@@ -1,0 +1,47 @@
+package TelegramBotApi;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  CloudApi,
+  rtl;
+
+contains
+  TelegramBotApi.Client in 'TelegramBotApi.Client.pas',
+  TelegramBotApi.CloudAPI.Authenticator in 'TelegramBotApi.CloudAPI.Authenticator.pas',
+  TelegramBotApi.Types in 'TelegramBotApi.Types.pas',
+  TelegramBotApi.Types.Request in 'TelegramBotApi.Types.Request.pas',
+  TelegramBotApi.CloudAPI.Converter in 'TelegramBotApi.CloudAPI.Converter.pas',
+  TelegramBotApi.Types.Keyboards in 'TelegramBotApi.Types.Keyboards.pas',
+  TelegramBotApi.Types.Enums in 'TelegramBotApi.Types.Enums.pas',
+  TelegramBotApi.UpdateParser in 'TelegramBotApi.UpdateParser.pas',
+  TelegramBotApi.Types.Helpers in 'TelegramBotApi.Types.Helpers.pas',
+  TelegramBotApi.Types.Intf in 'TelegramBotApi.Types.Intf.pas';
+
+end.
+

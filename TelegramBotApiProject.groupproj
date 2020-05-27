@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D0227AFC-C5B8-42BE-9844-C605CC45BE61}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="CloudAPI\CloudAPI.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="TelegramBotApi.dproj">
+            <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="CloudAPI">
+        <MSBuild Projects="CloudAPI\CloudAPI.dproj"/>
+    </Target>
+    <Target Name="CloudAPI:Clean">
+        <MSBuild Projects="CloudAPI\CloudAPI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CloudAPI:Make">
+        <MSBuild Projects="CloudAPI\CloudAPI.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TelegramBotApi" DependsOnTargets="CloudAPI">
+        <MSBuild Projects="TelegramBotApi.dproj"/>
+    </Target>
+    <Target Name="TelegramBotApi:Clean" DependsOnTargets="CloudAPI:Clean">
+        <MSBuild Projects="TelegramBotApi.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TelegramBotApi:Make" DependsOnTargets="CloudAPI:Make">
+        <MSBuild Projects="TelegramBotApi.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="CloudAPI;TelegramBotApi"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
