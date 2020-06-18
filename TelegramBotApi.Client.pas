@@ -32,7 +32,9 @@ type
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
     function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
 
-    constructor Create;
+    constructor Create; overload;
+    constructor Create(const AToken: string); overload;
+
     destructor Destroy; override;
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
@@ -58,6 +60,12 @@ begin
   TtgConverters.TelegramConverter;
   FCloudApi.BaseUrl := 'https://api.telegram.org/bot{token}';
   FVersion := '4.6.0';
+end;
+
+constructor TTelegramBotApi.Create(const AToken: string);
+begin
+  Self.Create;
+  BotToken := AToken;
 end;
 
 destructor TTelegramBotApi.Destroy;
