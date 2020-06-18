@@ -3,10 +3,11 @@ unit TelegramBotApi.Types;
 interface
 
 uses
-  System.JSON.Serializers,
+  CloudAPI.Json.Converters,
+  CloudAPI.Types,
+  System.Json.Serializers,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Intf,
-  CloudAPI.Types;
+  TelegramBotApi.Types.Intf;
 
 type
   TtgUser = class(TInterfacedObject, itgUser)
@@ -68,13 +69,19 @@ type
     FFrom: TtgUser;
     [JsonName('text')]
     FText: string;
+    [JsonName('date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FDate: TDateTime;
   public
     constructor Create;
     destructor Destroy; override;
+    function &Type: TtgMessageType;
     property Chat: TtgChat read FChat write FChat;
     property MessageID: Int64 read FMessageID write FMessageID;
     property From: TtgUser read FFrom write FFrom;
+    property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
+
   end;
 
   TtgInlineQuery = class
@@ -404,6 +411,13 @@ begin
   Result := TtgUserLink.FromID(AID);
 end;
 
+function TtgMessage.&Type: TtgMessageType;
+begin
+  if not FText.IsEmpty then
+    Exit(TtgMessageType.Text);
+  raise Exception.Create('Unknown TtgMessage.Type');
+end;
+
 constructor TtgMessage.Create;
 begin
   inherited;
@@ -507,7 +521,8 @@ end;
 
 { TtgInputMedia }
 
-constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
+constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string;
+  const AParseMode: TtgParseMode);
 begin
   FCaption := ACaption;
   FParseMode := TG_PARSE_MODES[Ord(AParseMode)];
