@@ -1,3 +1,6 @@
 [submodule "CloudAPI"]
 	path = CloudAPI
 	url = https://github.com/ms301/CloudAPI.git
+[submodule "DUnitX"]
+	path = DUnitX
+	url = https://github.com/VSoftTechnologies/DUnitX.git
