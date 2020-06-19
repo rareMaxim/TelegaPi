@@ -464,7 +464,7 @@ type
     class function Default: TtgSendVoiceArgument; static;
   end;
 
-/// <summary> Use this method to send audio files, if you want Telegram clients to
+  /// <summary> Use this method to send audio files, if you want Telegram clients to
   /// display the file as a playable voice message. For this to work, your audio must
   /// be in an .OGG file encoded with OPUS (other formats may be sent as Audio or
   /// Document). On success, the sent Message is returned. Bots can currently send
@@ -602,6 +602,20 @@ type
     /// time.</summary>
     AllowedUpdates: TAllowedUpdates;
     class function Default: TtgGetUpdatesArgument; static;
+  end;
+
+  [caName('getChat')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  TtgGetChatArgument = record
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    class function Default: TtgGetChatArgument; static;
   end;
 
 implementation
@@ -748,6 +762,13 @@ end;
 class function TtgSendMediaGroupArgument.Default: TtgSendMediaGroupArgument;
 begin
 
+end;
+
+{ TtgGetChatArgument }
+
+class function TtgGetChatArgument.Default: TtgGetChatArgument;
+begin
+  Result.ChatId := 0;
 end;
 
 end.

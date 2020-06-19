@@ -32,6 +32,7 @@ type
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
     function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
 
+    function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -82,6 +83,11 @@ end;
 function TTelegramBotApi.GetBotToken: string;
 begin
   Result := FBotToken;
+end;
+
+function TTelegramBotApi.getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
+begin
+  Result := InternalExecute<TtgGetChatArgument, TtgChat>(AGetChatArgument);
 end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;

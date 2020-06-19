@@ -51,13 +51,7 @@ type
     property Username: string read GetUsername;
   end;
 
-  TtgChat = class
-  private
-    [JsonName('id')]
-    FID: Int64;
-  public
-    property ID: Int64 read FID write FID;
-  end;
+  TtgChat = class;
 
   TtgMessage = class
   private
@@ -82,6 +76,50 @@ type
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
 
+  end;
+
+  TtgChat = class
+  private
+    [JsonName('id')]
+    FID: Int64;
+    [JsonName('type')]
+    Ftype: string;
+    [JsonName('title')]
+    Ftitle: string;
+    [JsonName('username')]
+    FUsername: string;
+    [JsonName('first_name')]
+    FFirstName: string;
+    [JsonName('last_name')]
+    FLastName: string;
+    [JsonName('photo')]
+    FPhoto: TObject;
+    [JsonName('description')]
+    FDescription: string;
+    [JsonName('invite_link')]
+    FInviteLink: string;
+    [JsonName('pinned_message')]
+    FPinnedMessage: TtgMessage;
+    [JsonName('slow_mode_delay')]
+    FSlowModeDelay: Int64;
+    [JsonName('sticker_set_name')]
+    FStickerSetName: string;
+    [JsonName('can_set_sticker_set')]
+    FCanSetStickerSet: Boolean;
+  public
+    property ID: Int64 read FID write FID;
+    property &Type: string read Ftype write Ftype;
+    property Title: string read Ftitle write Ftitle;
+    property Username: string read FUsername write FUsername;
+    property FirstName: string read FFirstName write FFirstName;
+    property LastName: string read FLastName write FLastName;
+    property Photo: TObject read FPhoto write FPhoto;
+    property Description: string read FDescription write FDescription;
+    property InviteLink: string read FInviteLink write FInviteLink;
+    property PinnedMessage: TtgMessage read FPinnedMessage write FPinnedMessage;
+    property SlowModeDelay: Int64 read FSlowModeDelay write FSlowModeDelay;
+    property StickerSetName: string read FStickerSetName write FStickerSetName;
+    property CanSetStickerSet: Boolean read FCanSetStickerSet write FCanSetStickerSet;
   end;
 
   TtgInlineQuery = class
@@ -269,7 +307,7 @@ type
   TtgInputMedia = class
   private
     [JsonName('type')]
-    FType: string;
+    Ftype: string;
     [JsonName('media')]
     FMedia: string;
     [JsonName('caption')]
@@ -282,7 +320,7 @@ type
     function GetFileToSend: TcaFileToSend;
     constructor Create(AMedia: TcaFileToSend; const ACaption: string = '';
       const AParseMode: TtgParseMode = TtgParseMode.Default); virtual;
-    property &Type: string read FType write FType;
+    property &Type: string read Ftype write Ftype;
     property Media: string read FMedia write FMedia;
     property Caption: string read FCaption write FCaption;
     property ParseMode: string read FParseMode write FParseMode;
@@ -521,8 +559,7 @@ end;
 
 { TtgInputMedia }
 
-constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string;
-  const AParseMode: TtgParseMode);
+constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
 begin
   FCaption := ACaption;
   FParseMode := TG_PARSE_MODES[Ord(AParseMode)];
