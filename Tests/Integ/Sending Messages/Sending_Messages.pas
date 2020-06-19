@@ -5,7 +5,7 @@ interface
 uses
   TestsFixture,
   TelegramBotApi.Client,
-  Test.Integ.Config,
+  Test.Data,
   DUnitX.TestFramework,
   DUnitX.Attributes;
 
@@ -34,17 +34,17 @@ var
   LMessage: TtgMessage;
 begin
   LMessageArgument := TtgMessageArgument.Default;
-  LMessageArgument.ChatId := TConfigFile.Current.SupergroupChat.ID;
+  LMessageArgument.ChatId := TTestData.Current.SupergroupChat.ID;
   LMessageArgument.Text := 'Hello world!';
   LResult := Bot.SendMessage(LMessageArgument);
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
   LMessage := LResult.Result;
   Assert.AreEqual('Hello world!', LMessage.Text);
   Assert.AreEqual(TtgMessageType.Text, LMessage.&type);
-  Assert.AreEqual(TConfigFile.Current.SupergroupChat.ID, LMessage.Chat.ID);
+  Assert.AreEqual(TTestData.Current.SupergroupChat.ID, LMessage.Chat.ID);
   Assert.IsTrue(DateInRange(LMessage.Date, IncSecond(Now, -10), IncSecond(Now, 2)));
-  Assert.AreEqual(BotUser.ID, LMessage.From.ID);
-  Assert.AreEqual(BotUser.Username, LMessage.From.Username);
+  Assert.AreEqual(TTestData.Current.BotUser.ID, LMessage.From.ID);
+  Assert.AreEqual(TTestData.Current.BotUser.Username, LMessage.From.Username);
 end;
 
 end.

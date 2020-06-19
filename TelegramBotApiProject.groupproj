@@ -3,14 +3,8 @@
         <ProjectGuid>{D0227AFC-C5B8-42BE-9844-C605CC45BE61}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="cloud-api-core\CloudAPI.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="cloud-api-core\Tests\CloudApiTest.dproj">
-            <Dependencies>cloud-api-core\CloudAPI.dproj</Dependencies>
-        </Projects>
         <Projects Include="TelegramBotApi.dproj">
-            <Dependencies>cloud-api-core\CloudAPI.dproj</Dependencies>
+            <Dependencies/>
         </Projects>
         <Projects Include="Tests\TelegramBotApiTests.dproj">
             <Dependencies>TelegramBotApi.dproj</Dependencies>
@@ -23,31 +17,13 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="CloudAPI">
-        <MSBuild Projects="cloud-api-core\CloudAPI.dproj"/>
-    </Target>
-    <Target Name="CloudAPI:Clean">
-        <MSBuild Projects="cloud-api-core\CloudAPI.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CloudAPI:Make">
-        <MSBuild Projects="cloud-api-core\CloudAPI.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CloudApiTest" DependsOnTargets="CloudAPI">
-        <MSBuild Projects="cloud-api-core\Tests\CloudApiTest.dproj"/>
-    </Target>
-    <Target Name="CloudApiTest:Clean" DependsOnTargets="CloudAPI:Clean">
-        <MSBuild Projects="cloud-api-core\Tests\CloudApiTest.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CloudApiTest:Make" DependsOnTargets="CloudAPI:Make">
-        <MSBuild Projects="cloud-api-core\Tests\CloudApiTest.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="TelegramBotApi" DependsOnTargets="CloudAPI">
+    <Target Name="TelegramBotApi">
         <MSBuild Projects="TelegramBotApi.dproj"/>
     </Target>
-    <Target Name="TelegramBotApi:Clean" DependsOnTargets="CloudAPI:Clean">
+    <Target Name="TelegramBotApi:Clean">
         <MSBuild Projects="TelegramBotApi.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="TelegramBotApi:Make" DependsOnTargets="CloudAPI:Make">
+    <Target Name="TelegramBotApi:Make">
         <MSBuild Projects="TelegramBotApi.dproj" Targets="Make"/>
     </Target>
     <Target Name="TelegramBotApiTests" DependsOnTargets="TelegramBotApi">
@@ -60,13 +36,13 @@
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests"/>
+        <CallTarget Targets="TelegramBotApi;TelegramBotApiTests"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean"/>
+        <CallTarget Targets="TelegramBotApi:Clean;TelegramBotApiTests:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make"/>
+        <CallTarget Targets="TelegramBotApi:Make;TelegramBotApiTests:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

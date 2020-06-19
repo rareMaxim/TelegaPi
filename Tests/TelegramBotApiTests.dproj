@@ -46,7 +46,7 @@
         <UsingDelphiRTL>true</UsingDelphiRTL>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
-        <DCC_UnitSearchPath>..\;..\DUnitX;..\cloud-api-core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\;..\DUnitX;..\CloudAPI;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>TelegramBotApiTests</SanitizedProjectName>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -83,8 +83,9 @@
         <DCCReference Include="..\TelegramBotApi.CloudAPI.Authenticator.pas"/>
         <DCCReference Include="Integ\Sending Messages\Sending_Messages.pas"/>
         <DCCReference Include="Integ\Framework\TestsFixture.pas"/>
-        <DCCReference Include="Integ\Test.Integ.Config.pas"/>
+        <DCCReference Include="Integ\Framework\Test.Config.pas"/>
         <DCCReference Include="TelegramBot.TestFramework.pas"/>
+        <DCCReference Include="Integ\Framework\Test.Data.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

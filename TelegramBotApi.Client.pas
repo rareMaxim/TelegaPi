@@ -10,7 +10,7 @@ uses
   CloudApi.Client.Sync;
 
 type
-  TTelegramBotApi = class(TInterfacedObject)
+  TTelegramBotApi = class
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;

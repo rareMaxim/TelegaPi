@@ -4,7 +4,7 @@ interface
 
 uses
   DUnitX.TestFramework,
-  Test.Integ.Config,
+  Test.Data,
   TelegramBotApi.Client,
   TelegramBotApi.Types;
 
@@ -14,7 +14,6 @@ type
   TTestsFixture = class
   private
     FBot: TTelegramBotApi;
-    FBotUser: TtgUser;
   protected
   public
     [Setup]
@@ -23,7 +22,6 @@ type
     procedure TearDown;
 
     property Bot: TTelegramBotApi read FBot write FBot;
-    property BotUser: TtgUser read FBotUser write FBotUser;
   end;
 
 implementation
@@ -31,20 +29,12 @@ implementation
 { TTestsFixture }
 
 procedure TTestsFixture.Setup;
-var
-  LResp: ItgResponse<TtgUser>;
 begin
-  FBot := TTelegramBotApi.Create(TConfigFile.Current.BotToken);
-  LResp := FBot.GetMe;
-  FBotUser := LResp.Result;
-  LResp.Result := default (TtgUser);
-  LResp := nil;
+  FBot := TTelegramBotApi.Create(TTestData.Current.Config.BotToken);
 end;
 
 procedure TTestsFixture.TearDown;
 begin
-  FBotUser.Free;
-  FBotUser := nil;
   FBot.Free;
   FBot := nil;
 end;

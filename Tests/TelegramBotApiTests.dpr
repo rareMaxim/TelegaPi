@@ -17,8 +17,9 @@ uses
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
   Sending_Messages in 'Integ\Sending Messages\Sending_Messages.pas',
   TestsFixture in 'Integ\Framework\TestsFixture.pas',
-  Test.Integ.Config in 'Integ\Test.Integ.Config.pas',
-  TelegramBot.TestFramework in 'TelegramBot.TestFramework.pas';
+  Test.Config in 'Integ\Framework\Test.Config.pas',
+  TelegramBot.TestFramework in 'TelegramBot.TestFramework.pas',
+  Test.Data in 'Integ\Framework\Test.Data.pas';
 {$IFNDEF TESTINSIGHT}
 
 var
