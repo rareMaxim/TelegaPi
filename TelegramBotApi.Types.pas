@@ -66,12 +66,26 @@ type
     [JsonName('date')]
     [JsonConverter(TJsonUnixTimeConverter)]
     FDate: TDateTime;
+    [JsonName('forward_from_chat')]
+    FForwardFromChat: TtgChat;
+    [JsonName('forward_from_message_id')]
+    FForwardFromMessageId: Int64;
+    [JsonName('forward_signature')]
+    FForwardSignature: string;
+    [JsonName('forward_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FForwardDate: TDateTime;
   public
     constructor Create;
     destructor Destroy; override;
     function &Type: TtgMessageType;
-    property Chat: TtgChat read FChat write FChat;
+  public
     property MessageID: Int64 read FMessageID write FMessageID;
+    property Chat: TtgChat read FChat write FChat;
+    property ForwardFromChat: TtgChat read FForwardFromChat write FForwardFromChat;
+    property ForwardFromMessageId: Int64 read FForwardFromMessageId write FForwardFromMessageId;
+    property ForwardSignature: string read FForwardSignature write FForwardSignature;
+    property ForwardDate: TDateTime read FForwardDate write FForwardDate;
     property From: TtgUser read FFrom write FFrom;
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
