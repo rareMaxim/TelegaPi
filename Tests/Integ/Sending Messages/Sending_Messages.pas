@@ -18,6 +18,8 @@ type
     procedure Should_Send_Text_Message;
     [Test]
     procedure Should_Send_Text_Message_To_Channel;
+    [Test]
+    procedure Should_Forward_Message;
   end;
 
 implementation
@@ -28,6 +30,34 @@ uses
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Request,
   System.SysUtils;
+
+procedure TTextMessageTests.Should_Forward_Message;
+var
+  LMessageArgument: TtgMessageArgument;
+  LMessageForwardArgument: TtgForwardMessageArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+  LMessageFrw: TtgMessage;
+begin
+  LMessageArgument := TtgMessageArgument.Default;
+  LMessageArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+  LMessageArgument.Text := '➡️ Message to be forwared ⬅️';
+  LResult := Bot.SendMessage(LMessageArgument);
+  Assert.AreEqual(True, LResult.Ok, LResult.Description);
+  LMessage := LResult.Result;
+  LMessageForwardArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+  LMessageForwardArgument.FromChatId := TTestData.Current.SupergroupChat.ID;
+  LMessageForwardArgument.MessageId := LMessage.MessageId;
+  LResult := Bot.ForwardMessage(LMessageForwardArgument);
+  LMessageFrw := LResult.Result;
+  Assert.AreEqual(TTestData.Current.BotUser.ID, LMessageFrw.From.ID);
+  Assert.AreEqual(TTestData.Current.BotUser.Username, LMessageFrw.From.Username);
+  Assert.IsNull(LMessageFrw.ForwardFromChat);
+  Assert.AreEqual(LMessageFrw.ForwardFromMessageId, Default (Int64));
+  Assert.IsEmpty(LMessageFrw.ForwardSignature);
+  Assert.IsNotEmpty(LMessageFrw.ForwardDate);
+  Assert.IsTrue(DateInRange(LMessageFrw.Date, IncSecond(Now, -10), IncSecond(Now, 2)));
+end;
 
 procedure TTextMessageTests.Should_Send_Text_Message;
 var
@@ -58,7 +88,7 @@ var
   LMessage: TtgMessage;
 begin
   LMessageArgument := TtgMessageArgument.Default;
-  LMessageArgument.ChatId := TTestData.Current.ChannelChat.ID;
+  LMessageArgument.ChatId := TTestData.Current.ChannelChat.Username;
   LMessageArgument.Text := Format(C_MSG, [LMessageArgument.ChatId.ToString]);
   LResult := Bot.SendMessage(LMessageArgument);
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
