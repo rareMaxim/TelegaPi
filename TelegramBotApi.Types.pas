@@ -289,8 +289,8 @@ type
 
   TtgUserLink = record
   private
-    ID: Int64;
-    Username: string;
+    FID: Int64;
+    FUsername: string;
     class function FromID(const AID: Int64): TtgUserLink; static;
     class function FromUserName(const AUsername: string): TtgUserLink; static;
   public
@@ -298,10 +298,14 @@ type
     function IsHaveID: Boolean;
     function IsHaveUsername: Boolean;
     function GetUsernameWithDog: string;
+    function ToString: string;
+  public
+    property ID: Int64 read FID write FID;
+    property Username: string read FUsername write FUsername;
+  public
     class function Empty: TtgUserLink; static;
     class operator Implicit(AID: Int64): TtgUserLink;
     class operator Implicit(AUsername: string): TtgUserLink;
-    function ToString: string;
   end;
 
   TtgInputMedia = class
