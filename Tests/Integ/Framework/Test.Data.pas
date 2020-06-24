@@ -17,9 +17,11 @@ type
     FConfig: TConfigFile;
     FSupergroupChat: TtgChat;
     FBotUser: TtgUser;
+    FChannelChat: TtgChat;
   protected
     procedure InitBotUser;
     procedure InitSupergroupChat;
+    procedure InitChannelChat;
   public
     constructor Create;
     destructor Destroy; override;
@@ -31,6 +33,7 @@ type
     property Config: TConfigFile read FConfig write FConfig;
     property BotUser: TtgUser read FBotUser write FBotUser;
     property SupergroupChat: TtgChat read FSupergroupChat write FSupergroupChat;
+    property ChannelChat: TtgChat read FChannelChat write FChannelChat;
   end;
 
 implementation
@@ -47,10 +50,12 @@ begin
   FConfig := TConfigFile.Load(CONFIG_FILE_NAME);
   InitBotUser;
   InitSupergroupChat;
+  InitChannelChat;
 end;
 
 destructor TTestData.Destroy;
 begin
+  FreeAndNil(FChannelChat);
   FreeAndNil(FSupergroupChat);
   FreeAndNil(FBotUser);
   //
@@ -99,6 +104,25 @@ begin
   end;
 end;
 
+procedure TTestData.InitChannelChat;
+var
+  LGetChatArgument: TtgGetChatArgument;
+  LResp: ItgResponse<TtgChat>;
+  FBot: TTelegramBotApi;
+begin
+  FBot := TTelegramBotApi.Create(FConfig.BotToken);
+  try
+    LGetChatArgument := TtgGetChatArgument.Default;
+    LGetChatArgument.ChatId := FConfig.ChannelChatId;
+    LResp := FBot.getChat(LGetChatArgument);
+    FChannelChat := LResp.Result;
+    LResp.Result := default (TtgChat);
+    LResp := nil;
+  finally
+    FreeAndNil(FBot);
+  end;
+end;
+
 procedure TTestData.InitSupergroupChat;
 var
   LGetChatArgument: TtgGetChatArgument;
@@ -116,7 +140,6 @@ begin
   finally
     FreeAndNil(FBot);
   end;
-
 end;
 
 end.

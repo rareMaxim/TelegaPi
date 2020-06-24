@@ -10,9 +10,11 @@ type
   private
     FBotToken: string;
     FSupergroupChatID: Int64;
+    FChannelChatId: string;
   public
     property BotToken: string read FBotToken write FBotToken;
     property SupergroupChatID: Int64 read FSupergroupChatID write FSupergroupChatID;
+    property ChannelChatId: string read FChannelChatId write FChannelChatId;
     class function Load(const AFileName: string): TConfigFile;
     procedure Save(const AFileName: string);
   end;
