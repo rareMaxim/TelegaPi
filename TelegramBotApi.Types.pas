@@ -1,4 +1,4 @@
-unit TelegramBotApi.Types;
+Ôªøunit TelegramBotApi.Types;
 
 interface
 
@@ -53,6 +53,29 @@ type
 
   TtgChat = class;
 
+  TtgMessageEntity = class
+  private
+    [JsonName('language')]
+    FLanguage: string;
+    [JsonName('user')]
+    FUser: TtgUser;
+    [JsonName('url')]
+    FUrl: string;
+    [JsonName('length')]
+    FLength: Int64;
+    [JsonName('offset')]
+    FOffset: Int64;
+    [JsonName('type')]
+    FType: string;
+  public
+    property &Type: string read FType write FType;
+    property Offset: Int64 read FOffset write FOffset;
+    property Length: Int64 read FLength write FLength;
+    property Url: string read FUrl write FUrl;
+    property User: TtgUser read FUser write FUser;
+    property Language: string read FLanguage write FLanguage;
+  end;
+
   TtgMessage = class
   private
     [JsonName('chat')]
@@ -75,6 +98,9 @@ type
     [JsonName('forward_date')]
     [JsonConverter(TJsonUnixTimeConverter)]
     FForwardDate: TDateTime;
+    [JsonName('entities')]
+    FEntities: TArray<TtgMessageEntity>;
+    //
   public
     constructor Create;
     destructor Destroy; override;
@@ -89,7 +115,7 @@ type
     property From: TtgUser read FFrom write FFrom;
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
-
+    property Entities: TArray<TtgMessageEntity> read FEntities write FEntities;
   end;
 
   TtgChat = class
@@ -97,7 +123,7 @@ type
     [JsonName('id')]
     FID: Int64;
     [JsonName('type')]
-    Ftype: string;
+    FType: string;
     [JsonName('title')]
     Ftitle: string;
     [JsonName('username')]
@@ -122,7 +148,7 @@ type
     FCanSetStickerSet: Boolean;
   public
     property ID: Int64 read FID write FID;
-    property &Type: string read Ftype write Ftype;
+    property &Type: string read FType write FType;
     property Title: string read Ftitle write Ftitle;
     property Username: string read FUsername write FUsername;
     property FirstName: string read FFirstName write FFirstName;
@@ -199,21 +225,21 @@ type
     destructor Destroy; override;
     function &Type: TtgUpdateType;
     /// <summary>
-    /// The updateës unique identifier. Update identifiers start from a certain
+    /// The update‚Äòs unique identifier. Update identifiers start from a certain
     /// positive number and increase sequentially. This ID becomes especially handy if
-    /// youíre using Webhooks, since it allows you to ignore repeated updates or to
+    /// you‚Äôre using Webhooks, since it allows you to ignore repeated updates or to
     /// restore the correct update sequence, should they get out of order. If there are
     /// no new updates for at least a week, then identifier of the next update will be
     /// chosen randomly instead of sequentially.
     /// </summary>
     property UpdateID: Int64 read FUpdateID write FUpdateID;
-    /// <summary>Optional. New incoming message of any kind ó text, photo, sticker, etc.
+    /// <summary>Optional. New incoming message of any kind ‚Äî text, photo, sticker, etc.
     /// </summary>
     property &Message: TtgMessage read FMessage write FMessage;
     /// <summary>Optional. New version of a message that is known to the bot and was
     /// edited</summary>
     property EditedMessage: TtgMessage read FEditedMessage write FEditedMessage;
-    /// <summary>Optional. New incoming channel post of any kind ó text, photo, sticker,
+    /// <summary>Optional. New incoming channel post of any kind ‚Äî text, photo, sticker,
     /// etc.
     /// </summary>
     property ChannelPost: TtgMessage read FChannelPost write FChannelPost;
@@ -325,7 +351,7 @@ type
   TtgInputMedia = class
   private
     [JsonName('type')]
-    Ftype: string;
+    FType: string;
     [JsonName('media')]
     FMedia: string;
     [JsonName('caption')]
@@ -338,7 +364,7 @@ type
     function GetFileToSend: TcaFileToSend;
     constructor Create(AMedia: TcaFileToSend; const ACaption: string = '';
       const AParseMode: TtgParseMode = TtgParseMode.Default); virtual;
-    property &Type: string read Ftype write Ftype;
+    property &Type: string read FType write FType;
     property Media: string read FMedia write FMedia;
     property Caption: string read FCaption write FCaption;
     property ParseMode: string read FParseMode write FParseMode;
@@ -390,7 +416,7 @@ destructor TtgResponse<T>.Destroy;
 begin
   case GetTypeKind(T) of
     tkClass:
-      PObject(@FResult).Free; // DONE -o@rareMax -cMemLeack: œÓ‚ÂËÚ¸, ‡·Ó˜ËÈ ÎË ˝ÚÓ ÒÔÓÒÓ· Ó˜ËÒÚÍË Ô‡ÏˇÚË
+      PObject(@FResult).Free; // DONE -o@rareMax -cMemLeack: –ü—Ä–æ–≤–µ—Ä–∏—Ç—å, —Ä–∞–±–æ—á–∏–π –ª–∏ —ç—Ç–æ —Å–ø–æ—Å–æ–± –æ—á–∏—Å—Ç–∫–∏ –ø–∞–º—è—Ç–∏
   end;
   inherited Destroy;
 end;
@@ -577,7 +603,8 @@ end;
 
 { TtgInputMedia }
 
-constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
+constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string;
+  const AParseMode: TtgParseMode);
 begin
   FCaption := ACaption;
   FParseMode := TG_PARSE_MODES[Ord(AParseMode)];
