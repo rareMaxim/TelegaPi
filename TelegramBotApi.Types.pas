@@ -5,7 +5,10 @@ interface
 uses
   CloudAPI.Json.Converters,
   CloudAPI.Types,
+  System.Generics.Collections,
+  System.Json.Converters,
   System.Json.Serializers,
+  TelegramBotApi.Json.Converter,
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Intf;
 
@@ -66,9 +69,12 @@ type
     [JsonName('offset')]
     FOffset: Int64;
     [JsonName('type')]
-    FType: string;
+    [JsonConverter(TtgMessageEntityTypeConverter)]
+    FType: TtgMessageEntityType;
   public
-    property &Type: string read FType write FType;
+    constructor Create;
+    destructor Destroy; override;
+    property &Type: TtgMessageEntityType read FType write FType;
     property Offset: Int64 read FOffset write FOffset;
     property Length: Int64 read FLength write FLength;
     property Url: string read FUrl write FUrl;
@@ -77,6 +83,8 @@ type
   end;
 
   TtgMessage = class
+  private type
+    TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
   private
     [JsonName('chat')]
     FChat: TtgChat;
@@ -99,7 +107,8 @@ type
     [JsonConverter(TJsonUnixTimeConverter)]
     FForwardDate: TDateTime;
     [JsonName('entities')]
-    FEntities: TArray<TtgMessageEntity>;
+    [JsonConverter(TMessEntConv)]
+    FEntities: TObjectList<TtgMessageEntity>;
     //
   public
     constructor Create;
@@ -115,7 +124,7 @@ type
     property From: TtgUser read FFrom write FFrom;
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
-    property Entities: TArray<TtgMessageEntity> read FEntities write FEntities;
+    property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
   end;
 
   TtgChat = class
@@ -373,8 +382,7 @@ type
 implementation
 
 uses
-  System.SysUtils,
-  System.Generics.Collections; // PObject
+  System.SysUtils; // PObject
 
 function TtgResponseBase.GetDescription: string;
 begin
@@ -505,12 +513,16 @@ begin
   inherited;
   FFrom := TtgUser.Create;
   FChat := TtgChat.Create;
+  FForwardFromChat := TtgChat.Create;
+  FEntities := TObjectList<TtgMessageEntity>.Create;
 end;
 
 destructor TtgMessage.Destroy;
 begin
+  FEntities.Free;
   FFrom.Free;
   FChat.Free;
+  FForwardFromChat.Free;
   inherited;
 end;
 
@@ -620,6 +632,19 @@ end;
 function TtgInputMedia.GetFileToSend: TcaFileToSend;
 begin
   Result := FFileToSend;
+end;
+
+{ TtgMessageEntity }
+
+constructor TtgMessageEntity.Create;
+begin
+  FUser := TtgUser.Create;
+end;
+
+destructor TtgMessageEntity.Destroy;
+begin
+  FUser.Free;
+  inherited;
 end;
 
 end.

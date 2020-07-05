@@ -41,7 +41,8 @@ contains
   TelegramBotApi.Types.Enums in 'TelegramBotApi.Types.Enums.pas',
   TelegramBotApi.UpdateParser in 'TelegramBotApi.UpdateParser.pas',
   TelegramBotApi.Types.Helpers in 'TelegramBotApi.Types.Helpers.pas',
-  TelegramBotApi.Types.Intf in 'TelegramBotApi.Types.Intf.pas';
+  TelegramBotApi.Types.Intf in 'TelegramBotApi.Types.Intf.pas',
+  TelegramBotApi.Json.Converter in 'TelegramBotApi.Json.Converter.pas';
 
 end.
 
