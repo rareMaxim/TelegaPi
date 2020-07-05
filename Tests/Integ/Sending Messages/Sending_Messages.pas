@@ -24,6 +24,8 @@ type
     procedure Should_Parse_MarkDown_Entities;
     [Test]
     procedure Should_Parse_HTML_Entities;
+    [Test]
+    procedure Should_Parse_Message_Entities_Into_Values;
   end;
 
 implementation
@@ -34,6 +36,7 @@ uses
   System.SysUtils,
   TelegramBotApi.Types,
   TelegramBotApi.Types.Enums,
+  TelegramBotApi.Types.Helpers,
   TelegramBotApi.Types.Request;
 
 procedure TTextMessageTests.Should_Forward_Message;
@@ -79,13 +82,13 @@ begin
   LEntityValueMappings := TDictionary<string, TtgMessageEntityType>.Create;
   try
     LEntityValueMappings.Add('<b>bold</b>', TtgMessageEntityType.Bold);
-    LEntityValueMappings.Add('<strong>&lt;strong&gt;</strong>', TtgMessageEntityType.Bold);
+    LEntityValueMappings.Add('<strong>strong</strong>', TtgMessageEntityType.Bold);
     LEntityValueMappings.Add('<i>italic</i>', TtgMessageEntityType.Italic);
-    LEntityValueMappings.Add('<em>&lt;em&gt;</em>', TtgMessageEntityType.Italic);
-    LEntityValueMappings.Add(Format('[inline url to Telegram.org](%s)', [url]),
+    LEntityValueMappings.Add('<em>em</em>', TtgMessageEntityType.Italic);
+    LEntityValueMappings.Add(Format('<a href="%s">inline url to Telegram.org</a>', [url]),
       TtgMessageEntityType.TextLink);
-    LEntityValueMappings.Add(Format('[%s](tg://user?id=%d)', [TTestData.Current.BotUser.FirstName,
-      TTestData.Current.BotUser.ID]), TtgMessageEntityType.TextMention);
+    LEntityValueMappings.Add(Format('<a href="tg://user?id=%d">%s</a>', [TTestData.Current.BotUser.ID,
+      TTestData.Current.BotUser.FirstName]), TtgMessageEntityType.TextMention);
     LEntityValueMappings.Add('inline "`fixed-width code`"', TtgMessageEntityType.Code);
     LEntityValueMappings.Add('```pre-formatted fixed-width code block```', TtgMessageEntityType.Pre);
     LEntityValueMappings.Add('<s>strikethrough</s>', TtgMessageEntityType.Strikethrough);
@@ -104,7 +107,7 @@ begin
     for I := 0 to LMessage.Entities.Count - 1 do
     begin
       Assert.IsTrue(LEntityValueMappings.ContainsValue(LMessage.Entities[I].&Type),
-        'LEntityValueMappings.ContainsKey');
+        LMessage.Entities[I].&Type.ToString);
     end;
   finally
     LEntityValueMappings.Free;
@@ -148,6 +151,49 @@ begin
     for I := 0 to LMessage.Entities.Count - 1 do
     begin
       Assert.IsTrue(LEntityValueMappings.ContainsKey(LMessage.Entities[I].&Type),
+        'LEntityValueMappings.ContainsKey');
+    end;
+  finally
+    LEntityValueMappings.Free;
+  end;
+
+end;
+
+procedure TTextMessageTests.Should_Parse_Message_Entities_Into_Values;
+type
+  TEntityValueMap = TPair<TtgMessageEntityType, string>;
+const
+  url = 'https://telegram.org/';
+var
+  LEntityValueMappings: TDictionary<string, TtgMessageEntityType>;
+  LMessageArgument: TtgMessageArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+  I: Integer;
+begin
+  LEntityValueMappings := TDictionary<string, TtgMessageEntityType>.Create;
+  try
+    LEntityValueMappings.Add('+38 063 126 48 33', TtgMessageEntityType.PhoneNumber);
+    LEntityValueMappings.Add('$UAH', TtgMessageEntityType.Cashtag);
+    LEntityValueMappings.Add('#TelegramBots', TtgMessageEntityType.Hashtag);
+    LEntityValueMappings.Add('@BotFather', TtgMessageEntityType.Mention);
+    LEntityValueMappings.Add('https://github.com/ms301/TelegramBotApi', TtgMessageEntityType.url);
+    LEntityValueMappings.Add('security@telegram.org', TtgMessageEntityType.Email);
+    LEntityValueMappings.Add('/test', TtgMessageEntityType.BotCommand);
+    LEntityValueMappings.Add(Format('/test@%s', [TTestData.Current.BotUser.Username]),
+      TtgMessageEntityType.BotCommand);
+
+    LMessageArgument := TtgMessageArgument.Default;
+    LMessageArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LMessageArgument.Text := string.Join(#13#10, LEntityValueMappings.Keys.ToArray);
+
+    LResult := Bot.SendMessage(LMessageArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+
+    for I := 0 to LMessage.Entities.Count - 1 do
+    begin
+      Assert.IsTrue(LEntityValueMappings.ContainsValue(LMessage.Entities[I].&Type),
         'LEntityValueMappings.ContainsKey');
     end;
   finally
