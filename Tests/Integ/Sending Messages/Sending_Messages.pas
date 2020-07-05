@@ -26,6 +26,8 @@ type
     procedure Should_Parse_HTML_Entities;
     [Test]
     procedure Should_Parse_Message_Entities_Into_Values;
+    [Test]
+    procedure Should_Parse_MarkdownV2_Entities;
   end;
 
 implementation
@@ -108,6 +110,53 @@ begin
     begin
       Assert.IsTrue(LEntityValueMappings.ContainsValue(LMessage.Entities[I].&Type),
         LMessage.Entities[I].&Type.ToString);
+    end;
+  finally
+    LEntityValueMappings.Free;
+  end;
+
+end;
+
+procedure TTextMessageTests.Should_Parse_MarkdownV2_Entities;
+type
+  TEntityValueMap = TPair<TtgMessageEntityType, string>;
+const
+  url = 'https://telegram.org/';
+var
+  LEntityValueMappings: TDictionary<TtgMessageEntityType, string>;
+  LMessageArgument: TtgMessageArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+  I: Integer;
+begin
+  LEntityValueMappings := TDictionary<TtgMessageEntityType, string>.Create;
+  try
+    LEntityValueMappings.Add(TtgMessageEntityType.Bold, '*bold*');
+    LEntityValueMappings.Add(TtgMessageEntityType.Italic, '_italic_');
+    LEntityValueMappings.Add(TtgMessageEntityType.TextLink,
+      Format('[inline url to Telegram.org](%s)', [url]));
+    LEntityValueMappings.Add(TtgMessageEntityType.TextMention, Format('[%s](tg://user?id=%d)',
+      [TTestData.Current.BotUser.FirstName, TTestData.Current.BotUser.ID]));
+    LEntityValueMappings.Add(TtgMessageEntityType.Code, 'inline "`fixed-width code`"');
+    LEntityValueMappings.Add(TtgMessageEntityType.Pre, '```pre-formatted fixed-width code block```');
+
+    LEntityValueMappings.Add(TtgMessageEntityType.Strikethrough, '~strikethrough~');
+    LEntityValueMappings.Add(TtgMessageEntityType. Underline, '__underline__');
+
+    LMessageArgument := TtgMessageArgument.Default;
+    LMessageArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LMessageArgument.Text := string.Join(#13#10, LEntityValueMappings.Values.ToArray);
+    LMessageArgument.ParseMode := TtgParseMode.Markdown;
+    LMessageArgument.DisableWebPagePreview := True;
+
+    LResult := Bot.SendMessage(LMessageArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+
+    for I := 0 to LMessage.Entities.Count - 1 do
+    begin
+      Assert.IsTrue(LEntityValueMappings.ContainsKey(LMessage.Entities[I].&Type),
+        'LEntityValueMappings.ContainsKey');
     end;
   finally
     LEntityValueMappings.Free;
@@ -199,7 +248,6 @@ begin
   finally
     LEntityValueMappings.Free;
   end;
-
 end;
 
 procedure TTextMessageTests.Should_Send_Text_Message;
