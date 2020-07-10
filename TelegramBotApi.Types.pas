@@ -82,6 +82,40 @@ type
     property Language: string read FLanguage write FLanguage;
   end;
 
+  TtgPhotosize = class
+  private
+    [JsonName('file_id')]
+    FFileId: string;
+    [JsonName('file_unique_id')]
+    FFileUniqueId: string;
+    [JsonName('width')]
+    FWidth: Int64;
+    [JsonName('height')]
+    FHeight: Int64;
+    [JsonName('file_size')]
+    FFileSize: Int64;
+  public
+    property FileId: string read FFileId write FFileId;
+    property FileUniqueId: string read FFileUniqueId write FFileUniqueId;
+    property Width: Int64 read FWidth write FWidth;
+    property Height: Int64 read FHeight write FHeight;
+    property FileSize: Int64 read FFileSize write FFileSize;
+  end;
+
+  TtgVideo = class(TtgPhotosize)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+    [JsonName('mime_type')]
+    FMimeType: string;
+  public
+    property Duration: Int64 read FDuration write FDuration;
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
   TtgMessage = class
   private type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
@@ -109,6 +143,10 @@ type
     [JsonName('entities')]
     [JsonConverter(TMessEntConv)]
     FEntities: TObjectList<TtgMessageEntity>;
+    [JsonName('video')]
+    FVideo: TtgVideo;
+    [JsonName('caption')]
+    FCaption: string;
     //
   public
     constructor Create;
@@ -125,6 +163,8 @@ type
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
+    property Video: TtgVideo read FVideo write FVideo;
+    property Caption: string read FCaption write FCaption;
   end;
 
   TtgChat = class
@@ -504,7 +544,9 @@ end;
 function TtgMessage.&Type: TtgMessageType;
 begin
   if not FText.IsEmpty then
-    Exit(TtgMessageType.Text);
+    Exit(TtgMessageType.Text)
+  else if Assigned(Video) then
+    Exit(TtgMessageType.Video);
   raise Exception.Create('Unknown TtgMessage.Type');
 end;
 

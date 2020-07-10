@@ -274,7 +274,7 @@ type
   /// </summary>
   [caName('sendVideo')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.GetOrPost)]
   TtgSendVideoArgument = record
   public
     [caName('chat_id')]
