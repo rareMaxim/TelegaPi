@@ -491,7 +491,6 @@ type
     /// multipart/form-data. More info on Sending Files »
     /// </summary>
     VideoNote: TcaFileToSend;
-
     /// <summary>Duration of the voice message in seconds</summary>
     [caName('duration')]
     [caDefaultValueInt64(0)]
@@ -521,7 +520,7 @@ type
     class function Default: TtgSendVideoNoteArgument; static;
   end;
 
-  [caName('sendVideoNote')]
+  [caName('SendMediaGroup')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.QueryString)]
   TtgSendMediaGroupArgument = record
@@ -753,6 +752,7 @@ begin
   Result.VideoNote := TcaFileToSend.Empty;
   Result.Duration := 0;
   Result.Length := 0;
+  Result.Thumb := TcaFileToSend.Empty;
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
 end;

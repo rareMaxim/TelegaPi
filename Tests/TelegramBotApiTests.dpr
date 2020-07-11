@@ -1,4 +1,4 @@
-program TelegramBotApiTests;
+﻿program TelegramBotApiTests;
 
 {$IFNDEF TESTINSIGHT}
 {$APPTYPE CONSOLE}

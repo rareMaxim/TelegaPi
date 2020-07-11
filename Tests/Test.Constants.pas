@@ -15,6 +15,12 @@ type
         class function GoldenRatio: string;
         class function MoonLanding: string;
       end;
+
+      Thumbnail = class
+        class function Dir: string;
+        class function Video: string;
+        class function TheAbilityToBreak: string;
+      end;
     end;
   public
 
@@ -38,6 +44,23 @@ end;
 class function TtgConst.PathToFile.Videos.VideoDir: string;
 begin
   Result := PathToFile.FilesDir + 'Video/';
+end;
+
+{ TtgConst.PathToFile.Thumbnail }
+
+class function TtgConst.PathToFile.Thumbnail.Dir: string;
+begin
+  Result := PathToFile.FilesDir + 'Thumbnail/';
+end;
+
+class function TtgConst.PathToFile.Thumbnail.TheAbilityToBreak: string;
+begin
+  Result := Dir + 'The Ability to Break.jpg';
+end;
+
+class function TtgConst.PathToFile.Thumbnail.Video: string;
+begin
+  Result := Dir + 'video.jpg';
 end;
 
 end.

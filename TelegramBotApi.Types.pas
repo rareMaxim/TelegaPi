@@ -82,24 +82,29 @@ type
     property Language: string read FLanguage write FLanguage;
   end;
 
-  TtgPhotosize = class
+  TtgFileInfo = class
   private
     [JsonName('file_id')]
     FFileId: string;
     [JsonName('file_unique_id')]
     FFileUniqueId: string;
-    [JsonName('width')]
-    FWidth: Int64;
-    [JsonName('height')]
-    FHeight: Int64;
     [JsonName('file_size')]
     FFileSize: Int64;
   public
     property FileId: string read FFileId write FFileId;
     property FileUniqueId: string read FFileUniqueId write FFileUniqueId;
+    property FileSize: Int64 read FFileSize write FFileSize;
+  end;
+
+  TtgPhotosize = class(TtgFileInfo)
+  private
+    [JsonName('width')]
+    FWidth: Int64;
+    [JsonName('height')]
+    FHeight: Int64;
+  public
     property Width: Int64 read FWidth write FWidth;
     property Height: Int64 read FHeight write FHeight;
-    property FileSize: Int64 read FFileSize write FFileSize;
   end;
 
   TtgVideo = class(TtgPhotosize)
@@ -114,6 +119,20 @@ type
     property Duration: Int64 read FDuration write FDuration;
     property Thumb: TtgPhotosize read FThumb write FThumb;
     property MimeType: string read FMimeType write FMimeType;
+  end;
+
+  TtgVideoNote = class(TtgFileInfo)
+  private
+    [JsonName('length')]
+    FLength: Int64;
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+  published
+    property Length: Int64 read FLength write FLength;
+    property Duration: Int64 read FDuration write FDuration;
+    property Thumb: TtgPhotosize read FThumb write FThumb;
   end;
 
   TtgMessage = class
@@ -147,6 +166,8 @@ type
     FVideo: TtgVideo;
     [JsonName('caption')]
     FCaption: string;
+    [JsonName('video_note')]
+    FVideoNote: TtgVideoNote;
     //
   public
     constructor Create;
@@ -164,6 +185,7 @@ type
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
     property Video: TtgVideo read FVideo write FVideo;
+    property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
     property Caption: string read FCaption write FCaption;
   end;
 
@@ -546,8 +568,12 @@ begin
   if not FText.IsEmpty then
     Exit(TtgMessageType.Text)
   else if Assigned(Video) then
-    Exit(TtgMessageType.Video);
-  raise Exception.Create('Unknown TtgMessage.Type');
+    Exit(TtgMessageType.Video)
+  else if Assigned(VideoNote) then
+    Exit(TtgMessageType.VideoNote)
+
+  else
+    raise Exception.Create('Unknown TtgMessage.Type');
 end;
 
 constructor TtgMessage.Create;
