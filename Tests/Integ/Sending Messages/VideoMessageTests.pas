@@ -20,6 +20,8 @@ type
     procedure Should_Send_Video_Note;
     [Test]
     procedure Should_Send_Video_With_Thumb;
+    // [Test]
+    procedure Should_Send_Video_Note_With_Thumb;
   end;
 
 implementation
@@ -90,6 +92,27 @@ begin
   Assert.IsNotEmpty(LMessage.VideoNote.Thumb.FileUniqueId);
   Assert.AreEqual(LVideoArgument.Length, LMessage.Video.Thumb.Width);
   Assert.AreEqual(LVideoArgument.Length, LMessage.Video.Thumb.Height);
+  Assert.IsTrue((LMessage.Video.Thumb.FileSize >= 1000) and (LMessage.Video.Thumb.FileSize <= 1500));
+end;
+
+procedure TSendingVideoMessageTests.Should_Send_Video_Note_With_Thumb;
+var
+  LVideoArgument: TtgSendVideoNoteArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LVideoArgument := TtgSendVideoNoteArgument.Default;
+  LVideoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+  LVideoArgument.VideoNote := TtgConst.PathToFile.Videos.GoldenRatio;
+  LVideoArgument.Thumb := TtgConst.PathToFile.Thumbnail.Video;
+  LResult := Bot.SendVideoNote(LVideoArgument);
+  Assert.AreEqual(True, LResult.Ok, LResult.Description);
+  LMessage := LResult.Result;
+  Assert.IsNotNull(LMessage.VideoNote.Thumb);
+  Assert.IsNotEmpty(LMessage.VideoNote.Thumb.FileId);
+  Assert.IsNotEmpty(LMessage.VideoNote.Thumb.FileUniqueId);
+  Assert.AreEqual(Int64(240), LMessage.VideoNote.Thumb.Width);
+  Assert.AreEqual(Int64(240), LMessage.VideoNote.Thumb.Height);
   Assert.IsTrue((LMessage.Video.Thumb.FileSize >= 1000) and (LMessage.Video.Thumb.FileSize <= 1500));
 end;
 

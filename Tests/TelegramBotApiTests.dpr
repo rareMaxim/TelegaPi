@@ -7,11 +7,11 @@
 
 uses
   System.SysUtils,
-  {$IFDEF TESTINSIGHT}
+{$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-  {$ELSE}
+{$ELSE}
   DUnitX.Loggers.Console,
-  {$ENDIF }
+{$ENDIF }
   DUnitX.TestFramework,
   TelegramBotApi.Client in '..\TelegramBotApi.Client.pas',
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
@@ -64,13 +64,15 @@ begin
     // We don't want this happening when running under CI.
     if TDUnitX.Options.ExitBehavior = TDUnitXExitBehavior.Pause then
     begin
-      System.Write('Done.. press <Enter> key to quit.');
+      System.WriteLn;
+      System.WriteLn('Telegram lib version: ' + TTelegramBotApi.LIB_VERSION);
+      System.WriteLn('Done.. press <Enter> key to quit.');
       System.Readln;
     end;
 {$ENDIF}
   except
     on E: Exception do
-      System.Writeln(E.ClassName, ': ', E.Message);
+      System.WriteLn(E.ClassName, ': ', E.Message);
   end;
 {$ENDIF}
 

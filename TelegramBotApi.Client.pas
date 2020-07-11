@@ -1,4 +1,4 @@
-unit TelegramBotApi.Client;
+﻿unit TelegramBotApi.Client;
 
 interface
 
@@ -11,6 +11,8 @@ uses
 
 type
   TTelegramBotApi = class
+  public const
+    LIB_VERSION = '4.6.0.alpha';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
@@ -40,7 +42,6 @@ type
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     property BotToken: string read GetBotToken write SetBotToken;
-    property Version: string read FVersion;
   end;
 
 implementation
@@ -60,7 +61,6 @@ begin
   FCloudApi.HttpClient.SecureProtocols := [THTTPSecureProtocol.TLS12];
   TtgConverters.TelegramConverter;
   FCloudApi.BaseUrl := 'https://api.telegram.org/bot{token}';
-  FVersion := '4.6.0';
 end;
 
 constructor TTelegramBotApi.Create(const AToken: string);
