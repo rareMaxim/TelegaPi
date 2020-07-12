@@ -17,13 +17,10 @@ uses
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
   TestsFixture in 'Integ\Framework\TestsFixture.pas',
   Test.Config in 'Integ\Framework\Test.Config.pas',
-  TelegramBot.TestFramework in 'TelegramBot.TestFramework.pas',
   Test.Data in 'Integ\Framework\Test.Data.pas',
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
-  Sending_Messages in 'Integ\Sending Messages\Sending_Messages.pas',
-  SendingVenueMessageTests in 'Integ\Sending Messages\SendingVenueMessageTests.pas',
-  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas';
+  SendingPhotoMessageTests in 'Integ\Sending Messages\SendingPhotoMessageTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

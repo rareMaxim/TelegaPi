@@ -14,7 +14,7 @@ type
   TTestsFixture = class
   private
     FBot: TTelegramBotApi;
-  protected
+
   public
     [Setup]
     procedure Setup;
@@ -26,11 +26,19 @@ type
 
 implementation
 
+uses
+  System.SysUtils;
+
 { TTestsFixture }
 
 procedure TTestsFixture.Setup;
 begin
   FBot := TTelegramBotApi.Create(TTestData.Current.Config.BotToken);
+  FBot.CloudApi.RequestLimitManager.Add(500, 'GlobalTelegram 0.5sec', True);
+  FBot.CloudApi.RequestLimitManager.OnLimit := procedure(ANeedPause: Int64)
+    begin
+      Sleep(ANeedPause);
+    end;
 end;
 
 procedure TTestsFixture.TearDown;

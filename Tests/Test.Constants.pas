@@ -17,9 +17,19 @@ type
       end;
 
       Thumbnail = class
+      private
         class function Dir: string;
+      public
         class function Video: string;
         class function TheAbilityToBreak: string;
+      end;
+
+      Photos = class
+      private
+        class function PhotoDir: string;
+      public
+        class function Bot: string;
+        class function Logo: string;
       end;
     end;
   public
@@ -61,6 +71,23 @@ end;
 class function TtgConst.PathToFile.Thumbnail.Video: string;
 begin
   Result := Dir + 'video.jpg';
+end;
+
+{ TtgConst.PathToFile.Photos }
+
+class function TtgConst.PathToFile.Photos.Bot: string;
+begin
+  Result := PhotoDir + 'bot.gif';
+end;
+
+class function TtgConst.PathToFile.Photos.Logo: string;
+begin
+  Result := PhotoDir + 'logo.png';
+end;
+
+class function TtgConst.PathToFile.Photos.PhotoDir: string;
+begin
+  Result := FilesDir + 'Photo/';
 end;
 
 end.

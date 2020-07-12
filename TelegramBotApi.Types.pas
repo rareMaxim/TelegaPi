@@ -91,11 +91,24 @@ type
     [JsonName('file_size')]
     FFileSize: Int64;
   public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
     property FileId: string read FFileId write FFileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
     property FileUniqueId: string read FFileUniqueId write FFileUniqueId;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
     property FileSize: Int64 read FFileSize write FFileSize;
   end;
 
+  /// <summary>
+  /// This object represents one size of a photo or a file / sticker thumbnail
+  /// </summary>
   TtgPhotosize = class(TtgFileInfo)
   private
     [JsonName('width')]
@@ -103,7 +116,13 @@ type
     [JsonName('height')]
     FHeight: Int64;
   public
+    /// <summary>
+    /// Photo width
+    /// </summary>
     property Width: Int64 read FWidth write FWidth;
+    /// <summary>
+    /// Photo height
+    /// </summary>
     property Height: Int64 read FHeight write FHeight;
   end;
 
@@ -191,6 +210,7 @@ type
   TtgMessage = class
   private type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
+    TMessPhotoConv = class(TJsonListConverter<TtgPhotosize>);
   private
     [JsonName('chat')]
     FChat: TtgChat;
@@ -223,6 +243,12 @@ type
     FVideoNote: TtgVideoNote;
     [JsonName('venue')]
     FVenue: TtgVenue;
+    [JsonName('photo')]
+    [JsonConverter(TMessPhotoConv)]
+    FPhoto: TObjectList<TtgPhotosize>;
+    [JsonName('caption_entities')]
+    [JsonConverter(TMessEntConv)]
+    FCaptionEntities: TObjectList<TtgMessageEntity>;
     //
   public
     constructor Create;
@@ -239,9 +265,15 @@ type
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
+    property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
     property Video: TtgVideo read FVideo write FVideo;
     property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
     property Caption: string read FCaption write FCaption;
+    /// <summary>
+    /// Optional. For messages with a caption, special entities like usernames, URLs,
+    /// bot commands, etc. that appear in the caption
+    /// </summary>
+    property CaptionEntities: TObjectList<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
     /// <summary>
     /// Optional. Message is a venue, information about the venue. For backward
     /// compatibility, when this field is set, the location field will also be set
@@ -633,7 +665,8 @@ begin
     Exit(TtgMessageType.VideoNote)
   else if Assigned(Venue) then
     Exit(TtgMessageType.Venue)
-
+  else if Photo.Count > 0 then
+    Exit(TtgMessageType.Photo)
   else
     raise Exception.Create('Unknown TtgMessage.Type');
 end;
@@ -645,10 +678,14 @@ begin
   FChat := TtgChat.Create;
   FForwardFromChat := TtgChat.Create;
   FEntities := TObjectList<TtgMessageEntity>.Create;
+  FCaptionEntities := TObjectList<TtgMessageEntity>.Create;
+  FPhoto := TObjectList<TtgPhotosize>.Create;
 end;
 
 destructor TtgMessage.Destroy;
 begin
+  FPhoto.Free;
+  FCaptionEntities.Free;
   FEntities.Free;
   FFrom.Free;
   FChat.Free;

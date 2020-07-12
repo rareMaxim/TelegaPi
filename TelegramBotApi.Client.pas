@@ -25,6 +25,9 @@ type
     function GetMe: ItgResponse<TtgUser>;
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
     function ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send photos. On success, the sent Message is returned.
+    /// </summary>
     function SendPhoto(ASendPhotoArgument: TtgSendPhotoArgument): ItgResponse<TtgMessage>;
     function SendAudio(ASendAudioArgument: TtgSendAudioArgument): ItgResponse<TtgMessage>;
     function SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;
@@ -42,6 +45,7 @@ type
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     property BotToken: string read GetBotToken write SetBotToken;
+    property CloudApi: TCloudApiClient read FCloudApi write FCloudApi;
   end;
 
 implementation
