@@ -7,11 +7,11 @@
 
 uses
   System.SysUtils,
-{$IFDEF TESTINSIGHT}
+  {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-{$ELSE}
+  {$ELSE}
   DUnitX.Loggers.Console,
-{$ENDIF }
+  {$ENDIF }
   DUnitX.TestFramework,
   TelegramBotApi.Client in '..\TelegramBotApi.Client.pas',
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
@@ -19,9 +19,11 @@ uses
   Test.Config in 'Integ\Framework\Test.Config.pas',
   TelegramBot.TestFramework in 'TelegramBot.TestFramework.pas',
   Test.Data in 'Integ\Framework\Test.Data.pas',
-  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas',
   Test.Constants in 'Test.Constants.pas',
-  Sending_Messages in 'Integ\Sending Messages\Sending_Messages.pas';
+  Test.Assert in 'Integ\Framework\Test.Assert.pas',
+  Sending_Messages in 'Integ\Sending Messages\Sending_Messages.pas',
+  SendingVenueMessageTests in 'Integ\Sending Messages\SendingVenueMessageTests.pas',
+  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

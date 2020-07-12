@@ -129,10 +129,63 @@ type
     FDuration: Int64;
     [JsonName('thumb')]
     FThumb: TtgPhotosize;
-  published
+  public
     property Length: Int64 read FLength write FLength;
     property Duration: Int64 read FDuration write FDuration;
     property Thumb: TtgPhotosize read FThumb write FThumb;
+  end;
+
+  /// <summary>This object represents a point on the map.</summary>
+  TtgLocation = class
+  private
+    [JsonName('longitude')]
+    FLongitude: Single;
+    [JsonName('latitude')]
+    FLatitude: Single;
+  public
+    /// <summary>Longitude as defined by sender</summary>
+    property Longitude: Single read FLongitude write FLongitude;
+    /// <summary>
+    /// Latitude as defined by sender
+    /// </summary>
+    property Latitude: Single read FLatitude write FLatitude;
+  end;
+
+  /// <summary>
+  /// This object represents a venue.
+  /// </summary>
+  TtgVenue = class
+  private
+    [JsonName('location')]
+    FLocation: TtgLocation;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('address')]
+    FAddress: string;
+    [JsonName('foursquare_id')]
+    FFoursquareId: string;
+    [JsonName('foursquare_type')]
+    FFoursquareType: string;
+  public
+    /// <summary>
+    /// Venue location
+    /// </summary>
+    property Location: TtgLocation read FLocation write FLocation;
+    /// <summary>Name of the venue</summary>
+    property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Address of the venue
+    /// </summary>
+    property Address: string read FAddress write FAddress;
+    /// <summary>
+    /// Optional. Foursquare identifier of the venue
+    /// </summary>
+    property FoursquareId: string read FFoursquareId write FFoursquareId;
+    /// <summary>
+    /// Optional. Foursquare type of the venue. (For example,
+    /// “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
+    /// </summary>
+    property FoursquareType: string read FFoursquareType write FFoursquareType;
   end;
 
   TtgMessage = class
@@ -168,6 +221,8 @@ type
     FCaption: string;
     [JsonName('video_note')]
     FVideoNote: TtgVideoNote;
+    [JsonName('venue')]
+    FVenue: TtgVenue;
     //
   public
     constructor Create;
@@ -187,6 +242,11 @@ type
     property Video: TtgVideo read FVideo write FVideo;
     property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
     property Caption: string read FCaption write FCaption;
+    /// <summary>
+    /// Optional. Message is a venue, information about the venue. For backward
+    /// compatibility, when this field is set, the location field will also be set
+    /// </summary>
+    property Venue: TtgVenue read FVenue write FVenue;
   end;
 
   TtgChat = class
@@ -196,7 +256,7 @@ type
     [JsonName('type')]
     FType: string;
     [JsonName('title')]
-    Ftitle: string;
+    FTitle: string;
     [JsonName('username')]
     FUsername: string;
     [JsonName('first_name')]
@@ -220,7 +280,7 @@ type
   public
     property ID: Int64 read FID write FID;
     property &Type: string read FType write FType;
-    property Title: string read Ftitle write Ftitle;
+    property Title: string read FTitle write FTitle;
     property Username: string read FUsername write FUsername;
     property FirstName: string read FFirstName write FFirstName;
     property LastName: string read FLastName write FLastName;
@@ -571,6 +631,8 @@ begin
     Exit(TtgMessageType.Video)
   else if Assigned(VideoNote) then
     Exit(TtgMessageType.VideoNote)
+  else if Assigned(Venue) then
+    Exit(TtgMessageType.Venue)
 
   else
     raise Exception.Create('Unknown TtgMessage.Type');
@@ -683,8 +745,7 @@ end;
 
 { TtgInputMedia }
 
-constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string;
-  const AParseMode: TtgParseMode);
+constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
 begin
   FCaption := ACaption;
   FParseMode := TG_PARSE_MODES[Ord(AParseMode)];
