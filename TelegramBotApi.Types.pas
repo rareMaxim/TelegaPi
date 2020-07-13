@@ -207,6 +207,44 @@ type
     property FoursquareType: string read FFoursquareType write FFoursquareType;
   end;
 
+  /// <summary>
+  /// This object represents a phone contact.
+  /// </summary>
+  TtgContact = class
+  private
+    [JsonName('phone_number')]
+    FPhoneNumber: string;
+    [JsonName('first_name')]
+    FFirstName: string;
+    [JsonName('last_name')]
+    FLastName: string;
+    [JsonName('user_id')]
+    FUserId: Int64;
+    [JsonName('vcard')]
+    FVCard: string;
+  public
+    /// <summary>
+    /// Contact's phone number
+    /// </summary>
+    property PhoneNumber: string read FPhoneNumber write FPhoneNumber;
+    /// <summary>
+    /// Contact's first name
+    /// </summary>
+    property FirstName: string read FFirstName write FFirstName;
+    /// <summary>
+    /// Optional. Contact's last name
+    /// </summary>
+    property LastName: string read FLastName write FLastName;
+    /// <summary>
+    /// Optional. Contact's user identifier in Telegram
+    /// </summary>
+    property UserId: Int64 read FUserId write FUserId;
+    /// <summary>
+    /// Optional. Additional data about the contact in the form of a vCard
+    /// </summary>
+    property VCard: string read FVCard write FVCard;
+  end;
+
   TtgMessage = class
   private type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
