@@ -287,7 +287,8 @@ type
     [JsonName('caption_entities')]
     [JsonConverter(TMessEntConv)]
     FCaptionEntities: TObjectList<TtgMessageEntity>;
-    //
+    [JsonName('contact')]
+    FContact: TtgContact;
   public
     constructor Create;
     destructor Destroy; override;
@@ -312,6 +313,10 @@ type
     /// bot commands, etc. that appear in the caption
     /// </summary>
     property CaptionEntities: TObjectList<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
+    /// <summary>
+    /// Optional. Message is a shared contact, information about the contact
+    /// </summary>
+    property Contact: TtgContact read FContact write FContact;
     /// <summary>
     /// Optional. Message is a venue, information about the venue. For backward
     /// compatibility, when this field is set, the location field will also be set
