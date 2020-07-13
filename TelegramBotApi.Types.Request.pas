@@ -339,6 +339,49 @@ type
     class function Default: TtgSendVideoArgument; static;
   end;
 
+  /// <summary>
+  /// Use this method to send phone contacts. On success, the sent Message is returned.
+  /// </summary>
+  [caName('sendContact')]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  TtgSendContactArgument = record
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    [caName('phone_number')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>Contact's phone number</summary>
+    PhoneNumber: string;
+    [caName('first_name')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>Contact's first name</summary>
+    FirstName: string;
+    [caName('last_name')]
+    [caDefaultValueString('')]
+    /// <summary>Contact's last name</summary>
+    LastName: string;
+    [caName('vcard')]
+    [caDefaultValueString('')]
+    /// <summary>Additional data about the contact in the form of a vCard, 0-2048 bytes</summary>
+    VCard: string;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_notification')]
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    DisableNotification: Boolean;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    ReplyToMessageId: Int64;
+    class function Default: TtgSendContactArgument; static;
+  end;
+
   [caName('sendAnimation')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.QueryString)]
@@ -853,6 +896,19 @@ begin
   Result.Address := '';
   Result.FoursquareId := '';
   Result.FoursquareType := '';
+  Result.DisableNotification := False;
+  Result.ReplyToMessageId := 0;
+end;
+
+{ TtgSendContactArgument }
+
+class function TtgSendContactArgument.Default: TtgSendContactArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
+  Result.PhoneNumber := '';
+  Result.FirstName := '';
+  Result.LastName := '';
+  Result.VCard := '';
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
 end;
