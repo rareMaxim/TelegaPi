@@ -20,7 +20,11 @@ uses
   Test.Data in 'Integ\Framework\Test.Data.pas',
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
-  SendingPhotoMessageTests in 'Integ\Sending Messages\SendingPhotoMessageTests.pas';
+  Sending_Messages in 'Integ\Sending Messages\Sending_Messages.pas',
+  SendingContactMessageTests in 'Integ\Sending Messages\SendingContactMessageTests.pas',
+  SendingPhotoMessageTests in 'Integ\Sending Messages\SendingPhotoMessageTests.pas',
+  SendingVenueMessageTests in 'Integ\Sending Messages\SendingVenueMessageTests.pas',
+  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

@@ -85,7 +85,11 @@
         <DCCReference Include="Integ\Framework\Test.Data.pas"/>
         <DCCReference Include="Test.Constants.pas"/>
         <DCCReference Include="Integ\Framework\Test.Assert.pas"/>
+        <DCCReference Include="Integ\Sending Messages\Sending_Messages.pas"/>
+        <DCCReference Include="Integ\Sending Messages\SendingContactMessageTests.pas"/>
         <DCCReference Include="Integ\Sending Messages\SendingPhotoMessageTests.pas"/>
+        <DCCReference Include="Integ\Sending Messages\SendingVenueMessageTests.pas"/>
+        <DCCReference Include="Integ\Sending Messages\VideoMessageTests.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

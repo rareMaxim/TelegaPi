@@ -207,6 +207,44 @@ type
     property FoursquareType: string read FFoursquareType write FFoursquareType;
   end;
 
+  /// <summary>
+  /// This object represents a phone contact.
+  /// </summary>
+  TtgContact = class
+  private
+    [JsonName('phone_number')]
+    FPhoneNumber: string;
+    [JsonName('first_name')]
+    FFirstName: string;
+    [JsonName('last_name')]
+    FLastName: string;
+    [JsonName('user_id')]
+    FUserId: Int64;
+    [JsonName('vcard')]
+    FVCard: string;
+  public
+    /// <summary>
+    /// Contact's phone number
+    /// </summary>
+    property PhoneNumber: string read FPhoneNumber write FPhoneNumber;
+    /// <summary>
+    /// Contact's first name
+    /// </summary>
+    property FirstName: string read FFirstName write FFirstName;
+    /// <summary>
+    /// Optional. Contact's last name
+    /// </summary>
+    property LastName: string read FLastName write FLastName;
+    /// <summary>
+    /// Optional. Contact's user identifier in Telegram
+    /// </summary>
+    property UserId: Int64 read FUserId write FUserId;
+    /// <summary>
+    /// Optional. Additional data about the contact in the form of a vCard
+    /// </summary>
+    property VCard: string read FVCard write FVCard;
+  end;
+
   TtgMessage = class
   private type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
@@ -249,7 +287,8 @@ type
     [JsonName('caption_entities')]
     [JsonConverter(TMessEntConv)]
     FCaptionEntities: TObjectList<TtgMessageEntity>;
-    //
+    [JsonName('contact')]
+    FContact: TtgContact;
   public
     constructor Create;
     destructor Destroy; override;
@@ -274,6 +313,10 @@ type
     /// bot commands, etc. that appear in the caption
     /// </summary>
     property CaptionEntities: TObjectList<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
+    /// <summary>
+    /// Optional. Message is a shared contact, information about the contact
+    /// </summary>
+    property Contact: TtgContact read FContact write FContact;
     /// <summary>
     /// Optional. Message is a venue, information about the venue. For backward
     /// compatibility, when this field is set, the location field will also be set

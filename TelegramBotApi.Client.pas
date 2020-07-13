@@ -37,6 +37,7 @@ type
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
     function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
+    function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
@@ -125,6 +126,11 @@ end;
 function TTelegramBotApi.SendAudio(ASendAudioArgument: TtgSendAudioArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendAudioArgument, TtgMessage>(ASendAudioArgument);
+end;
+
+function TTelegramBotApi.SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgSendContactArgument, TtgMessage>(ASendContactArgument);
 end;
 
 function TTelegramBotApi.SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;
