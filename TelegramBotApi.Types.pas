@@ -361,6 +361,7 @@ type
     FCaptionEntities: TObjectList<TtgMessageEntity>;
     [JsonName('contact')]
     FContact: TtgContact;
+    [JsonName('document')]
     FDocument: TtgDocument;
     [JsonName('audio')]
     FAudio: TtgAudio;
@@ -803,6 +804,8 @@ begin
     Exit(TtgMessageType.Audio)
   else if Assigned(Voice) then
     Exit(TtgMessageType.Voice)
+  else if Assigned(Document) then
+    Exit(TtgMessageType.Document)
   else
     raise Exception.Create('Unknown TtgMessage.Type');
 end;
