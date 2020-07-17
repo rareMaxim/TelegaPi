@@ -16,6 +16,8 @@ type
   public
     [Test]
     procedure Should_Send_Audio;
+    [Test]
+    procedure Should_Send_Audio_With_Thumb;
   end;
 
 implementation
@@ -54,6 +56,29 @@ begin
   Assert.IsNotEmpty(LMessage.Audio.FileId);
   Assert.IsNotEmpty(LMessage.Audio.FileUniqueId);
   Assert.IsTrue(LMessage.Audio.FileSize > 200);
+end;
+
+procedure TAudioMessageTests.Should_Send_Audio_With_Thumb;
+var
+  LAudioArgument: TtgSendAudioArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LAudioArgument := TtgSendAudioArgument.Default;
+  LAudioArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+  LAudioArgument.Audio := TtgConst.PathToFile.Audio.AStateOfDespairMp3;
+  LAudioArgument.Thumb := TtgConst.PathToFile.Thumbnail.TheAbilityToBreak;
+
+  LResult := Bot.SendAudio(LAudioArgument);
+  Assert.AreEqual(True, LResult.Ok, LResult.Description);
+  LMessage := LResult.Result;
+
+  Assert.IsNotNull(LMessage.Audio.Thumb);
+  Assert.IsNotEmpty(LMessage.Audio.Thumb.FileId);
+  Assert.IsNotEmpty(LMessage.Audio.Thumb.FileUniqueId);
+  Assert.AreEqual(Int64(90), LMessage.Audio.Thumb.Width);
+  Assert.AreEqual(Int64(90), LMessage.Audio.Thumb.Height);
+  Assert.IsTrue(LMessage.Audio.Thumb.FileSize > 10000);
 end;
 
 end.
