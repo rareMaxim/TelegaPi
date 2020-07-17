@@ -152,6 +152,44 @@ type
     property MimeType: string read FMimeType write FMimeType;
   end;
 
+  /// <summary>
+  /// This object represents an audio file to be treated as music by the Telegram clients.
+  /// </summary>
+  TtgAudio = class(TtgFileInfo)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+    [JsonName('mime_type')]
+    FMimeType: string;
+    [JsonName('performer')]
+    FPerformer: string;
+    FTitle: string;
+    // [JsonName('title')]
+  public
+    /// <summary>
+    /// Duration of the audio in seconds as defined by sender
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. Performer of the audio as defined by sender or by audio tags
+    /// </summary>
+    property Performer: string read FPerformer write FPerformer;
+    /// <summary>
+    /// Optional. Title of the audio as defined by sender or by audio tags
+    /// </summary>
+    property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Optional. Thumbnail of the album cover to which the music file belongs
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
   TtgVideo = class(TtgPhotosize)
   private
     [JsonName('duration')]
@@ -316,6 +354,8 @@ type
     [JsonName('contact')]
     FContact: TtgContact;
     FDocument: TtgDocument;
+    [JsonName('audio')]
+    FAudio: TtgAudio;
   public
     constructor Create;
     destructor Destroy; override;
@@ -331,6 +371,10 @@ type
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
+    /// <summary>
+    /// Optional. Message is an audio file, information about the file
+    /// </summary>
+    property Audio: TtgAudio read FAudio write FAudio;
     /// <summary>
     /// Optional. Message is a general file, information about the file
     /// </summary>
