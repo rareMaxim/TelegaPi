@@ -102,10 +102,10 @@ begin
   Assert.AreEqual(TtgMessageType.Voice, LMessage.&Type);
   Assert.AreEqual(LAudioArgument.Caption, LMessage.Caption);
   Assert.AreEqual(LAudioArgument.Duration, LMessage.Voice.Duration);
-  Assert.AreEqual('audio/ogg', LMessage.Audio.MimeType);
-  Assert.IsNotEmpty(LMessage.Audio.FileId);
-  Assert.IsNotEmpty(LMessage.Audio.FileUniqueId);
-  Assert.IsTrue(LMessage.Audio.FileSize > 200);
+  Assert.AreEqual('audio/ogg', LMessage.Voice.MimeType);
+  Assert.IsNotEmpty(LMessage.Voice.FileId);
+  Assert.IsNotEmpty(LMessage.Voice.FileUniqueId);
+  Assert.IsTrue(LMessage.Voice.FileSize > 200);
 end;
 
 end.
