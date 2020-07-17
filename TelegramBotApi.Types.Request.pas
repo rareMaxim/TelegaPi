@@ -244,6 +244,7 @@ type
     Thumb: TcaFileToSend;
     [caName('caption')]
     [caDefaultValueStringAttribute('')]
+    [caParameterType(TcaParameterType.GetOrPost)]
     /// <summary>
     /// Document caption (may also be used when resending documents by file_id), 0-1024
     /// characters after entities parsing
