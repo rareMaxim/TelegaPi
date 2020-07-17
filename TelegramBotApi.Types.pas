@@ -126,6 +126,32 @@ type
     property Height: Int64 read FHeight write FHeight;
   end;
 
+  /// <summary>
+  /// This object represents a general file (as opposed to photos, voice messages and audio files).
+  /// </summary>
+  TtgDocument = class(TtgFileInfo)
+  private
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+    [JsonName('file_name')]
+    FFilename: string;
+    [JsonName('mime_type')]
+    FMimeType: string;
+  public
+    /// <summary>
+    /// Optional. Document thumbnail as defined by sender
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Original filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
   TtgVideo = class(TtgPhotosize)
   private
     [JsonName('duration')]
@@ -289,6 +315,7 @@ type
     FCaptionEntities: TObjectList<TtgMessageEntity>;
     [JsonName('contact')]
     FContact: TtgContact;
+    FDocument: TtgDocument;
   public
     constructor Create;
     destructor Destroy; override;
@@ -304,6 +331,10 @@ type
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
+    /// <summary>
+    /// Optional. Message is a general file, information about the file
+    /// </summary>
+    property Document: TtgDocument read FDocument write FDocument;
     property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
     property Video: TtgVideo read FVideo write FVideo;
     property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;

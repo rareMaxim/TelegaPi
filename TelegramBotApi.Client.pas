@@ -16,7 +16,6 @@ type
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
-    FVersion: string;
     function GetBotToken: string;
     procedure SetBotToken(const Value: string);
   protected

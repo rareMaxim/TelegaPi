@@ -36,7 +36,6 @@ function TtgMessageEntityTypeConverter.ReadJson(const AReader: TJsonReader; ATyp
   const AExistingValue: TValue; const ASerializer: TJsonSerializer): TValue;
 var
   LEnumValue: TtgMessageEntityType;
-  TypeData: PTypeData;
 begin
   LEnumValue := TtgMessageEntityType.FromString(AReader.Value.AsString);
   TValue.Make(@LEnumValue, ATypeInf, Result);

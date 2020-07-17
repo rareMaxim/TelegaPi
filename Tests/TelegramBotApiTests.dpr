@@ -24,7 +24,8 @@ uses
   SendingContactMessageTests in 'Integ\Sending Messages\SendingContactMessageTests.pas',
   SendingPhotoMessageTests in 'Integ\Sending Messages\SendingPhotoMessageTests.pas',
   SendingVenueMessageTests in 'Integ\Sending Messages\SendingVenueMessageTests.pas',
-  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas';
+  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas',
+  DocumentMessageTests in 'Integ\Sending Messages\DocumentMessageTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

@@ -31,6 +31,13 @@ type
         class function Bot: string;
         class function Logo: string;
       end;
+
+      Documents = class
+      private
+        class function DocumentDir: string;
+      public
+        class function Hamlet: string;
+      end;
     end;
   public
 
@@ -88,6 +95,18 @@ end;
 class function TtgConst.PathToFile.Photos.PhotoDir: string;
 begin
   Result := FilesDir + 'Photo/';
+end;
+
+{ TtgConst.PathToFile.Documents }
+
+class function TtgConst.PathToFile.Documents.DocumentDir: string;
+begin
+  Result := FilesDir + 'Document/';
+end;
+
+class function TtgConst.PathToFile.Documents.Hamlet: string;
+begin
+  Result := DocumentDir + 'hamlet.pdf';
 end;
 
 end.

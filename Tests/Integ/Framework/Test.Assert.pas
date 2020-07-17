@@ -14,7 +14,8 @@ type
 implementation
 
 uses
-  System.Math;
+  System.Math,
+  System.SysUtils;
 { TgAssert }
 
 class procedure TgAssert.InRange(actual, low, hight: single; const message: string = '');

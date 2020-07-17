@@ -29,7 +29,6 @@ type
     class destructor Destroy;
     class function Current: TTestData;
     procedure AfterConstruction; override;
-  published
     property Config: TConfigFile read FConfig write FConfig;
     property BotUser: TtgUser read FBotUser write FBotUser;
     property SupergroupChat: TtgChat read FSupergroupChat write FSupergroupChat;
