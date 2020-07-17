@@ -152,6 +152,52 @@ type
     property MimeType: string read FMimeType write FMimeType;
   end;
 
+  /// <summary>
+  /// This object represents a voice note.
+  /// </summary>
+  TtgVoice = class(TtgFileInfo)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('mime_type')]
+    FMimeType: string;
+  public
+    /// <summary>
+    /// Duration of the audio in seconds as defined by sender
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
+  /// <summary>
+  /// This object represents an audio file to be treated as music by the Telegram clients.
+  /// </summary>
+  TtgAudio = class(TtgVoice)
+  private
+    [JsonName('performer')]
+    FPerformer: string;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+  public
+    /// <summary>
+    /// Optional. Performer of the audio as defined by sender or by audio tags
+    /// </summary>
+    property Performer: string read FPerformer write FPerformer;
+    /// <summary>
+    /// Optional. Title of the audio as defined by sender or by audio tags
+    /// </summary>
+    property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Optional. Thumbnail of the album cover to which the music file belongs
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+  end;
+
   TtgVideo = class(TtgPhotosize)
   private
     [JsonName('duration')]
@@ -316,6 +362,10 @@ type
     [JsonName('contact')]
     FContact: TtgContact;
     FDocument: TtgDocument;
+    [JsonName('audio')]
+    FAudio: TtgAudio;
+    [JsonName('voice')]
+    FVoice: TtgVoice;
   public
     constructor Create;
     destructor Destroy; override;
@@ -332,12 +382,20 @@ type
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
     /// <summary>
+    /// Optional. Message is an audio file, information about the file
+    /// </summary>
+    property Audio: TtgAudio read FAudio write FAudio;
+    /// <summary>
     /// Optional. Message is a general file, information about the file
     /// </summary>
     property Document: TtgDocument read FDocument write FDocument;
     property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
     property Video: TtgVideo read FVideo write FVideo;
     property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
+    /// <summary>
+    /// Optional. Message is a voice message, information about the file
+    /// </summary>
+    property Voice: TtgVoice read FVoice write FVoice;
     property Caption: string read FCaption write FCaption;
     /// <summary>
     /// Optional. For messages with a caption, special entities like usernames, URLs,
@@ -741,6 +799,10 @@ begin
     Exit(TtgMessageType.Venue)
   else if Photo.Count > 0 then
     Exit(TtgMessageType.Photo)
+  else if Assigned(Audio) then
+    Exit(TtgMessageType.Audio)
+  else if Assigned(Voice) then
+    Exit(TtgMessageType.Voice)
   else
     raise Exception.Create('Unknown TtgMessage.Type');
 end;
