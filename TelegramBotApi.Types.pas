@@ -361,6 +361,7 @@ type
     FCaptionEntities: TObjectList<TtgMessageEntity>;
     [JsonName('contact')]
     FContact: TtgContact;
+    [JsonName('document')]
     FDocument: TtgDocument;
     [JsonName('audio')]
     FAudio: TtgAudio;
