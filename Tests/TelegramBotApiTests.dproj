@@ -91,6 +91,7 @@
         <DCCReference Include="Integ\Sending Messages\SendingVenueMessageTests.pas"/>
         <DCCReference Include="Integ\Sending Messages\VideoMessageTests.pas"/>
         <DCCReference Include="Integ\Sending Messages\DocumentMessageTests.pas"/>
+        <DCCReference Include="Integ\Sending Messages\AudioMessageTests.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
