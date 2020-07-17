@@ -38,6 +38,15 @@ type
       public
         class function Hamlet: string;
       end;
+
+      Audio = class
+      private
+        class function AudioDir: string;
+      public
+        class function AStateOfDespairMp3: string;
+        class function CantinaRagMp3: string;
+        class function TestOgg: string;
+      end;
     end;
   public
 
@@ -107,6 +116,28 @@ end;
 class function TtgConst.PathToFile.Documents.Hamlet: string;
 begin
   Result := DocumentDir + 'hamlet.pdf';
+end;
+
+{ TtgConst.PathToFile.Audio }
+
+class function TtgConst.PathToFile.Audio.AStateOfDespairMp3: string;
+begin
+  Result := AudioDir + 'Ask Again - A State of Despair.mp3';
+end;
+
+class function TtgConst.PathToFile.Audio.AudioDir: string;
+begin
+  Result := FilesDir + 'Audio/';
+end;
+
+class function TtgConst.PathToFile.Audio.CantinaRagMp3: string;
+begin
+  Result := AudioDir + 'Jackson F Smith - Cantina Rag.mp3';
+end;
+
+class function TtgConst.PathToFile.Audio.TestOgg: string;
+begin
+  Result := AudioDir + 'Test.ogg';
 end;
 
 end.
