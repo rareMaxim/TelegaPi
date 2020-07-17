@@ -153,25 +153,37 @@ type
   end;
 
   /// <summary>
-  /// This object represents an audio file to be treated as music by the Telegram clients.
+  /// This object represents a voice note.
   /// </summary>
-  TtgAudio = class(TtgFileInfo)
+  TtgVoice = class(TtgFileInfo)
   private
     [JsonName('duration')]
     FDuration: Int64;
-    [JsonName('thumb')]
-    FThumb: TtgPhotosize;
     [JsonName('mime_type')]
     FMimeType: string;
-    [JsonName('performer')]
-    FPerformer: string;
-    FTitle: string;
-    // [JsonName('title')]
   public
     /// <summary>
     /// Duration of the audio in seconds as defined by sender
     /// </summary>
     property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
+  /// <summary>
+  /// This object represents an audio file to be treated as music by the Telegram clients.
+  /// </summary>
+  TtgAudio = class(TtgVoice)
+  private
+    [JsonName('performer')]
+    FPerformer: string;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+  public
     /// <summary>
     /// Optional. Performer of the audio as defined by sender or by audio tags
     /// </summary>
@@ -184,10 +196,6 @@ type
     /// Optional. Thumbnail of the album cover to which the music file belongs
     /// </summary>
     property Thumb: TtgPhotosize read FThumb write FThumb;
-    /// <summary>
-    /// Optional. MIME type of the file as defined by sender
-    /// </summary>
-    property MimeType: string read FMimeType write FMimeType;
   end;
 
   TtgVideo = class(TtgPhotosize)
@@ -356,6 +364,8 @@ type
     FDocument: TtgDocument;
     [JsonName('audio')]
     FAudio: TtgAudio;
+    [JsonName('voice')]
+    FVoice: TtgVoice;
   public
     constructor Create;
     destructor Destroy; override;
@@ -382,6 +392,10 @@ type
     property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
     property Video: TtgVideo read FVideo write FVideo;
     property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
+    /// <summary>
+    /// Optional. Message is a voice message, information about the file
+    /// </summary>
+    property Voice: TtgVoice read FVoice write FVoice;
     property Caption: string read FCaption write FCaption;
     /// <summary>
     /// Optional. For messages with a caption, special entities like usernames, URLs,
