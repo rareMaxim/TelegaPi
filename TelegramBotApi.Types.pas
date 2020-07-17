@@ -799,6 +799,10 @@ begin
     Exit(TtgMessageType.Venue)
   else if Photo.Count > 0 then
     Exit(TtgMessageType.Photo)
+  else if Assigned(Audio) then
+    Exit(TtgMessageType.Audio)
+  else if Assigned(Voice) then
+    Exit(TtgMessageType.Voice)
   else
     raise Exception.Create('Unknown TtgMessage.Type');
 end;
