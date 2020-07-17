@@ -33,7 +33,8 @@ uses
   Test.Constants,
   TelegramBotApi.Types,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Request;
+  TelegramBotApi.Types.Request,
+  Test.Assert;
 
 { TSendingVideoMessageTests }
 
@@ -66,7 +67,7 @@ begin
   Assert.IsTrue(LMessage.Video.Thumb.FileSize > 200);
   Assert.AreEqual(LVideoArgument.Width, LMessage.Video.Thumb.Width);
   Assert.AreEqual(LVideoArgument.Height, LMessage.Video.Thumb.Height);
-  Assert.IsTrue((LMessage.Video.Thumb.FileSize >= 600) and (LMessage.Video.Thumb.FileSize <= 900));
+  TgAssert.InRange(LMessage.Video.Thumb.FileSize, 600, 900);
 end;
 
 procedure TSendingVideoMessageTests.Should_Send_Video_Note;
@@ -92,7 +93,7 @@ begin
   Assert.IsNotEmpty(LMessage.VideoNote.Thumb.FileUniqueId);
   Assert.AreEqual(LVideoArgument.Length, LMessage.Video.Thumb.Width);
   Assert.AreEqual(LVideoArgument.Length, LMessage.Video.Thumb.Height);
-  Assert.IsTrue((LMessage.Video.Thumb.FileSize >= 1000) and (LMessage.Video.Thumb.FileSize <= 1500));
+  TgAssert.InRange(LMessage.Video.Thumb.FileSize, 1000, 1500);
 end;
 
 procedure TSendingVideoMessageTests.Should_Send_Video_Note_With_Thumb;
@@ -113,7 +114,7 @@ begin
   Assert.IsNotEmpty(LMessage.VideoNote.Thumb.FileUniqueId);
   Assert.AreEqual(Int64(240), LMessage.VideoNote.Thumb.Width);
   Assert.AreEqual(Int64(240), LMessage.VideoNote.Thumb.Height);
-  Assert.IsTrue((LMessage.Video.Thumb.FileSize >= 1000) and (LMessage.Video.Thumb.FileSize <= 1500));
+  TgAssert.InRange(LMessage.Video.Thumb.FileSize, 1000, 1500);
 end;
 
 procedure TSendingVideoMessageTests.Should_Send_Video_With_Thumb;
@@ -134,7 +135,7 @@ begin
   Assert.IsNotEmpty(LMessage.Video.Thumb.FileUniqueId);
   Assert.AreEqual(Int64(320), LMessage.Video.Thumb.Width);
   Assert.AreEqual(Int64(240), LMessage.Video.Thumb.Height);
-  Assert.IsTrue((LMessage.Video.Thumb.FileSize >= 600) and (LMessage.Video.Thumb.FileSize <= 900));
+  TgAssert.InRange(LMessage.Video.Thumb.FileSize, 600, 900);
 end;
 
 end.
