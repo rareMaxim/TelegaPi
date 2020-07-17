@@ -18,6 +18,8 @@ type
     procedure Should_Send_Audio;
     [Test]
     procedure Should_Send_Audio_With_Thumb;
+    [Test]
+    procedure Should_Send_Voice;
   end;
 
 implementation
@@ -79,6 +81,31 @@ begin
   Assert.AreEqual(Int64(90), LMessage.Audio.Thumb.Width);
   Assert.AreEqual(Int64(90), LMessage.Audio.Thumb.Height);
   Assert.IsTrue(LMessage.Audio.Thumb.FileSize > 10000);
+end;
+
+procedure TAudioMessageTests.Should_Send_Voice;
+var
+  LAudioArgument: TtgSendVoiceArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LAudioArgument := TtgSendVoiceArgument.Default;
+  LAudioArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+  LAudioArgument.Voice := TtgConst.PathToFile.Audio.TestOgg;
+  LAudioArgument.Caption := 'Test Voice in .ogg format';
+  LAudioArgument.Duration := 24;
+
+  LResult := Bot.SendVoice(LAudioArgument);
+  Assert.AreEqual(True, LResult.Ok, LResult.Description);
+  LMessage := LResult.Result;
+
+  Assert.AreEqual(TtgMessageType.Voice, LMessage.&Type);
+  Assert.AreEqual(LAudioArgument.Caption, LMessage.Caption);
+  Assert.AreEqual(LAudioArgument.Duration, LMessage.Voice.Duration);
+  Assert.AreEqual('audio/ogg', LMessage.Audio.MimeType);
+  Assert.IsNotEmpty(LMessage.Audio.FileId);
+  Assert.IsNotEmpty(LMessage.Audio.FileUniqueId);
+  Assert.IsTrue(LMessage.Audio.FileSize > 200);
 end;
 
 end.
