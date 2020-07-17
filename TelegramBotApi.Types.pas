@@ -803,6 +803,8 @@ begin
     Exit(TtgMessageType.Audio)
   else if Assigned(Voice) then
     Exit(TtgMessageType.Voice)
+  else if Assigned(Document) then
+    Exit(TtgMessageType.Document)
   else
     raise Exception.Create('Unknown TtgMessage.Type');
 end;
