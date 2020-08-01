@@ -43,7 +43,7 @@ type
 
     destructor Destroy; override;
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
-    function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
+    class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     property BotToken: string read GetBotToken write SetBotToken;
     property CloudApi: TCloudApiClient read FCloudApi write FCloudApi;
   end;
@@ -104,9 +104,9 @@ begin
   Result := InternalExecute < TtgGetUpdatesArgument, TArray < TtgUpdate >> (AGetUpdatesArgument);
 end;
 
-function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
+class function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
 begin
-  Result := FCloudApi.Serializer.Deserialize < TtgResponse < TArray<TtgUpdate> >> (AJson);
+  Result := TCloudApiClient.Serializer.Deserialize < TtgResponse < TArray<TtgUpdate> >> (AJson);
 end;
 
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;

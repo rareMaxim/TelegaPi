@@ -52,15 +52,9 @@ end;
 procedure TTgBotUpdateParser.ParseResponse(const JSON: string);
 var
   LUpdates: ItgResponse<TArray<TtgUpdate>>;
-  LBot: TTelegramBotApi;
 begin
-  LBot := TTelegramBotApi.Create();
-  try
-    LUpdates := LBot.GetUpdates(JSON);
-    EventParser(LUpdates.Result);
-  finally
-    FreeAndNil(LBot);
-  end;
+  LUpdates := TTelegramBotApi.GetUpdates(JSON);
+  EventParser(LUpdates.Result);
 end;
 
 procedure TTgBotUpdateParser.TypeUpdate(AUpdate: TtgUpdate);
