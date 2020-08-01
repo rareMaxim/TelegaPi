@@ -112,9 +112,12 @@ end;
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;
 var
   LReq: IcaRequest;
+  LCloudResponse: IcaResponse<TtgResponse<TResult>>;
 begin
   LReq := TcaRequestArgument.ObjToRequest<TArgument>(AArgument);
-  Result := FCloudApi.Execute < TtgResponse < TResult >> (LReq).Data;
+  LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (LReq);
+  Result := LCloudResponse.Data;
+  Result.CloudResponse := LCloudResponse;
 end;
 
 function TTelegramBotApi.SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;

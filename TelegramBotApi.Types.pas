@@ -4,6 +4,7 @@ interface
 
 uses
   CloudAPI.Json.Converters,
+  CloudAPI.Response,
   CloudAPI.Types,
   System.Generics.Collections,
   System.Json.Converters,
@@ -607,20 +608,27 @@ type
     // private
     function GetResult: T;
     procedure SetResult(const Value: T);
+    function GetResponse: IcaResponseBase;
+    procedure SetResponse(const Value: IcaResponseBase);
     // public
     property Result: T read GetResult write SetResult;
+    property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
 
   TtgResponse<T> = class(TtgResponseBase, ItgResponse<T>)
   private
     [JsonName('result')]
     FResult: T;
+    FResponse: IcaResponseBase;
     function GetResult: T;
     procedure SetResult(const Value: T);
+    function GetResponse: IcaResponseBase;
+    procedure SetResponse(const Value: IcaResponseBase);
   public
     constructor Create;
     destructor Destroy; override;
     property Result: T read GetResult write SetResult;
+    property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
 
   TtgUserLink = record
@@ -716,12 +724,22 @@ begin
   inherited Destroy;
 end;
 
+function TtgResponse<T>.GetResponse: IcaResponseBase;
+begin
+  Result := FResponse;
+end;
+
 function TtgResponse<T>.GetResult: T;
 begin
   Result := FResult;
 end;
 
 { TtgResponse<T> }
+
+procedure TtgResponse<T>.SetResponse(const Value: IcaResponseBase);
+begin
+  FResponse := Value;
+end;
 
 procedure TtgResponse<T>.SetResult(const Value: T);
 begin
