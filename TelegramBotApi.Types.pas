@@ -139,6 +139,8 @@ type
     [JsonName('mime_type')]
     FMimeType: string;
   public
+    constructor Create;
+    destructor Destroy; override;
     /// <summary>
     /// Optional. Document thumbnail as defined by sender
     /// </summary>
@@ -185,6 +187,8 @@ type
     [JsonName('thumb')]
     FThumb: TtgPhotosize;
   public
+    constructor Create;
+    destructor Destroy; override;
     /// <summary>
     /// Optional. Performer of the audio as defined by sender or by audio tags
     /// </summary>
@@ -208,6 +212,8 @@ type
     [JsonName('mime_type')]
     FMimeType: string;
   public
+    constructor Create;
+    destructor Destroy; override;
     property Duration: Int64 read FDuration write FDuration;
     property Thumb: TtgPhotosize read FThumb write FThumb;
     property MimeType: string read FMimeType write FMimeType;
@@ -237,6 +243,8 @@ type
     [JsonName('thumb')]
     FThumb: TtgPhotosize;
   public
+    constructor Create;
+    destructor Destroy; override;
     property Length: Int64 read FLength write FLength;
     property Duration: Int64 read FDuration write FDuration;
     property Thumb: TtgPhotosize read FThumb write FThumb;
@@ -274,6 +282,8 @@ type
     [JsonName('foursquare_type')]
     FFoursquareType: string;
   public
+    constructor Create;
+    destructor Destroy; override;
     /// <summary>
     /// Venue location
     /// </summary>
@@ -385,7 +395,6 @@ type
     FAudio: TtgAudio;
     [JsonName('voice')]
     FVoice: TtgVoice;
-
   public
     constructor Create;
     destructor Destroy; override;
@@ -439,6 +448,10 @@ type
     property Venue: TtgVenue read FVenue write FVenue;
   end;
 
+  TtgChatPhoto = class
+
+  end;
+
   TtgChat = class
   private
     [JsonName('id')]
@@ -454,7 +467,7 @@ type
     [JsonName('last_name')]
     FLastName: string;
     [JsonName('photo')]
-    FPhoto: TObject;
+    FPhoto: TtgChatPhoto;
     [JsonName('description')]
     FDescription: string;
     [JsonName('invite_link')]
@@ -468,13 +481,15 @@ type
     [JsonName('can_set_sticker_set')]
     FCanSetStickerSet: Boolean;
   public
+    constructor Create;
+    destructor Destroy; override;
     property ID: Int64 read FID write FID;
     property &Type: string read FType write FType;
     property Title: string read FTitle write FTitle;
     property Username: string read FUsername write FUsername;
     property FirstName: string read FFirstName write FFirstName;
     property LastName: string read FLastName write FLastName;
-    property Photo: TObject read FPhoto write FPhoto;
+    property Photo: TtgChatPhoto read FPhoto write FPhoto;
     property Description: string read FDescription write FDescription;
     property InviteLink: string read FInviteLink write FInviteLink;
     property PinnedMessage: TtgMessage read FPinnedMessage write FPinnedMessage;
@@ -930,18 +945,42 @@ begin
   FEntities := TObjectList<TtgMessageEntity>.Create;
   FCaptionEntities := TObjectList<TtgMessageEntity>.Create;
   FPhoto := TObjectList<TtgPhotosize>.Create;
-  FAnimation := TtgAnimation.Create;
 end;
 
 destructor TtgMessage.Destroy;
 begin
-  FAnimation.Free;
-  FPhoto.Free;
+  case &Type of
+    TtgMessageType.Photo:
+      FPhoto.Clear;
+    TtgMessageType.Audio:
+      FAudio.Free;
+    TtgMessageType.Video:
+      FVideo.Free;
+    TtgMessageType.VideoNote:
+      FVideoNote.Free;
+    TtgMessageType.Voice:
+      FVoice.Free;
+    TtgMessageType.Document:
+      begin
+        FDocument.Free;
+        if Assigned(FAnimation) then
+          FAnimation.Free;
+      end;
+    // TtgMessageType.Sticker:
+    // TtgMessageType.Game:
+    // TtgMessageType.Location:
+    TtgMessageType.Contact:
+      FContact.Free;
+    // TtgMessageType.Service:
+    TtgMessageType.Venue:
+      FVenue.Free;
+  end;
   FCaptionEntities.Free;
   FEntities.Free;
   FFrom.Free;
   FChat.Free;
   FForwardFromChat.Free;
+  FPhoto.Free;
   inherited;
 end;
 
@@ -1062,6 +1101,88 @@ end;
 destructor TtgMessageEntity.Destroy;
 begin
   FUser.Free;
+  inherited;
+end;
+
+{ TtgVenue }
+
+constructor TtgVenue.Create;
+begin
+  FLocation := TtgLocation.Create;
+end;
+
+destructor TtgVenue.Destroy;
+begin
+  FLocation.Free;
+  inherited Destroy;
+end;
+
+{ TtgChat }
+
+constructor TtgChat.Create;
+begin
+  FPhoto := nil;
+  FPinnedMessage := nil;
+end;
+
+destructor TtgChat.Destroy;
+begin
+  if Assigned(FPhoto) then
+    FPhoto.Free;
+  if Assigned(FPinnedMessage) then
+    FPinnedMessage.Free;
+  inherited;
+end;
+
+{ TtgVideo }
+
+constructor TtgVideo.Create;
+begin
+  FThumb := TtgPhotosize.Create;
+end;
+
+destructor TtgVideo.Destroy;
+begin
+  FThumb.Free;
+  inherited Destroy;
+end;
+
+{ TtgDocument }
+
+constructor TtgDocument.Create;
+begin
+  FThumb := TtgPhotosize.Create;
+end;
+
+destructor TtgDocument.Destroy;
+begin
+  FThumb.Free;
+  inherited;
+end;
+
+{ TtgAudio }
+
+constructor TtgAudio.Create;
+begin
+  FThumb := TtgPhotosize.Create;
+end;
+
+destructor TtgAudio.Destroy;
+begin
+  FThumb.Free;
+  inherited;
+end;
+
+{ TtgVideoNote }
+
+constructor TtgVideoNote.Create;
+begin
+  FThumb := TtgPhotosize.Create;
+end;
+
+destructor TtgVideoNote.Destroy;
+begin
+  FThumb.Free;
   inherited;
 end;
 

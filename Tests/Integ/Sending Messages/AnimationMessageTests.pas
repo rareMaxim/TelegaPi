@@ -61,8 +61,7 @@ begin
   Assert.IsNotEmpty(LMessage.Animation.FileId);
   Assert.IsNotEmpty(LMessage.Animation.FileUniqueId);
   Assert.IsNotEmpty(LMessage.Animation.Filename);
-  Assert.IsTrue(LMessage.Animation.Thumb.FileSize > 80000);
-
+  Assert.IsTrue(LMessage.Animation.FileSize > 80000);
 end;
 
 procedure TAnimationMessageTests.Should_Send_Animation_With_Thumb;
@@ -87,7 +86,6 @@ begin
   Assert.IsNotEmpty(LMessage.Animation.Thumb.FileUniqueId);
   Assert.IsNotEmpty(LMessage.Animation.Filename);
   Assert.IsTrue(LMessage.Animation.Thumb.FileSize > 10000);
-
 end;
 
 end.
