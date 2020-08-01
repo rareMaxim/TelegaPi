@@ -568,6 +568,32 @@ type
     property PollAnswer: TtgPollAnswer read FPollAnswer write FPollAnswer;
   end;
 
+  /// <summary>
+  /// Contains information about why a request was unsuccessful.
+  /// </summary>
+  TtgResponseParameters = class
+  private
+    [JsonName('migrate_to_chat_id')]
+    FMigrateToChatId: Int64;
+    [JsonName('retry_after')]
+    FRetryAfter: Integer;
+  public
+    /// <summary>
+    /// Optional. The group has been migrated to a supergroup
+    /// with the specified identifier. This number may be greater than 32 bits
+    /// and some programming languages may have difficulty/silent
+    /// defects in interpreting it. But it is smaller than 52 bits,
+    /// so a signed 64 bit integer or double-precision float type are safe
+    /// for storing this identifier.
+    /// </summary>
+    property MigrateToChatId: Int64 read FMigrateToChatId write FMigrateToChatId;
+    /// <summary>
+    /// Optional. In case of exceeding flood control, the number of seconds left
+    /// to wait before the request can be repeated.
+    /// </summary>
+    property RetryAfter: Integer read FRetryAfter write FRetryAfter;
+  end;
+
   ItgResponseBase = interface
     ['{1657D8E5-0B41-4983-B1BE-443A266CFD40}']
     // private
@@ -577,12 +603,17 @@ type
     procedure SetDescription(const Value: string);
     procedure SetErrorCode(const Value: Integer);
     procedure SetOk(const Value: Boolean);
+    function GerParameters: TtgResponseParameters;
     // public
     property Description: string read GetDescription write SetDescription;
     property ErrorCode: Integer read GetErrorCode write SetErrorCode;
     property Ok: Boolean read GetOk write SetOk;
+    property Parameters: TtgResponseParameters read GerParameters;
   end;
 
+  /// <summary>
+  /// Represents bot API response
+  /// </summary>
   TtgResponseBase = class(TInterfacedObject, ItgResponseBase)
   private
     [JsonName('description')]
@@ -591,16 +622,34 @@ type
     FErrorCode: Integer;
     [JsonName('Ok')]
     FOk: Boolean;
+    [JsonName('parameters')]
+    FParameters: TtgResponseParameters;
     function GetDescription: string;
     function GetErrorCode: Integer;
     function GetOk: Boolean;
     procedure SetDescription(const Value: string);
     procedure SetErrorCode(const Value: Integer);
     procedure SetOk(const Value: Boolean);
+    function GerParameters: TtgResponseParameters;
   public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Gets the error message.
+    /// </summary>
     property Description: string read GetDescription write SetDescription;
+    /// <summary>
+    /// Gets the error code.
+    /// </summary>
     property ErrorCode: Integer read GetErrorCode write SetErrorCode;
+    /// <summary>
+    /// Gets a value indicating whether the request was successful.
+    /// </summary>
     property Ok: Boolean read GetOk write SetOk;
+    /// <summary>
+    /// Contains information about why a request was unsuccessful.
+    /// </summary>
+    property Parameters: TtgResponseParameters read GerParameters;
   end;
 
   ItgResponse<T> = interface(ItgResponseBase)
@@ -611,6 +660,9 @@ type
     function GetResponse: IcaResponseBase;
     procedure SetResponse(const Value: IcaResponseBase);
     // public
+    /// <summary>
+    /// Gets the result object.
+    /// </summary>
     property Result: T read GetResult write SetResult;
     property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
@@ -677,7 +729,24 @@ type
 implementation
 
 uses
-  System.SysUtils; // PObject
+  System.SysUtils;
+
+constructor TtgResponseBase.Create;
+begin
+  inherited Create();
+  FParameters := TtgResponseParameters.Create;
+end;
+
+destructor TtgResponseBase.Destroy;
+begin
+  FParameters.Free;
+  inherited Destroy;
+end;
+
+function TtgResponseBase.GerParameters: TtgResponseParameters;
+begin
+  Result := FParameters;
+end;
 
 function TtgResponseBase.GetDescription: string;
 begin
