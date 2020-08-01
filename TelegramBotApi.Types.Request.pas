@@ -385,7 +385,7 @@ type
 
   [caName('sendAnimation')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.GetOrPost)]
   /// <summary>
   /// Use this method to send video files, Telegram clients support mp4 videos (other
   /// formats may be sent as Document). On success, the sent Message is returned.

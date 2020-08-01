@@ -213,6 +213,21 @@ type
     property MimeType: string read FMimeType write FMimeType;
   end;
 
+  /// <summary>
+  /// This object represents an animation file (GIF or H.264/MPEG-4 AVC video without
+  /// sound).
+  /// </summary>
+  TtgAnimation = class(TtgVideo)
+  private
+    [JsonName('file_name')]
+    FFilename: string;
+  public
+    /// <summary>
+    /// Optional. Original animation filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+  end;
+
   TtgVideoNote = class(TtgFileInfo)
   private
     [JsonName('length')]
@@ -346,6 +361,8 @@ type
     [JsonName('entities')]
     [JsonConverter(TMessEntConv)]
     FEntities: TObjectList<TtgMessageEntity>;
+    [JsonName('animation')]
+    FAnimation: TtgAnimation;
     [JsonName('video')]
     FVideo: TtgVideo;
     [JsonName('caption')]
@@ -368,6 +385,7 @@ type
     FAudio: TtgAudio;
     [JsonName('voice')]
     FVoice: TtgVoice;
+
   public
     constructor Create;
     destructor Destroy; override;
@@ -383,6 +401,12 @@ type
     property Date: TDateTime read FDate write FDate;
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
+    /// <summary>
+    /// Optional. Message is an animation, information about the animation. For
+    /// backward compatibility, when this field is set, the document field will also be
+    /// set
+    /// </summary>
+    property Animation: TtgAnimation read FAnimation write FAnimation;
     /// <summary>
     /// Optional. Message is an audio file, information about the file
     /// </summary>
@@ -906,10 +930,12 @@ begin
   FEntities := TObjectList<TtgMessageEntity>.Create;
   FCaptionEntities := TObjectList<TtgMessageEntity>.Create;
   FPhoto := TObjectList<TtgPhotosize>.Create;
+  FAnimation := TtgAnimation.Create;
 end;
 
 destructor TtgMessage.Destroy;
 begin
+  FAnimation.Free;
   FPhoto.Free;
   FCaptionEntities.Free;
   FEntities.Free;

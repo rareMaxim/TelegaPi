@@ -20,12 +20,13 @@ uses
   Test.Data in 'Integ\Framework\Test.Data.pas',
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
+  AnimationMessageTests in 'Integ\Sending Messages\AnimationMessageTests.pas',
   AudioMessageTests in 'Integ\Sending Messages\AudioMessageTests.pas',
   DocumentMessageTests in 'Integ\Sending Messages\DocumentMessageTests.pas',
-  Sending_Messages in 'Integ\Sending Messages\Sending_Messages.pas',
   SendingContactMessageTests in 'Integ\Sending Messages\SendingContactMessageTests.pas',
   SendingPhotoMessageTests in 'Integ\Sending Messages\SendingPhotoMessageTests.pas',
   SendingVenueMessageTests in 'Integ\Sending Messages\SendingVenueMessageTests.pas',
+  TextMessageTests in 'Integ\Sending Messages\TextMessageTests.pas',
   VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas';
 
 //

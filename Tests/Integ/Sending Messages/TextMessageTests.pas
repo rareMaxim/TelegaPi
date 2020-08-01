@@ -1,4 +1,4 @@
-﻿unit Sending_Messages;
+﻿unit TextMessageTests;
 
 interface
 
