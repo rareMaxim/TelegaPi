@@ -768,6 +768,7 @@ type
 implementation
 
 uses
+  CloudAPI.Exceptions,
   System.SysUtils;
 
 constructor TtgResponseBase.Create;
@@ -932,8 +933,10 @@ begin
     Exit(TtgMessageType.Voice)
   else if Assigned(Document) then
     Exit(TtgMessageType.Document)
+  else if Assigned(Contact) then
+    Exit(TtgMessageType.Contact)
   else
-    raise Exception.Create('Unknown TtgMessage.Type');
+    TcaExceptionManager.Current.Alert('TtgMessage.Type', 'Unknown TtgMessage.Type');
 end;
 
 constructor TtgMessage.Create;
