@@ -34,7 +34,7 @@ type
     function SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;
     function SendVoice(ASendVoiceArgument: TtgSendVoiceArgument): ItgResponse<TtgMessage>;
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
-    function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
+    function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TArray<TtgMessage>>;
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
     function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
@@ -140,9 +140,10 @@ begin
   Result := InternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument);
 end;
 
-function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
+function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
+  : ItgResponse<TArray<TtgMessage>>;
 begin
-  Result := InternalExecute<TtgSendMediaGroupArgument, TtgMessage>(ASendMediaGroupArgument);
+  Result := InternalExecute < TtgSendMediaGroupArgument, TArray < TtgMessage >> (ASendMediaGroupArgument);
 end;
 
 function TTelegramBotApi.SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
