@@ -39,6 +39,7 @@ begin
     begin
       Sleep(ANeedPause);
     end;
+  FBot.CloudApi.ExceptionManager.AlertException := True;
 end;
 
 procedure TTestsFixture.TearDown;
