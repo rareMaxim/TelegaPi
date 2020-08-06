@@ -744,7 +744,7 @@ type
   end;
 
   TtgInputMedia = class
-  private
+  protected
     [JsonName('type')]
     FType: string;
     [JsonName('media')]
@@ -763,6 +763,12 @@ type
     property Media: string read FMedia write FMedia;
     property Caption: string read FCaption write FCaption;
     property ParseMode: string read FParseMode write FParseMode;
+  end;
+
+  TInputMediaPhoto = class(TtgInputMedia)
+  public
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = '';
+      const AParseMode: TtgParseMode = TtgParseMode.Default); override;
   end;
 
 implementation
@@ -1187,6 +1193,14 @@ destructor TtgVideoNote.Destroy;
 begin
   FThumb.Free;
   inherited;
+end;
+
+{ TInputMediaPhoto }
+
+constructor TInputMediaPhoto.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
+begin
+  inherited Create(AMedia, ACaption, AParseMode);
+  FType := 'photo';
 end;
 
 end.

@@ -19,7 +19,8 @@ type
     function GetBotToken: string;
     procedure SetBotToken(const Value: string);
   protected
-    function InternalExecute<TArgument: record; TResult>(AArgument: TArgument): ItgResponse<TResult>;
+    function InternalExecute<TArgument: record; TResult>(AArgument: TArgument): ItgResponse<TResult>; overload;
+    function InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>; overload;
   public
     function GetMe: ItgResponse<TtgUser>;
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
@@ -34,7 +35,7 @@ type
     function SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;
     function SendVoice(ASendVoiceArgument: TtgSendVoiceArgument): ItgResponse<TtgMessage>;
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
-    function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
+    function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TArray<TtgMessage>>;
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
     function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
@@ -53,6 +54,7 @@ implementation
 uses
   CloudApi.Response,
   CloudApi.RequestArgument,
+  CloudApi.Types,
   System.Net.HttpClient,
   TelegramBotApi.CloudApi.Authenticator,
   TelegramBotApi.CloudApi.Converter;
@@ -112,10 +114,16 @@ end;
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;
 var
   LReq: IcaRequest;
-  LCloudResponse: IcaResponse<TtgResponse<TResult>>;
 begin
   LReq := TcaRequestArgument.ObjToRequest<TArgument>(AArgument);
-  LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (LReq);
+  Result := InternalExecute<TResult>(LReq);
+end;
+
+function TTelegramBotApi.InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>;
+var
+  LCloudResponse: IcaResponse<TtgResponse<TResult>>;
+begin
+  LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (ARequest);
   Result := LCloudResponse.Data;
   Result.CloudResponse := LCloudResponse;
 end;
@@ -140,9 +148,21 @@ begin
   Result := InternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument);
 end;
 
-function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TtgMessage>;
+function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
+  : ItgResponse<TArray<TtgMessage>>;
+var
+  LRequest: IcaRequest;
+  LMedia: TtgInputMedia;
 begin
-  Result := InternalExecute<TtgSendMediaGroupArgument, TtgMessage>(ASendMediaGroupArgument);
+  LRequest := TcaRequestArgument.ObjToRequest<TtgSendMediaGroupArgument>(ASendMediaGroupArgument);
+  for LMedia in ASendMediaGroupArgument.Media do
+  begin
+    case LMedia.GetFileToSend.Tag of
+      TcaFileToSendTag.FromFile, TcaFileToSendTag.FromStream:
+        LRequest.AddFile(LMedia.GetFileToSend);
+    end;
+  end;
+  Result := InternalExecute < TArray < TtgMessage >> (LRequest);
 end;
 
 function TTelegramBotApi.SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
