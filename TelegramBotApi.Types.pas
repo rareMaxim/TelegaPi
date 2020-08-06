@@ -743,7 +743,10 @@ type
     class operator Implicit(AUsername: string): TtgUserLink;
   end;
 
-  TtgInputMedia = class
+  /// <summary>
+  /// This object represents the content of a media message to be sent.
+  /// </summary>
+  TtgInputMedia = class abstract
   protected
     [JsonName('type')]
     FType: string;
@@ -752,23 +755,262 @@ type
     [JsonName('caption')]
     FCaption: string;
     [JsonName('parse_mode')]
-    FParseMode: string;
+    FParseMode: TtgParseMode;
     [JsonIgnoreAttribute]
     FFileToSend: TcaFileToSend;
   public
     function GetFileToSend: TcaFileToSend;
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = '';
-      const AParseMode: TtgParseMode = TtgParseMode.Default); virtual;
-    property &Type: string read FType write FType;
-    property Media: string read FMedia write FMedia;
+    constructor Create(AMedia: TcaFileToSend); virtual;
+    property &Type: string read FType;
+    property Media: string read FMedia;
     property Caption: string read FCaption write FCaption;
-    property ParseMode: string read FParseMode write FParseMode;
+    property ParseMode: TtgParseMode read FParseMode write FParseMode;
   end;
 
-  TInputMediaPhoto = class(TtgInputMedia)
+  /// <summary>
+  /// Represents a photo to be sent.
+  /// </summary>
+  TtgInputMediaPhoto = class(TtgInputMedia)
   public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = '';
-      const AParseMode: TtgParseMode = TtgParseMode.Default); override;
+    constructor Create(AMedia: TcaFileToSend); override;
+    /// <summary>
+    /// Type of the result, must be "photo"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Caption of the photo to be sent, 0-1024 characters after entities
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the photo caption. See formatting
+    /// options for more details.
+    /// </summary>
+    property ParseMode;
+  end;
+
+  /// <summary>
+  /// Represents a general file to be sent.
+  /// </summary>
+  TtgInputMediaDocument = class(TtgInputMediaPhoto)
+  private
+    [JsonName('thumb')]
+    FThumb: TcaFileToSend;
+  public
+    constructor Create(AMedia: TcaFileToSend); override;
+    /// <summary>
+    /// Type of the result, must be "document"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb: TcaFileToSend read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Caption of the document  to be sent, 0-1024 characters after entities
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the document caption. See formatting
+    /// options for more details.
+    /// </summary>
+    property ParseMode;
+  end;
+
+  /// <summary>
+  /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to
+  /// be sent.
+  /// </summary>
+  TtgInputMediaAnimation = class(TtgInputMediaDocument)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('width')]
+    FWidth: Int64;
+    [JsonName('height')]
+    FHeight: Int64;
+  public
+    constructor Create(AMedia: TcaFileToSend); override;
+    /// <summary>
+    /// Type of the result, must be "animation"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the animation caption.
+    /// See formatting options for more details.
+    /// </summary>
+    property ParseMode;
+    /// <summary>
+    /// Optional. Animation  width
+    /// </summary>
+    property Width: Int64 read FWidth write FWidth;
+    /// <summary>
+    /// Optional. Animation  height
+    /// </summary>
+    property Height: Int64 read FHeight write FHeight;
+    /// <summary>
+    /// Optional. Animation  duration
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+  end;
+
+  /// <summary>
+  /// Represents a video to be sent.
+  /// </summary>
+  TtgInputMediaVideo = class(TtgInputMediaAnimation)
+  private
+    [JsonName('supports_streaming')]
+    FSupportsStreaming: Boolean;
+  public
+    constructor Create(AMedia: TcaFileToSend); override;
+    /// <summary>
+    /// Type of the result, must be "photo"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the video caption.
+    /// See formatting options for more details.
+    /// </summary>
+    property ParseMode;
+    /// <summary>
+    /// Optional. Video width
+    /// </summary>
+    property Width;
+    /// <summary>
+    /// Optional. Video height
+    /// </summary>
+    property Height;
+    /// <summary>
+    /// Optional. Video duration
+    /// </summary>
+    property Duration;
+    /// <summary>
+    /// Optional. Pass True, if the uploaded video is suitable for streaming
+    /// </summary>
+    property SupportsStreaming: Boolean read FSupportsStreaming write FSupportsStreaming;
+  end;
+
+  /// <summary>
+  /// Represents an audio file to be treated as music to be sent.
+  /// </summary>
+  TtgInputMediaAudio = class(TtgInputMediaDocument)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('performer')]
+    FPerformer: string;
+    [JsonName('title')]
+    FTitle: string;
+  public
+    constructor Create(AMedia: TcaFileToSend); override;
+    /// <summary>
+    /// Type of the result, must be "audio"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Caption of the audio to be sent, 0-1024 characters after entities parsing
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the audio caption.
+    /// See formatting options for more details.
+    /// </summary>
+    property ParseMode;
+    /// <summary>
+    /// Optional. Duration of the audio in seconds
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. Performer of the audio
+    /// </summary>
+    property Performer: string read FPerformer write FPerformer;
+    /// <summary>
+    /// Optional. Title of the audio
+    /// </summary>
+    property Title: string read FTitle write FTitle;
   end;
 
 implementation
@@ -1082,10 +1324,8 @@ end;
 
 { TtgInputMedia }
 
-constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
+constructor TtgInputMedia.Create(AMedia: TcaFileToSend);
 begin
-  FCaption := ACaption;
-  FParseMode := TG_PARSE_MODES[Ord(AParseMode)];
   FFileToSend := AMedia;
   case AMedia.Tag of
     TcaFileToSendTag.ID, TcaFileToSendTag.FromURL:
@@ -1195,12 +1435,44 @@ begin
   inherited;
 end;
 
-{ TInputMediaPhoto }
+{ TtgInputMediaPhoto }
 
-constructor TInputMediaPhoto.Create(AMedia: TcaFileToSend; const ACaption: string; const AParseMode: TtgParseMode);
+constructor TtgInputMediaPhoto.Create(AMedia: TcaFileToSend);
 begin
-  inherited Create(AMedia, ACaption, AParseMode);
+  inherited Create(AMedia);
   FType := 'photo';
+end;
+
+{ TtgInputMediaAudio }
+
+constructor TtgInputMediaVideo.Create(AMedia: TcaFileToSend);
+begin
+  inherited Create(AMedia);
+  FType := 'video';
+end;
+
+{ TtgInputMediaAudio }
+
+constructor TtgInputMediaAudio.Create(AMedia: TcaFileToSend);
+begin
+  inherited Create(AMedia);
+  FType := 'audio';
+end;
+
+{ TtgInputMediaAnimation }
+
+constructor TtgInputMediaAnimation.Create(AMedia: TcaFileToSend);
+begin
+  inherited Create(AMedia);
+  FType := 'animation';
+end;
+
+{ TtgInputMediaDocument }
+
+constructor TtgInputMediaDocument.Create(AMedia: TcaFileToSend);
+begin
+  inherited Create(AMedia);
+  FType := 'document';
 end;
 
 end.

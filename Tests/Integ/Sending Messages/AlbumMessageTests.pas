@@ -36,8 +36,8 @@ begin
   LMediaGroup := TtgSendMediaGroupArgument.Default;
   LMediaGroup.ChatId := TTestData.Current.SupergroupChat.ID;
   LMediaGroup.Media := [ //
-    TInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)),
-    TInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)) //
+    TtgInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)),
+    TtgInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)) //
     ];
 
   LResult := Bot.SendMediaGroup(LMediaGroup);
