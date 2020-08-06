@@ -655,8 +655,7 @@ type
     /// to get a file from the Internet, or upload a new one using
     /// multipart/form-data. More info on Sending Files »
     /// </summary>
-    media: TArray<TtgInputMedia>;
-
+    Media: TArray<TtgInputMedia>;
     [caDefaultValueBoolean(False)]
     [caName('disable_notification')]
     /// <summary>Sends the message silently. Users will receive a notification with no
