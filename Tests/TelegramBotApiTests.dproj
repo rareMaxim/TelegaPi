@@ -85,6 +85,7 @@
         <DCCReference Include="Integ\Framework\Test.Data.pas"/>
         <DCCReference Include="Test.Constants.pas"/>
         <DCCReference Include="Integ\Framework\Test.Assert.pas"/>
+        <DCCReference Include="Integ\Sending Messages\AlbumMessageTests.pas"/>
         <DCCReference Include="Integ\Sending Messages\AnimationMessageTests.pas"/>
         <DCCReference Include="Integ\Sending Messages\AudioMessageTests.pas"/>
         <DCCReference Include="Integ\Sending Messages\DocumentMessageTests.pas"/>

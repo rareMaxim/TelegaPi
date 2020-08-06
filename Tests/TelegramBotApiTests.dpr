@@ -20,6 +20,7 @@ uses
   Test.Data in 'Integ\Framework\Test.Data.pas',
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
+  AlbumMessageTests in 'Integ\Sending Messages\AlbumMessageTests.pas',
   AnimationMessageTests in 'Integ\Sending Messages\AnimationMessageTests.pas',
   AudioMessageTests in 'Integ\Sending Messages\AudioMessageTests.pas',
   DocumentMessageTests in 'Integ\Sending Messages\DocumentMessageTests.pas',
