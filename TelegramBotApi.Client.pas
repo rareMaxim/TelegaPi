@@ -19,7 +19,8 @@ type
     function GetBotToken: string;
     procedure SetBotToken(const Value: string);
   protected
-    function InternalExecute<TArgument: record; TResult>(AArgument: TArgument): ItgResponse<TResult>;
+    function InternalExecute<TArgument: record; TResult>(AArgument: TArgument): ItgResponse<TResult>; overload;
+    function InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>; overload;
   public
     function GetMe: ItgResponse<TtgUser>;
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
@@ -112,10 +113,16 @@ end;
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;
 var
   LReq: IcaRequest;
-  LCloudResponse: IcaResponse<TtgResponse<TResult>>;
 begin
   LReq := TcaRequestArgument.ObjToRequest<TArgument>(AArgument);
-  LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (LReq);
+  Result := InternalExecute<TResult>(LReq);
+end;
+
+function TTelegramBotApi.InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>;
+var
+  LCloudResponse: IcaResponse<TtgResponse<TResult>>;
+begin
+  LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (ARequest);
   Result := LCloudResponse.Data;
   Result.CloudResponse := LCloudResponse;
 end;
