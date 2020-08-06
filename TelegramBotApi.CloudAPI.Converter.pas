@@ -9,6 +9,7 @@ type
     class procedure TtgParseModeConverter;
     class procedure TtgAllowedUpdates;
     class procedure TArrayTcaFileToSend;
+    class procedure TArrayTtgInputMedia;
   public
     class procedure TelegramConverter;
   end;
@@ -29,7 +30,7 @@ uses
 
 class procedure TtgConverters.TtgAllowedUpdates;
 begin
-  TcaRequestArgument.RegisterConverter('TAllowedUpdates',
+  TcaRequestArgument.RegisterConverter<TAllowedUpdates>(
     function(AValue: TValue): string
     begin
       Result := AValue.AsType<TAllowedUpdates>.ToString;
@@ -38,7 +39,7 @@ end;
 
 class procedure TtgConverters.TArrayTcaFileToSend;
 begin
-  TcaRequestArgument.RegisterConverter('TArray<TcaFileToSend>',
+  TcaRequestArgument.RegisterConverter < TArray < TcaFileToSend >> (
     function(AValue: TValue): string
     var
       LArray: TArray<TcaFileToSend>;
@@ -48,17 +49,30 @@ begin
     end);
 end;
 
+class procedure TtgConverters.TArrayTtgInputMedia;
+begin
+  TcaRequestArgument.RegisterConverter < TArray < TtgInputMedia >> (
+    function(AValue: TValue): string
+    var
+      LArray: TArray<TtgInputMedia>;
+    begin
+      LArray := AValue.AsType<TArray<TtgInputMedia>>;
+      Result := TCloudApiClientBase.Serializer.Serialize < TArray < TtgInputMedia >> (LArray);
+    end);
+end;
+
 class procedure TtgConverters.TelegramConverter;
 begin
   TtgUserLinkConverter;
   TtgParseModeConverter;
   TtgAllowedUpdates;
   TArrayTcaFileToSend;
+  TArrayTtgInputMedia;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;
 begin
-  TcaRequestArgument.RegisterConverter('TtgParseMode',
+  TcaRequestArgument.RegisterConverter<TtgParseMode>(
     function(AValue: TValue): string
     begin
       case AValue.AsType<TtgParseMode> of
@@ -80,7 +94,7 @@ end;
 
 class procedure TtgConverters.TtgUserLinkConverter;
 begin
-  TcaRequestArgument.RegisterConverter('TtgUserLink',
+  TcaRequestArgument.RegisterConverter<TtgUserLink>(
     function(AValue: TValue): string
     begin
       Result := AValue.AsType<TtgUserLink>.ToString;
