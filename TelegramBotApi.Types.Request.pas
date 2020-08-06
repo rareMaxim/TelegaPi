@@ -649,6 +649,7 @@ type
     [caName('media')]
     [caIsRequaired]
     [caDefaultValueString('')]
+    [caParameterType(TcaParameterType.GetOrPost)]
     /// <summary>
     /// Audio file to send. Pass a file_id as String to send an animation that exists on
     /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
