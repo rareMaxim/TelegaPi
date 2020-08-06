@@ -54,6 +54,7 @@ implementation
 uses
   CloudApi.Response,
   CloudApi.RequestArgument,
+  CloudApi.Types,
   System.Net.HttpClient,
   TelegramBotApi.CloudApi.Authenticator,
   TelegramBotApi.CloudApi.Converter;
@@ -149,8 +150,19 @@ end;
 
 function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
   : ItgResponse<TArray<TtgMessage>>;
+var
+  LRequest: IcaRequest;
+  LMedia: TtgInputMedia;
 begin
-  Result := InternalExecute < TtgSendMediaGroupArgument, TArray < TtgMessage >> (ASendMediaGroupArgument);
+  LRequest := TcaRequestArgument.ObjToRequest<TtgSendMediaGroupArgument>(ASendMediaGroupArgument);
+  for LMedia in ASendMediaGroupArgument.Media do
+  begin
+    case LMedia.GetFileToSend.Tag of
+      TcaFileToSendTag.FromFile, TcaFileToSendTag.FromStream:
+        LRequest.AddFile(LMedia.GetFileToSend);
+    end;
+  end;
+  Result := InternalExecute < TArray < TtgMessage >> (LRequest);
 end;
 
 function TTelegramBotApi.SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
