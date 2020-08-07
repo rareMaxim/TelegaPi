@@ -1339,7 +1339,7 @@ begin
   FCaption := ACaption;
   case AMedia.&Type of
     TcaFileToSendType.ID, TcaFileToSendType.Url:
-      FMedia := ExtractFileName(AMedia.GetUrlOrIdOrFilePath);
+      FMedia := AMedia.GetUrlOrIdOrFilePath;
     TcaFileToSendType.File, TcaFileToSendType.Stream:
       FMedia := 'attach://' + ExtractFileName(AMedia.Name);
   end;
