@@ -157,8 +157,8 @@ begin
   LRequest := TcaRequestArgument.ObjToRequest<TtgSendMediaGroupArgument>(ASendMediaGroupArgument);
   for LMedia in ASendMediaGroupArgument.Media do
   begin
-    case LMedia.GetFileToSend.Tag of
-      TcaFileToSendTag.FromFile, TcaFileToSendTag.FromStream:
+    case LMedia.GetFileToSend.&Type of
+      TcaFileToSendType.File, TcaFileToSendType.Stream:
         LRequest.AddFile(LMedia.GetFileToSend);
     end;
   end;

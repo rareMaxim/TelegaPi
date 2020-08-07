@@ -761,7 +761,7 @@ type
     [JsonName('caption')]
     FCaption: string;
     [JsonName('parse_mode')]
-    FParseMode: TtgParseMode;
+    FParseMode: string;
     [JsonIgnoreAttribute]
     FFileToSend: TcaFileToSend;
   public
@@ -770,7 +770,7 @@ type
     property &Type: string read FType;
     property Media: string read FMedia;
     property Caption: string read FCaption write FCaption;
-    property ParseMode: TtgParseMode read FParseMode write FParseMode;
+    property ParseMode: string read FParseMode write FParseMode;
   end;
 
   /// <summary>
@@ -1337,11 +1337,11 @@ constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string =
 begin
   FFileToSend := AMedia;
   FCaption := ACaption;
-  case AMedia.Tag of
-    TcaFileToSendTag.ID, TcaFileToSendTag.FromURL:
-      FMedia := ExtractFileName(AMedia.Data);
-    TcaFileToSendTag.FromFile, TcaFileToSendTag.FromStream:
-      FMedia := 'attach://' + ExtractFileName(AMedia.Data);
+  case AMedia.&Type of
+    TcaFileToSendType.ID, TcaFileToSendType.Url:
+      FMedia := ExtractFileName(AMedia.GetUrlOrIdOrFilePath);
+    TcaFileToSendType.File, TcaFileToSendType.Stream:
+      FMedia := 'attach://' + ExtractFileName(AMedia.Name);
   end;
 end;
 
