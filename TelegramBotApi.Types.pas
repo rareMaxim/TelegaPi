@@ -1184,7 +1184,10 @@ begin
   else if Assigned(Contact) then
     Exit(TtgMessageType.Contact)
   else
+  begin
+    Result := TtgMessageType.Unknown;
     TcaExceptionManager.Current.Alert('TtgMessage.Type', 'Unknown TtgMessage.Type');
+  end;
 end;
 
 constructor TtgMessage.Create;
