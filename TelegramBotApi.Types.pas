@@ -761,7 +761,8 @@ type
     [JsonName('caption')]
     FCaption: string;
     [JsonName('parse_mode')]
-    FParseMode: string;
+    [JsonConverter(TtgParseModeConverter)]
+    FParseMode: TtgParseMode;
     [JsonIgnoreAttribute]
     FFileToSend: TcaFileToSend;
   public
@@ -770,7 +771,7 @@ type
     property &Type: string read FType;
     property Media: string read FMedia;
     property Caption: string read FCaption write FCaption;
-    property ParseMode: string read FParseMode write FParseMode;
+    property ParseMode: TtgParseMode read FParseMode write FParseMode;
   end;
 
   /// <summary>

@@ -42,13 +42,11 @@ begin
     TtgInputMediaPhoto.Create('https://cdn.pixabay.com/photo/2017/04/11/21/34/giraffe-2222908_640.jpg')];
   LResult := Bot.SendMediaGroup(LMediaGroup);
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
-
   for i := Low(LResult.Result) to High(LResult.Result) do
   begin
     Assert.AreEqual(TtgMessageType.Photo, LResult.Result[i].&Type);
     Assert.AreEqual(LMediaGroup.Media[i].Caption, LResult.Result[i].Caption);
   end;
-
 end;
 
 procedure TAlbumMessageTests.Should_Upload_2_Photos_Album;
@@ -68,7 +66,6 @@ begin
     TtgInputMediaPhoto.Create(LFiles[1], 'Bot')];
   LResult := Bot.SendMediaGroup(LMediaGroup);
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
-
   for i := Low(LResult.Result) to High(LResult.Result) do
   begin
     Assert.AreEqual(TtgMessageType.Photo, LResult.Result[i].&Type);

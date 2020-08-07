@@ -7,8 +7,8 @@ type
   /// <summary>
   /// The type of a Message
   /// </summary>
-  TtgMessageType = (Unknown = 0, Text, Photo, Audio, Video, VideoNote, Voice, Document, Sticker, Game,
-    Location, Contact, Service, Venue);
+  TtgMessageType = (Unknown = 0, Text, Photo, Audio, Video, VideoNote, Voice, Document, Sticker, Game, Location,
+    Contact, Service, Venue);
 
   TtgParseMode = (Default, Markdown, MarkdownV2, HTML);
 
@@ -152,13 +152,12 @@ type
     /// </summary>
     Strikethrough);
 {$SCOPEDENUMS OFF}
-  TAllowedUpdate = (message, Edited_message, Channel_post, Edited_channel_post, Inline_query,
-    Chosen_inline_result, Callback_query);
+  TAllowedUpdate = (message, Edited_message, Channel_post, Edited_channel_post, Inline_query, Chosen_inline_result,
+    Callback_query);
   TAllowedUpdates = set of TAllowedUpdate;
 
 const
   UPDATES_ALLOWED_ALL = [Low(TAllowedUpdate) .. High(TAllowedUpdate)];
-  TG_PARSE_MODES: array of string = ['', 'Markdown', 'MarkdownV2', 'HTML'];
 
 implementation
 

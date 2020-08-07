@@ -17,6 +17,14 @@ type
     class function FromString(const AValue: string): TtgMessageEntityType; static;
   end;
 
+  TtgParseModeHelper = record helper for TtgParseMode
+  private const
+    TG_PARSE_MODES: array of string = ['', 'Markdown', 'MarkdownV2', 'HTML'];
+  public
+    function ToString: string;
+    class function FromString(const AValue: string): TtgParseMode; static;
+  end;
+
 implementation
 
 uses
@@ -107,6 +115,23 @@ begin
     LStore.Free;
   end;
 
+end;
+
+{ TtgParseModeHelper }
+
+class function TtgParseModeHelper.FromString(const AValue: string): TtgParseMode;
+var
+  I: Integer;
+begin
+  Result := TtgParseMode.Default;
+  for I := Low(TG_PARSE_MODES) to High(TG_PARSE_MODES) do
+    if SameText(TG_PARSE_MODES[I], AValue) then
+      Exit(TtgParseMode(I));
+end;
+
+function TtgParseModeHelper.ToString: string;
+begin
+  Result := TG_PARSE_MODES[Ord(Self)];
 end;
 
 end.
