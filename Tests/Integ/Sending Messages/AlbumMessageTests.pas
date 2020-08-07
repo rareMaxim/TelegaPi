@@ -18,6 +18,8 @@ type
     procedure Should_Upload_2_Photos_Album;
     [Test]
     procedure Should_Send_Photo_Album_Using_Url;
+    [Test]
+    procedure Should_Upload_2_Videos_Album;
   end;
 
 implementation
@@ -71,6 +73,33 @@ begin
     Assert.AreEqual(TtgMessageType.Photo, LResult.Result[i].&Type);
     Assert.AreEqual(LMediaGroup.Media[i].Caption, LResult.Result[i].Caption);
   end;
+end;
+
+procedure TAlbumMessageTests.Should_Upload_2_Videos_Album;
+var
+  LMediaGroup: TtgSendMediaGroupArgument;
+  LResult: ItgResponse<TArray<TtgMessage>>;
+  LFiles: TArray<TcaFileToSend>;
+  i: integer;
+begin
+  LFiles := [ //
+    TcaFileToSend.FromFile(TtgConst.PathToFile.Videos.GoldenRatio), //
+    TcaFileToSend.FromFile(TtgConst.PathToFile.Videos.MoonLanding), //
+    TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)];
+  LMediaGroup := TtgSendMediaGroupArgument.Default;
+  LMediaGroup.ChatId := TTestData.Current.SupergroupChat.ID;
+  LMediaGroup.Media := [ //
+    TtgInputMediaVideo.Create(LFiles[0], 'Golden Ratio', 240, 240, 28), //
+    TtgInputMediaVideo.Create(LFiles[0], 'Moon Landing'), //
+    TtgInputMediaPhoto.Create(LFiles[1], 'Bot')];
+  LResult := Bot.SendMediaGroup(LMediaGroup);
+  Assert.AreEqual(True, LResult.Ok, LResult.Description);
+  for i := Low(LResult.Result) to High(LResult.Result) do
+  begin
+    Assert.AreEqual(TtgMessageType.Photo, LResult.Result[i].&Type);
+    Assert.AreEqual(LMediaGroup.Media[i].Caption, LResult.Result[i].Caption);
+  end;
+
 end;
 
 end.

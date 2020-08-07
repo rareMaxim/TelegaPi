@@ -912,7 +912,8 @@ type
     [JsonName('supports_streaming')]
     FSupportsStreaming: Boolean;
   public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''; const AHeight: Integer = 0;
+      const AWidth: Integer = 0; const ADuration: Integer = 0); reintroduce;
     /// <summary>
     /// Type of the result, must be "photo"
     /// </summary>
@@ -1456,10 +1457,14 @@ end;
 
 { TtgInputMediaAudio }
 
-constructor TtgInputMediaVideo.Create(AMedia: TcaFileToSend; const ACaption: string = '');
+constructor TtgInputMediaVideo.Create(AMedia: TcaFileToSend; const ACaption: string = ''; const AHeight: Integer = 0;
+  const AWidth: Integer = 0; const ADuration: Integer = 0);
 begin
   inherited Create(AMedia, ACaption);
   FType := 'video';
+  FHeight := AHeight;
+  FWidth := AWidth;
+  FDuration := ADuration;
 end;
 
 { TtgInputMediaAudio }
