@@ -395,6 +395,8 @@ type
     FAudio: TtgAudio;
     [JsonName('voice')]
     FVoice: TtgVoice;
+    [JsonName('media_group_id')]
+    FMediaGroupId: string;
   public
     constructor Create;
     destructor Destroy; override;
@@ -408,6 +410,10 @@ type
     property ForwardDate: TDateTime read FForwardDate write FForwardDate;
     property From: TtgUser read FFrom write FFrom;
     property Date: TDateTime read FDate write FDate;
+    /// <summary>
+    /// Optional. The unique identifier of a media message group this message belongs to
+    /// </summary>
+    property MediaGroupId: string read FMediaGroupId write FMediaGroupId;
     property Text: string read FText write FText;
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
     /// <summary>
