@@ -760,7 +760,7 @@ type
     FFileToSend: TcaFileToSend;
   public
     function GetFileToSend: TcaFileToSend;
-    constructor Create(AMedia: TcaFileToSend); virtual;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); virtual;
     property &Type: string read FType;
     property Media: string read FMedia;
     property Caption: string read FCaption write FCaption;
@@ -772,7 +772,7 @@ type
   /// </summary>
   TtgInputMediaPhoto = class(TtgInputMedia)
   public
-    constructor Create(AMedia: TcaFileToSend); override;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
     /// <summary>
     /// Type of the result, must be "photo"
     /// </summary>
@@ -804,7 +804,7 @@ type
     [JsonName('thumb')]
     FThumb: TcaFileToSend;
   public
-    constructor Create(AMedia: TcaFileToSend); override;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
     /// <summary>
     /// Type of the result, must be "document"
     /// </summary>
@@ -851,7 +851,7 @@ type
     [JsonName('height')]
     FHeight: Int64;
   public
-    constructor Create(AMedia: TcaFileToSend); override;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
     /// <summary>
     /// Type of the result, must be "animation"
     /// </summary>
@@ -905,7 +905,7 @@ type
     [JsonName('supports_streaming')]
     FSupportsStreaming: Boolean;
   public
-    constructor Create(AMedia: TcaFileToSend); override;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
     /// <summary>
     /// Type of the result, must be "photo"
     /// </summary>
@@ -967,7 +967,7 @@ type
     [JsonName('title')]
     FTitle: string;
   public
-    constructor Create(AMedia: TcaFileToSend); override;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
     /// <summary>
     /// Type of the result, must be "audio"
     /// </summary>
@@ -1324,9 +1324,10 @@ end;
 
 { TtgInputMedia }
 
-constructor TtgInputMedia.Create(AMedia: TcaFileToSend);
+constructor TtgInputMedia.Create(AMedia: TcaFileToSend; const ACaption: string = '');
 begin
   FFileToSend := AMedia;
+  FCaption := ACaption;
   case AMedia.Tag of
     TcaFileToSendTag.ID, TcaFileToSendTag.FromURL:
       FMedia := ExtractFileName(AMedia.Data);
@@ -1437,41 +1438,41 @@ end;
 
 { TtgInputMediaPhoto }
 
-constructor TtgInputMediaPhoto.Create(AMedia: TcaFileToSend);
+constructor TtgInputMediaPhoto.Create(AMedia: TcaFileToSend; const ACaption: string = '');
 begin
-  inherited Create(AMedia);
+  inherited Create(AMedia, ACaption);
   FType := 'photo';
 end;
 
 { TtgInputMediaAudio }
 
-constructor TtgInputMediaVideo.Create(AMedia: TcaFileToSend);
+constructor TtgInputMediaVideo.Create(AMedia: TcaFileToSend; const ACaption: string = '');
 begin
-  inherited Create(AMedia);
+  inherited Create(AMedia, ACaption);
   FType := 'video';
 end;
 
 { TtgInputMediaAudio }
 
-constructor TtgInputMediaAudio.Create(AMedia: TcaFileToSend);
+constructor TtgInputMediaAudio.Create(AMedia: TcaFileToSend; const ACaption: string = '');
 begin
-  inherited Create(AMedia);
+  inherited Create(AMedia, ACaption);
   FType := 'audio';
 end;
 
 { TtgInputMediaAnimation }
 
-constructor TtgInputMediaAnimation.Create(AMedia: TcaFileToSend);
+constructor TtgInputMediaAnimation.Create(AMedia: TcaFileToSend; const ACaption: string = '');
 begin
-  inherited Create(AMedia);
+  inherited Create(AMedia, ACaption);
   FType := 'animation';
 end;
 
 { TtgInputMediaDocument }
 
-constructor TtgInputMediaDocument.Create(AMedia: TcaFileToSend);
+constructor TtgInputMediaDocument.Create(AMedia: TcaFileToSend; const ACaption: string = '');
 begin
-  inherited Create(AMedia);
+  inherited Create(AMedia, ACaption);
   FType := 'document';
 end;
 

@@ -37,9 +37,7 @@ begin
   LMediaGroup.ChatId := TTestData.Current.SupergroupChat.ID;
   LMediaGroup.Media := [ //
     TtgInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)),
-    TtgInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot)) //
-    ];
-
+    TtgInputMediaPhoto.Create(TcaFileToSend.FromFile(TtgConst.PathToFile.Photos.Bot))];
   LResult := Bot.SendMediaGroup(LMediaGroup);
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
   for LMsg in LResult.Result do
