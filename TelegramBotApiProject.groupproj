@@ -10,7 +10,7 @@
             <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
         </Projects>
         <Projects Include="Tests\TelegramBotApiTests.dproj">
-            <Dependencies>TelegramBotApi.dproj</Dependencies>
+            <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -38,13 +38,13 @@
     <Target Name="TelegramBotApi:Make" DependsOnTargets="CloudAPI:Make">
         <MSBuild Projects="TelegramBotApi.dproj" Targets="Make"/>
     </Target>
-    <Target Name="TelegramBotApiTests" DependsOnTargets="TelegramBotApi">
+    <Target Name="TelegramBotApiTests" DependsOnTargets="CloudAPI;TelegramBotApi">
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj"/>
     </Target>
-    <Target Name="TelegramBotApiTests:Clean" DependsOnTargets="TelegramBotApi:Clean">
+    <Target Name="TelegramBotApiTests:Clean" DependsOnTargets="CloudAPI:Clean;TelegramBotApi:Clean">
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="TelegramBotApiTests:Make" DependsOnTargets="TelegramBotApi:Make">
+    <Target Name="TelegramBotApiTests:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
