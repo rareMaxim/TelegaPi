@@ -735,7 +735,7 @@ type
   [caName('sendPoll')]
   [caMethod(TcaMethod.GET)]
   [caParameterType(TcaParameterType.QueryString)]
-  TtgSendPoll = record
+  TtgSendPollArgument = record
   public
     [caName('chat_id')]
     [caIsRequaired]
@@ -768,7 +768,7 @@ type
     /// <summary>
     /// Poll type, “quiz” or “regular”, defaults to “regular”
     /// </summary>
-    &Type: TArray<string>;
+    &Type: string;
     [caName('allows_multiple_answers')]
     [caDefaultValueBoolean(False)]
     /// <summary>
@@ -780,7 +780,7 @@ type
     /// <summary>
     /// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
     /// </summary>
-    CorrectOptionId: Boolean;
+    CorrectOptionId: Integer;
     [caName('explanation')]
     [caDefaultValueString('')]
     /// <summary>
@@ -798,14 +798,14 @@ type
     /// Amount of time in seconds the poll will be active after creation, 5-600. Can't
     /// be used together with close_date.
     /// </summary>
-    OpenPeriod: integer;
+    OpenPeriod: Integer;
     [caName('close_date')]
     [caDefaultValueInt64Attrib(0)]
     /// <summary>
     /// Point in time (Unix timestamp) when the poll will be automatically closed.
     /// Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
     /// </summary>
-    CloseDate: integer;
+    CloseDate: Integer;
     [caDefaultValueBoolean(False)]
     [caName('is_closed')]
     /// <summary>
@@ -822,7 +822,7 @@ type
     [caDefaultValueInt64(0)]
     /// <summary>If the message is a reply, ID of the original message</summary>
     ReplyToMessageId: Int64;
-    class function Default: TtgSendPoll; static;
+    class function Default: TtgSendPollArgument; static;
   end;
 
 implementation
@@ -1009,9 +1009,9 @@ begin
   Result.ReplyToMessageId := 0;
 end;
 
-{ TtgSendPoll }
+{ TtgSendPollArgument }
 
-class function TtgSendPoll.Default: TtgSendPoll;
+class function TtgSendPollArgument.Default: TtgSendPollArgument;
 begin
   Result.ChatId := TtgUserLink.Empty;
   Result.Question := '';
