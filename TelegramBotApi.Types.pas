@@ -528,6 +528,29 @@ type
 
   end;
 
+  /// <summary>
+  /// This object contains information about one answer option in a poll.
+  /// </summary>
+  TtgPollOption = class
+  private
+    [JsonName('text')]
+    FText: string;
+    [JsonName('voter_count')]
+    FVoterCount: Integer;
+  public
+    /// <summary>
+    /// Option text, 1-100 characters
+    /// </summary>
+    property Text: string read FText write FText;
+    /// <summary>
+    /// Number of users that voted for this option
+    /// </summary>
+    property VoterCount: Integer read FVoterCount write FVoterCount;
+  end;
+
+  /// <summary>
+  /// This object contains information about a poll.
+  /// </summary>
   TtgPoll = class
 
   end;
