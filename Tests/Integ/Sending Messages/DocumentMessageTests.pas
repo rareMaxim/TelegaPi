@@ -47,7 +47,7 @@ begin
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
   LMessage := LResult.Result;
   Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
-  Assert.AreEqual(LSendDocumentArgument.Document.FileName, LMessage.Document.Filename);
+  Assert.AreEqual(LSendDocumentArgument.Document.FilePath, LMessage.Document.Filename);
   Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
   TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
   Assert.IsNotEmpty(LMessage.Document.FileId);
@@ -78,7 +78,7 @@ begin
   TgAssert.InRange(LMessage.Document.Thumb.FileSize, 11000, 12000);
 
   Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
-  Assert.AreEqual(LSendDocumentArgument.Document.FileName, LMessage.Document.Filename);
+  Assert.AreEqual(LSendDocumentArgument.Document.FilePath, LMessage.Document.Filename);
   Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
   TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
   Assert.IsNotEmpty(LMessage.Document.FileId);
@@ -100,7 +100,7 @@ begin
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
   LMessage := LResult.Result;
   Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
-  Assert.AreEqual(LSendDocumentArgument.Document.FileName, LMessage.Document.Filename);
+  Assert.AreEqual(LSendDocumentArgument.Document.FilePath, LMessage.Document.Filename);
   Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
   TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
   Assert.IsNotEmpty(LMessage.Document.FileId);
