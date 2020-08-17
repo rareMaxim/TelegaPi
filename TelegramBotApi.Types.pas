@@ -552,7 +552,93 @@ type
   /// This object contains information about a poll.
   /// </summary>
   TtgPoll = class
-
+  private
+    [JsonName('id')]
+    FID: string;
+    [JsonName('question')]
+    FQuestion: string;
+    [JsonName('options')]
+    FOptions: TArray<TtgPollOption>;
+    [JsonName('total_voter_count')]
+    FTotalVoterCount: Integer;
+    [JsonName('is_closed')]
+    FIsClosed: Boolean;
+    [JsonName('is_anonymous')]
+    FIsAnonymous: Boolean;
+    [JsonName('type')]
+    FType: string;
+    [JsonName('allows_multiple_answers')]
+    FAllowsMultipleAnswers: Boolean;
+    [JsonName('correct_option_id')]
+    FCorrectOptionId: Integer;
+    [JsonName('explanation')]
+    FExplanation: string;
+    [JsonName('explanation_entities')]
+    FExplanationEntities: TArray<TtgMessageEntity>;
+    [JsonName('open_period')]
+    FOpenPeriod: Integer;
+    [JsonName('close_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FCloseDate: TDateTime;
+  public
+    destructor Destroy; override;
+    /// <summary>
+    /// Unique poll identifier
+    /// </summary>
+    property ID: string read FID write FID;
+    /// <summary>
+    /// Poll question, 1-255 characters
+    /// </summary>
+    property Question: string read FQuestion write FQuestion;
+    /// <summary>
+    /// List of poll options
+    /// </summary>
+    property Options: TArray<TtgPollOption> read FOptions write FOptions;
+    /// <summary>
+    /// Total number of users that voted in the poll
+    /// </summary>
+    property TotalVoterCount: Integer read FTotalVoterCount write FTotalVoterCount;
+    /// <summary>
+    /// True, if the poll is closed
+    /// </summary>
+    property IsClosed: Boolean read FIsClosed write FIsClosed;
+    /// <summary>
+    /// True, if the poll is anonymous
+    /// </summary>
+    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
+    /// <summary>
+    /// Poll type, currently can be “regular” or “quiz”
+    /// </summary>
+    property &Type: string read FType write FType;
+    /// <summary>
+    /// True, if the poll allows multiple answers
+    /// </summary>
+    property AllowsMultipleAnswers: Boolean read FAllowsMultipleAnswers write FAllowsMultipleAnswers;
+    /// <summary>
+    /// Optional. 0-based identifier of the correct answer option. Available only for
+    /// polls in the quiz mode, which are closed, or was sent (not forwarded) by the
+    /// bot or to the private chat with the bot.
+    /// </summary>
+    property CorrectOptionId: Integer read FCorrectOptionId write FCorrectOptionId;
+    /// <summary>
+    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear
+    /// in the explanation
+    /// </summary>
+    property Explanation: string read FExplanation write FExplanation;
+    /// <summary>
+    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear
+    /// in the explanation
+    /// </summary>
+    property ExplanationEntities: TArray<TtgMessageEntity> read FExplanationEntities write FExplanationEntities;
+    /// <summary>
+    /// Optional. Amount of time in seconds the poll will be active after creation
+    /// </summary>
+    property OpenPeriod: Integer read FOpenPeriod write FOpenPeriod;
+    /// <summary>
+    /// Optional. Point in time (Unix timestamp) when the poll will be automatically
+    /// closed
+    /// </summary>
+    property CloseDate: TDateTime read FCloseDate write FCloseDate;
   end;
 
   TtgPollAnswer = class
@@ -1512,6 +1598,17 @@ constructor TtgInputMediaDocument.Create(AMedia: TcaFileToSend; const ACaption: 
 begin
   inherited Create(AMedia, ACaption);
   FType := 'document';
+end;
+
+{ TtgPoll }
+
+destructor TtgPoll.Destroy;
+var
+  I: Integer;
+begin
+  for I := Low(FOptions) to High(FOptions) do
+    FOptions[I].Free;
+  inherited;
 end;
 
 end.
