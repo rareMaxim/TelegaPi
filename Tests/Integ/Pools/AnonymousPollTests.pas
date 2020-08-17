@@ -21,8 +21,10 @@ type
 implementation
 
 uses
+  TelegramBotApi.Types,
+  TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Request,
-  TelegramBotApi.Types, TelegramBotApi.Types.Enums;
+  Test.Assert;
 
 { TAnonymousPollTests }
 
@@ -47,7 +49,13 @@ begin
   Assert.IsTrue(LMessage.Poll.IsAnonymous);
   Assert.AreEqual('regular', LMessage.Poll.&Type);
   Assert.IsFalse(LMessage.Poll.AllowsMultipleAnswers);
-
+  TgAssert.IsDefault(LMessage.Poll.CorrectOptionId);
+  TgAssert.IsDefault(LMessage.Poll.OpenPeriod);
+  TgAssert.IsDefault(LMessage.Poll.CloseDate);
+  Assert.AreEqual(LPool.Question, LMessage.Poll.Question);
+  Assert.AreEqual(3, Length(LMessage.Poll.Options));
+  for i := Low(LPool.Options) to High(LPool.Options) do
+    Assert.AreEqual(LPool.Options[i], LMessage.Poll.Options[i].Text);
 end;
 
 end.
