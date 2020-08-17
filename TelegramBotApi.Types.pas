@@ -343,191 +343,6 @@ type
     property VCard: string read FVCard write FVCard;
   end;
 
-  TtgMessage = class
-  private type
-    TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
-    TMessPhotoConv = class(TJsonListConverter<TtgPhotosize>);
-  private
-    [JsonName('chat')]
-    FChat: TtgChat;
-    [JsonName('message_id')]
-    FMessageID: Int64;
-    [JsonName('from')]
-    FFrom: TtgUser;
-    [JsonName('text')]
-    FText: string;
-    [JsonName('date')]
-    [JsonConverter(TJsonUnixTimeConverter)]
-    FDate: TDateTime;
-    [JsonName('forward_from_chat')]
-    FForwardFromChat: TtgChat;
-    [JsonName('forward_from_message_id')]
-    FForwardFromMessageId: Int64;
-    [JsonName('forward_signature')]
-    FForwardSignature: string;
-    [JsonName('forward_date')]
-    [JsonConverter(TJsonUnixTimeConverter)]
-    FForwardDate: TDateTime;
-    [JsonName('entities')]
-    [JsonConverter(TMessEntConv)]
-    FEntities: TObjectList<TtgMessageEntity>;
-    [JsonName('animation')]
-    FAnimation: TtgAnimation;
-    [JsonName('video')]
-    FVideo: TtgVideo;
-    [JsonName('caption')]
-    FCaption: string;
-    [JsonName('video_note')]
-    FVideoNote: TtgVideoNote;
-    [JsonName('venue')]
-    FVenue: TtgVenue;
-    [JsonName('photo')]
-    [JsonConverter(TMessPhotoConv)]
-    FPhoto: TObjectList<TtgPhotosize>;
-    [JsonName('caption_entities')]
-    [JsonConverter(TMessEntConv)]
-    FCaptionEntities: TObjectList<TtgMessageEntity>;
-    [JsonName('contact')]
-    FContact: TtgContact;
-    [JsonName('document')]
-    FDocument: TtgDocument;
-    [JsonName('audio')]
-    FAudio: TtgAudio;
-    [JsonName('voice')]
-    FVoice: TtgVoice;
-    [JsonName('media_group_id')]
-    FMediaGroupId: string;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    function &Type: TtgMessageType;
-  public
-    property MessageID: Int64 read FMessageID write FMessageID;
-    property Chat: TtgChat read FChat write FChat;
-    property ForwardFromChat: TtgChat read FForwardFromChat write FForwardFromChat;
-    property ForwardFromMessageId: Int64 read FForwardFromMessageId write FForwardFromMessageId;
-    property ForwardSignature: string read FForwardSignature write FForwardSignature;
-    property ForwardDate: TDateTime read FForwardDate write FForwardDate;
-    property From: TtgUser read FFrom write FFrom;
-    property Date: TDateTime read FDate write FDate;
-    /// <summary>
-    /// Optional. The unique identifier of a media message group this message belongs to
-    /// </summary>
-    property MediaGroupId: string read FMediaGroupId write FMediaGroupId;
-    property Text: string read FText write FText;
-    property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
-    /// <summary>
-    /// Optional. Message is an animation, information about the animation. For
-    /// backward compatibility, when this field is set, the document field will also be
-    /// set
-    /// </summary>
-    property Animation: TtgAnimation read FAnimation write FAnimation;
-    /// <summary>
-    /// Optional. Message is an audio file, information about the file
-    /// </summary>
-    property Audio: TtgAudio read FAudio write FAudio;
-    /// <summary>
-    /// Optional. Message is a general file, information about the file
-    /// </summary>
-    property Document: TtgDocument read FDocument write FDocument;
-    property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
-    property Video: TtgVideo read FVideo write FVideo;
-    property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
-    /// <summary>
-    /// Optional. Message is a voice message, information about the file
-    /// </summary>
-    property Voice: TtgVoice read FVoice write FVoice;
-    property Caption: string read FCaption write FCaption;
-    /// <summary>
-    /// Optional. For messages with a caption, special entities like usernames, URLs,
-    /// bot commands, etc. that appear in the caption
-    /// </summary>
-    property CaptionEntities: TObjectList<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
-    /// <summary>
-    /// Optional. Message is a shared contact, information about the contact
-    /// </summary>
-    property Contact: TtgContact read FContact write FContact;
-    /// <summary>
-    /// Optional. Message is a venue, information about the venue. For backward
-    /// compatibility, when this field is set, the location field will also be set
-    /// </summary>
-    property Venue: TtgVenue read FVenue write FVenue;
-  end;
-
-  TtgChatPhoto = class
-
-  end;
-
-  TtgChat = class
-  private
-    [JsonName('id')]
-    FID: Int64;
-    [JsonName('type')]
-    FType: string;
-    [JsonName('title')]
-    FTitle: string;
-    [JsonName('username')]
-    FUsername: string;
-    [JsonName('first_name')]
-    FFirstName: string;
-    [JsonName('last_name')]
-    FLastName: string;
-    [JsonName('photo')]
-    FPhoto: TtgChatPhoto;
-    [JsonName('description')]
-    FDescription: string;
-    [JsonName('invite_link')]
-    FInviteLink: string;
-    [JsonName('pinned_message')]
-    FPinnedMessage: TtgMessage;
-    [JsonName('slow_mode_delay')]
-    FSlowModeDelay: Int64;
-    [JsonName('sticker_set_name')]
-    FStickerSetName: string;
-    [JsonName('can_set_sticker_set')]
-    FCanSetStickerSet: Boolean;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    property ID: Int64 read FID write FID;
-    property &Type: string read FType write FType;
-    property Title: string read FTitle write FTitle;
-    property Username: string read FUsername write FUsername;
-    property FirstName: string read FFirstName write FFirstName;
-    property LastName: string read FLastName write FLastName;
-    property Photo: TtgChatPhoto read FPhoto write FPhoto;
-    property Description: string read FDescription write FDescription;
-    property InviteLink: string read FInviteLink write FInviteLink;
-    property PinnedMessage: TtgMessage read FPinnedMessage write FPinnedMessage;
-    property SlowModeDelay: Int64 read FSlowModeDelay write FSlowModeDelay;
-    property StickerSetName: string read FStickerSetName write FStickerSetName;
-    property CanSetStickerSet: Boolean read FCanSetStickerSet write FCanSetStickerSet;
-  end;
-
-  TtgInlineQuery = class
-
-  end;
-
-  TtgAnswerInlineQuery = class
-
-  end;
-
-  TtgChosenInlineResult = class
-
-  end;
-
-  TtgCallbackQuery = class
-
-  end;
-
-  TtgShippingQuery = class
-
-  end;
-
-  TtgPreCheckoutQuery = class
-
-  end;
-
   /// <summary>
   /// This object contains information about one answer option in a poll.
   /// </summary>
@@ -642,6 +457,194 @@ type
   end;
 
   TtgPollAnswer = class
+
+  end;
+
+  TtgMessage = class
+  private type
+    TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
+    TMessPhotoConv = class(TJsonListConverter<TtgPhotosize>);
+  private
+    [JsonName('chat')]
+    FChat: TtgChat;
+    [JsonName('message_id')]
+    FMessageID: Int64;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('text')]
+    FText: string;
+    [JsonName('date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FDate: TDateTime;
+    [JsonName('forward_from_chat')]
+    FForwardFromChat: TtgChat;
+    [JsonName('forward_from_message_id')]
+    FForwardFromMessageId: Int64;
+    [JsonName('forward_signature')]
+    FForwardSignature: string;
+    [JsonName('forward_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FForwardDate: TDateTime;
+    [JsonName('entities')]
+    [JsonConverter(TMessEntConv)]
+    FEntities: TObjectList<TtgMessageEntity>;
+    [JsonName('animation')]
+    FAnimation: TtgAnimation;
+    [JsonName('video')]
+    FVideo: TtgVideo;
+    [JsonName('caption')]
+    FCaption: string;
+    [JsonName('video_note')]
+    FVideoNote: TtgVideoNote;
+    [JsonName('venue')]
+    FVenue: TtgVenue;
+    [JsonName('photo')]
+    [JsonConverter(TMessPhotoConv)]
+    FPhoto: TObjectList<TtgPhotosize>;
+    [JsonName('caption_entities')]
+    [JsonConverter(TMessEntConv)]
+    FCaptionEntities: TObjectList<TtgMessageEntity>;
+    [JsonName('contact')]
+    FContact: TtgContact;
+    [JsonName('document')]
+    FDocument: TtgDocument;
+    [JsonName('audio')]
+    FAudio: TtgAudio;
+    [JsonName('voice')]
+    FVoice: TtgVoice;
+    [JsonName('media_group_id')]
+    FMediaGroupId: string;
+    [JsonName('poll')]
+    FPoll: TtgPoll;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function &Type: TtgMessageType;
+  public
+    property MessageID: Int64 read FMessageID write FMessageID;
+    property Chat: TtgChat read FChat write FChat;
+    property ForwardFromChat: TtgChat read FForwardFromChat write FForwardFromChat;
+    property ForwardFromMessageId: Int64 read FForwardFromMessageId write FForwardFromMessageId;
+    property ForwardSignature: string read FForwardSignature write FForwardSignature;
+    property ForwardDate: TDateTime read FForwardDate write FForwardDate;
+    property From: TtgUser read FFrom write FFrom;
+    property Date: TDateTime read FDate write FDate;
+    /// <summary>
+    /// Optional. The unique identifier of a media message group this message belongs to
+    /// </summary>
+    property MediaGroupId: string read FMediaGroupId write FMediaGroupId;
+    property Text: string read FText write FText;
+    property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
+    /// <summary>
+    /// Optional. Message is an animation, information about the animation. For
+    /// backward compatibility, when this field is set, the document field will also be
+    /// set
+    /// </summary>
+    property Animation: TtgAnimation read FAnimation write FAnimation;
+    /// <summary>
+    /// Optional. Message is an audio file, information about the file
+    /// </summary>
+    property Audio: TtgAudio read FAudio write FAudio;
+    /// <summary>
+    /// Optional. Message is a general file, information about the file
+    /// </summary>
+    property Document: TtgDocument read FDocument write FDocument;
+    property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
+    property Video: TtgVideo read FVideo write FVideo;
+    property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
+    /// <summary>
+    /// Optional. Message is a voice message, information about the file
+    /// </summary>
+    property Voice: TtgVoice read FVoice write FVoice;
+    property Caption: string read FCaption write FCaption;
+    /// <summary>
+    /// Optional. For messages with a caption, special entities like usernames, URLs,
+    /// bot commands, etc. that appear in the caption
+    /// </summary>
+    property CaptionEntities: TObjectList<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
+    /// <summary>
+    /// Optional. Message is a shared contact, information about the contact
+    /// </summary>
+    property Contact: TtgContact read FContact write FContact;
+    property Poll: TtgPoll read FPoll write FPoll;
+    /// <summary>
+    /// Optional. Message is a venue, information about the venue. For backward
+    /// compatibility, when this field is set, the location field will also be set
+    /// </summary>
+    property Venue: TtgVenue read FVenue write FVenue;
+  end;
+
+  TtgChatPhoto = class
+
+  end;
+
+  TtgChat = class
+  private
+    [JsonName('id')]
+    FID: Int64;
+    [JsonName('type')]
+    FType: string;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('username')]
+    FUsername: string;
+    [JsonName('first_name')]
+    FFirstName: string;
+    [JsonName('last_name')]
+    FLastName: string;
+    [JsonName('photo')]
+    FPhoto: TtgChatPhoto;
+    [JsonName('description')]
+    FDescription: string;
+    [JsonName('invite_link')]
+    FInviteLink: string;
+    [JsonName('pinned_message')]
+    FPinnedMessage: TtgMessage;
+    [JsonName('slow_mode_delay')]
+    FSlowModeDelay: Int64;
+    [JsonName('sticker_set_name')]
+    FStickerSetName: string;
+    [JsonName('can_set_sticker_set')]
+    FCanSetStickerSet: Boolean;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    property ID: Int64 read FID write FID;
+    property &Type: string read FType write FType;
+    property Title: string read FTitle write FTitle;
+    property Username: string read FUsername write FUsername;
+    property FirstName: string read FFirstName write FFirstName;
+    property LastName: string read FLastName write FLastName;
+    property Photo: TtgChatPhoto read FPhoto write FPhoto;
+    property Description: string read FDescription write FDescription;
+    property InviteLink: string read FInviteLink write FInviteLink;
+    property PinnedMessage: TtgMessage read FPinnedMessage write FPinnedMessage;
+    property SlowModeDelay: Int64 read FSlowModeDelay write FSlowModeDelay;
+    property StickerSetName: string read FStickerSetName write FStickerSetName;
+    property CanSetStickerSet: Boolean read FCanSetStickerSet write FCanSetStickerSet;
+  end;
+
+  TtgInlineQuery = class
+
+  end;
+
+  TtgAnswerInlineQuery = class
+
+  end;
+
+  TtgChosenInlineResult = class
+
+  end;
+
+  TtgCallbackQuery = class
+
+  end;
+
+  TtgShippingQuery = class
+
+  end;
+
+  TtgPreCheckoutQuery = class
 
   end;
 
@@ -1300,6 +1303,8 @@ begin
     Exit(TtgMessageType.Document)
   else if Assigned(Contact) then
     Exit(TtgMessageType.Contact)
+  else if Assigned(Poll) then
+    Exit(TtgMessageType.Poll)
   else
   begin
     Result := TtgMessageType.Unknown;
@@ -1345,6 +1350,8 @@ begin
     // TtgMessageType.Service:
     TtgMessageType.Venue:
       FVenue.Free;
+    TtgMessageType.Poll:
+      FPoll.Free;
   end;
   FCaptionEntities.Free;
   FEntities.Free;
