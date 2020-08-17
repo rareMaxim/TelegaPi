@@ -38,6 +38,11 @@ type
     function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TArray<TtgMessage>>;
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
     function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send a native poll. On success, the sent Message is returned.
+    /// </summary>
+    function SendPool(ASendPollArgument: TtgSendPollArgument): ItgResponse<TtgMessage>;
+
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
@@ -173,6 +178,11 @@ end;
 function TTelegramBotApi.SendPhoto(ASendPhotoArgument: TtgSendPhotoArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendPhotoArgument, TtgMessage>(ASendPhotoArgument);
+end;
+
+function TTelegramBotApi.SendPool(ASendPollArgument: TtgSendPollArgument): ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgSendPollArgument, TtgMessage>(ASendPollArgument);
 end;
 
 function TTelegramBotApi.SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
