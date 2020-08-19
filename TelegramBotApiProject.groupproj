@@ -12,6 +12,9 @@
         <Projects Include="Tests\TelegramBotApiTests.dproj">
             <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
         </Projects>
+        <Projects Include="experiment\Project14.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="TelegramBotApiTests:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Project14">
+        <MSBuild Projects="experiment\Project14.dproj"/>
+    </Target>
+    <Target Name="Project14:Clean">
+        <MSBuild Projects="experiment\Project14.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project14:Make">
+        <MSBuild Projects="experiment\Project14.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests"/>
+        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests;Project14"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;Project14:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make"/>
+        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;Project14:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
