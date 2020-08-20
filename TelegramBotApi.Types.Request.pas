@@ -776,7 +776,7 @@ type
     /// </summary>
     AllowsMultipleAnswers: Boolean;
     [caName('correct_option_id')]
-    [caDefaultValueInt64Attrib(0)]
+    [caDefaultValueInt64(0)]
     /// <summary>
     /// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
     /// </summary>
@@ -793,14 +793,14 @@ type
     /// <summary>Mode for parsing entities in the explanation. See formatting options for more details.</summary>
     ExplanationParseMode: TtgParseMode;
     [caName('open_period')]
-    [caDefaultValueInt64Attrib(0)]
+    [caDefaultValueInt64(0)]
     /// <summary>
     /// Amount of time in seconds the poll will be active after creation, 5-600. Can't
     /// be used together with close_date.
     /// </summary>
     OpenPeriod: Integer;
     [caName('close_date')]
-    [caDefaultValueInt64Attrib(0)]
+    [caDefaultValueInt64(0)]
     /// <summary>
     /// Point in time (Unix timestamp) when the poll will be automatically closed.
     /// Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
