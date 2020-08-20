@@ -1362,23 +1362,23 @@ begin
   inherited;
 end;
 
+{ TtgUpdate }
 constructor TtgUpdate.Create;
 begin
   inherited Create;
-  FMessage := TtgMessage.Create;
-  FEditedMessage := TtgMessage.Create;
+  FMessage := nil;
+  FEditedMessage := nil;
 
 end;
 
 destructor TtgUpdate.Destroy;
 begin
-  FEditedMessage.Free;
-  FMessage.Free;
+  if Assigned(FEditedMessage) then
+    FEditedMessage.Free;
+  if Assigned(FMessage) then
+    FMessage.Free;
   inherited Destroy;
-
 end;
-
-{ TtgUpdate }
 
 function TtgUpdate.&Type: TtgUpdateType;
 begin
