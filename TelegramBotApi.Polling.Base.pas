@@ -36,9 +36,10 @@ type
 implementation
 
 uses
+  System.Classes,
+  System.SysUtils,
   TelegramBotApi.Types,
-  TelegramBotApi.Types.Request,
-  System.SysUtils;
+  TelegramBotApi.Types.Request;
 
 { TtgPollingBase }
 
