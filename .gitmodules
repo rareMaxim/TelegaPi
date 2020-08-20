@@ -1,9 +1,3 @@
 [submodule "CloudAPI"]
 	path = CloudAPI
 	url = https://github.com/ms301/CloudAPI.git
-[submodule "DUnitX"]
-	path = DUnitX
-	url = https://github.com/VSoftTechnologies/DUnitX.git
-[submodule "FastMM5"]
-	path = FastMM5
-	url = https://github.com/pleriche/FastMM5.git
