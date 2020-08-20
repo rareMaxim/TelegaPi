@@ -37,7 +37,8 @@ implementation
 
 uses
   TelegramBotApi.Types,
-  TelegramBotApi.Types.Request;
+  TelegramBotApi.Types.Request,
+  System.SysUtils;
 
 { TtgPollingBase }
 
@@ -63,6 +64,7 @@ var
   LUpdateArg: TtgGetUpdatesArgument;
   LBot: TTelegramBotApi;
   LUpdates: TArray<TtgUpdate>;
+  i: Integer;
 begin
   LUpdateArg := TtgGetUpdatesArgument.Default;
   LUpdateArg.Offset := FMessageOffset;
@@ -72,10 +74,11 @@ begin
   try
     LUpdates := LBot.GetUpdates(LUpdateArg).Result;
     EventParser(LUpdates);
+    for i := Low(LUpdates) to High(LUpdates) do
+      LUpdates[i].Free;
   finally
     LBot.Free;
   end;
-
 end;
 
 procedure TtgPollingBase.Start;
@@ -85,12 +88,9 @@ begin
   FTask := TTask.Run(
     procedure
     begin
-      while TTask.CurrentTask.Status <> TTaskStatus.Canceled do
+      while FEvent.WaitFor(FPollingInterval) = wrTimeout do
       begin
-        if FEvent.WaitFor(FPollingInterval) <> wrTimeout then
-          Break;
         Go(FBot.BotToken);
-
       end;
     end)
 end;
@@ -99,10 +99,7 @@ procedure TtgPollingBase.Stop;
 begin
   FEvent.SetEvent;
   TTask.WaitForAny([FTask]);
-  // FTask.Wait();
-  // if Assigned(FTask) then
-  // FTask.Cancel;
-  // FTask := nil;
+  FTask := nil;
 end;
 
 end.
