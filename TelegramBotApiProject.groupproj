@@ -12,6 +12,9 @@
         <Projects Include="Tests\TelegramBotApiTests.dproj">
             <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
         </Projects>
+        <Projects Include="Examples\Echo\Example.Echo.dproj">
+            <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="TelegramBotApiTests:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Example_Echo" DependsOnTargets="CloudAPI;TelegramBotApi">
+        <MSBuild Projects="Examples\Echo\Example.Echo.dproj"/>
+    </Target>
+    <Target Name="Example_Echo:Clean" DependsOnTargets="CloudAPI:Clean;TelegramBotApi:Clean">
+        <MSBuild Projects="Examples\Echo\Example.Echo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Example_Echo:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
+        <MSBuild Projects="Examples\Echo\Example.Echo.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests"/>
+        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests;Example_Echo"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;Example_Echo:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make"/>
+        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;Example_Echo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
