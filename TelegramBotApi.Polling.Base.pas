@@ -74,9 +74,13 @@ begin
   LBot := TTelegramBotApi.Create(AToken);
   try
     LUpdates := LBot.GetUpdates(LUpdateArg).Result;
-    EventParser(LUpdates);
-    for i := Low(LUpdates) to High(LUpdates) do
-      LUpdates[i].Free;
+    if Length(LUpdates) > 0 then
+    begin
+      EventParser(LUpdates);
+      FMessageOffset := LUpdates[High(LUpdates)].UpdateID + 1;
+      for i := Low(LUpdates) to High(LUpdates) do
+        LUpdates[i].Free;
+    end;
   finally
     LBot.Free;
   end;
