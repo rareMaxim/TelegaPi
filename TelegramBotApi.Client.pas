@@ -21,7 +21,13 @@ type
   protected
     function InternalExecute<TArgument: record; TResult>(AArgument: TArgument): ItgResponse<TResult>; overload;
     function InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>; overload;
+    function InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult; overload;
+    function InternalExecuteCustom<TArgument: record; TResult>(AArgument: TArgument): TResult; overload;
+
   public
+    function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
+    class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
+    function SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
     function GetMe: ItgResponse<TtgUser>;
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
     function ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
@@ -48,8 +54,6 @@ type
     constructor Create(const AToken: string); overload;
 
     destructor Destroy; override;
-    function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
-    class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     property BotToken: string read GetBotToken write SetBotToken;
     property CloudApi: TCloudApiClient read FCloudApi write FCloudApi;
   end;
@@ -133,6 +137,22 @@ begin
   Result.CloudResponse := LCloudResponse;
 end;
 
+function TTelegramBotApi.InternalExecuteCustom<TArgument, TResult>(AArgument: TArgument): TResult;
+var
+  LReq: IcaRequest;
+begin
+  LReq := TcaRequestArgument.ObjToRequest<TArgument>(AArgument);
+  Result := InternalExecuteCustom<TResult>(LReq);
+end;
+
+function TTelegramBotApi.InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult;
+var
+  LCloudResponse: IcaResponse<TResult>;
+begin
+  LCloudResponse := FCloudApi.Execute<TResult>(ARequest);
+  Result := LCloudResponse.Data;
+end;
+
 function TTelegramBotApi.SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendAnimationArgument, TtgMessage>(ASendAnimationArgument);
@@ -212,6 +232,11 @@ begin
     FBotToken := Value;
     TTelegramAuthenticator(FCloudApi.Authenticator).BotToken := Value;
   end;
+end;
+
+function TTelegramBotApi.SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
+begin
+  Result := InternalExecuteCustom<TtgSetWebhookArgument, Boolean>(SetWebhookArgument);
 end;
 
 end.
