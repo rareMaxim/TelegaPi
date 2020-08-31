@@ -28,6 +28,7 @@ type
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     function SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
+    function DeleteWebhook(): Boolean;
     function GetMe: ItgResponse<TtgUser>;
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
     function ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
@@ -82,6 +83,11 @@ constructor TTelegramBotApi.Create(const AToken: string);
 begin
   Self.Create;
   BotToken := AToken;
+end;
+
+function TTelegramBotApi.DeleteWebhook: Boolean;
+begin
+  Result := InternalExecuteCustom<TtgDeleteWebhookArgument, Boolean>(TtgDeleteWebhookArgument.Default);
 end;
 
 destructor TTelegramBotApi.Destroy;

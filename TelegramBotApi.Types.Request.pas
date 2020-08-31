@@ -767,6 +767,16 @@ type
     class function Default: TtgSetWebhookArgument; static;
   end;
 
+  /// <summary> Use this method to remove webhook integration if you decide to switch
+  /// back to getUpdates. Returns True on success. Requires no parameters.
+  /// </summary>
+  [caName('deleteWebhook')]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgDeleteWebhookArgument = record
+  public
+    class function Default: TtgDeleteWebhookArgument; static;
+  end;
+
   [caName('getChat')]
   [caMethod(TcaMethod.GET)]
   [caParameterType(TcaParameterType.GetOrPost)]
@@ -1086,6 +1096,13 @@ begin
   Result.Certificate := TcaFileToSend.Empty;
   Result.MaxConnections := 40;
   Result.AllowedUpdates := UPDATES_ALLOWED_ALL;
+end;
+
+{ TtgDeleteWebhookArgument }
+
+class function TtgDeleteWebhookArgument.Default: TtgDeleteWebhookArgument;
+begin
+
 end;
 
 end.
