@@ -103,7 +103,8 @@ end;
 procedure TtgPollingBase.Stop;
 begin
   FEvent.SetEvent;
-  TTask.WaitForAny([FTask]);
+  if Assigned(FTask) then
+    TTask.WaitForAny([FTask]);
   FTask := nil;
 end;
 

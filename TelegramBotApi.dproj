@@ -127,7 +127,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\TelegramBotApi.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\Public\Documents\Embarcadero\Studio\21.0\Bpl\TelegramBotApi.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>TelegramBotApi.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

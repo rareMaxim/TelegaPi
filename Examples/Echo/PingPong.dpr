@@ -1,4 +1,4 @@
-program Example.Echo;
+program PingPong;
 
 {$APPTYPE CONSOLE}
 {$R *.res}
@@ -9,8 +9,9 @@ uses
   WinAPI.Windows,
   TelegramBotApi.Client,
   TelegramBotApi.Polling.Console,
-  Test.Config in '..\..\Tests\Integ\Framework\Test.Config.pas',
-  TelegramBotApi.Types;
+  TelegramBotApi.Types,
+  TelegramBotApi.Types.Request,
+  Test.Config in '..\..\Tests\Integ\Framework\Test.Config.pas';
 
 type
   TControllerTest = class
@@ -20,10 +21,10 @@ type
     FPoller: TtgPollingConsole;
     FConfig: TConfigFile;
   protected
+    procedure SendMsg(ATo: TtgUserLink; const AMsg: string);
   public
     constructor Create;
     destructor Destroy; override;
-
   end;
 
   { TControllerTest }
@@ -39,6 +40,7 @@ begin
   FPoller.OnMessage := procedure(AMsg: TtgMessage)
     begin
       Writeln(AMsg.Text);
+      SendMsg(AMsg.From.ID, AMsg.Text);
     end;
   FPoller.Start;
   Writeln('Start listening for @' + FMe.Username);
@@ -46,11 +48,21 @@ end;
 
 destructor TControllerTest.Destroy;
 begin
-  // FMe.Free;
+  FPoller.Stop;
   FPoller.Free;
   FBot.Free;
   FConfig.Free;
   inherited;
+end;
+
+procedure TControllerTest.SendMsg(ATo: TtgUserLink; const AMsg: string);
+var
+  LMsgArg: TtgMessageArgument;
+begin
+  LMsgArg := TtgMessageArgument.Default;
+  LMsgArg.ChatId := ATo;
+  LMsgArg.Text := AMsg;
+  FBot.SendMessage(LMsgArg);
 end;
 
 procedure Run;

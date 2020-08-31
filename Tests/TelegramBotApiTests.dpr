@@ -6,6 +6,7 @@
 {$STRONGLINKTYPES ON}
 
 uses
+  FastMM5,
   System.SysUtils,
   {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
@@ -16,20 +17,11 @@ uses
   TelegramBotApi.Client in '..\TelegramBotApi.Client.pas',
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
   TestsFixture in 'Integ\Framework\TestsFixture.pas',
-  Test.Config in 'Integ\Framework\Test.Config.pas',
   Test.Data in 'Integ\Framework\Test.Data.pas',
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
   AnonymousPollTests in 'Integ\Pools\AnonymousPollTests.pas',
-  AlbumMessageTests in 'Integ\Sending Messages\AlbumMessageTests.pas',
-  AnimationMessageTests in 'Integ\Sending Messages\AnimationMessageTests.pas',
-  AudioMessageTests in 'Integ\Sending Messages\AudioMessageTests.pas',
-  DocumentMessageTests in 'Integ\Sending Messages\DocumentMessageTests.pas',
-  SendingContactMessageTests in 'Integ\Sending Messages\SendingContactMessageTests.pas',
-  SendingPhotoMessageTests in 'Integ\Sending Messages\SendingPhotoMessageTests.pas',
-  SendingVenueMessageTests in 'Integ\Sending Messages\SendingVenueMessageTests.pas',
-  TextMessageTests in 'Integ\Sending Messages\TextMessageTests.pas',
-  VideoMessageTests in 'Integ\Sending Messages\VideoMessageTests.pas';
+  Test.Config in 'Integ\Framework\Test.Config.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

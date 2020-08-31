@@ -12,7 +12,7 @@
         <Projects Include="Tests\TelegramBotApiTests.dproj">
             <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
         </Projects>
-        <Projects Include="Examples\Echo\Example.Echo.dproj">
+        <Projects Include="Examples\Echo\PingPong.dproj">
             <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
         </Projects>
     </ItemGroup>
@@ -50,23 +50,23 @@
     <Target Name="TelegramBotApiTests:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Example_Echo" DependsOnTargets="CloudAPI;TelegramBotApi">
-        <MSBuild Projects="Examples\Echo\Example.Echo.dproj"/>
+    <Target Name="PingPong" DependsOnTargets="CloudAPI;TelegramBotApi">
+        <MSBuild Projects="Examples\Echo\PingPong.dproj"/>
     </Target>
-    <Target Name="Example_Echo:Clean" DependsOnTargets="CloudAPI:Clean;TelegramBotApi:Clean">
-        <MSBuild Projects="Examples\Echo\Example.Echo.dproj" Targets="Clean"/>
+    <Target Name="PingPong:Clean" DependsOnTargets="CloudAPI:Clean;TelegramBotApi:Clean">
+        <MSBuild Projects="Examples\Echo\PingPong.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="Example_Echo:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
-        <MSBuild Projects="Examples\Echo\Example.Echo.dproj" Targets="Make"/>
+    <Target Name="PingPong:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
+        <MSBuild Projects="Examples\Echo\PingPong.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests;Example_Echo"/>
+        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests;PingPong"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;Example_Echo:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;PingPong:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;Example_Echo:Make"/>
+        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;PingPong:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
