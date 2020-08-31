@@ -23,12 +23,13 @@ type
     function InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>; overload;
     function InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult; overload;
     function InternalExecuteCustom<TArgument: record; TResult>(AArgument: TArgument): TResult; overload;
-
   public
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     function SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
     function DeleteWebhook(): Boolean;
+    function GetWebhookInfo(): ItgResponse<TtgWebhookInfo>; overload;
+
     function GetMe: ItgResponse<TtgUser>;
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
     function ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
@@ -124,6 +125,11 @@ end;
 class function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
 begin
   Result := TCloudApiClient.Serializer.Deserialize < TtgResponse < TArray<TtgUpdate> >> (AJson);
+end;
+
+function TTelegramBotApi.GetWebhookInfo: ItgResponse<TtgWebhookInfo>;
+begin
+  Result := InternalExecute<TtgGetWebhookInfoArgument, TtgWebhookInfo>(TtgGetWebhookInfoArgument.Default);
 end;
 
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;

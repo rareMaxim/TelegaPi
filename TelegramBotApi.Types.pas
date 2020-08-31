@@ -1133,6 +1133,60 @@ type
     property Title: string read FTitle write FTitle;
   end;
 
+  /// <summary> Contains information about the current status of a webhook.</summary>
+  TtgWebhookInfo = class
+  private
+    [JsonName('allowed_updates')]
+    [JsonName('url')]
+    FUrl: string;
+    [JsonName('has_custom_certificate')]
+    FHasCustomCertificate: Boolean;
+    [JsonName('pending_update_count')]
+    FPendingUpdateCount: Integer;
+    [JsonName('last_error_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FLastErrorDate: TDateTime;
+    [JsonName('last_error_message')]
+    FLastErrorMessage: string;
+    [JsonName('max_connections')]
+    FMaxConnections: Integer;
+    [JsonName('allowed_updates')]
+    FAllowedUpdates: TAllowedUpdates;
+  public
+    /// <summary>
+    /// Webhook URL, may be empty if webhook is not set up
+    /// </summary>
+    property Url: string read FUrl write FUrl;
+    /// <summary>
+    /// True, if a custom certificate was provided for webhook certificate checks
+    /// </summary>
+    property HasCustomCertificate: Boolean read FHasCustomCertificate write FHasCustomCertificate;
+    /// <summary>
+    /// Number of updates awaiting delivery
+    /// </summary>
+    property PendingUpdateCount: Integer read FPendingUpdateCount write FPendingUpdateCount;
+    /// <summary>
+    /// Optional. Unix time for the most recent error that happened when trying to
+    /// deliver an update via webhook
+    /// </summary>
+    property LastErrorDate: TDateTime read FLastErrorDate write FLastErrorDate;
+    /// <summary>
+    /// Optional. Error message in human-readable format for the most recent error that
+    /// happened when trying to deliver an update via webhook
+    /// </summary>
+    property LastErrorMessage: string read FLastErrorMessage write FLastErrorMessage;
+    /// <summary>
+    /// Optional. Maximum allowed number of simultaneous HTTPS connections to the
+    /// webhook for update delivery
+    /// </summary>
+    property MaxConnections: Integer read FMaxConnections write FMaxConnections;
+    /// <summary>
+    /// Optional. A list of update types the bot is subscribed to. Defaults to all
+    /// update types
+    /// </summary>
+    property AllowedUpdates: TAllowedUpdates read FAllowedUpdates write FAllowedUpdates;
+  end;
+
 implementation
 
 uses

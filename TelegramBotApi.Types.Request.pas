@@ -777,6 +777,16 @@ type
     class function Default: TtgDeleteWebhookArgument; static;
   end;
 
+  /// <summary> Use this method to get current webhook status. Requires no parameters.
+  /// On success, returns a WebhookInfo object. If the bot is using getUpdates, will
+  /// return an object with the url field empty.</summary>
+  [caName('getWebhookInfo')]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgGetWebhookInfoArgument = record
+  public
+    class function Default: TtgGetWebhookInfoArgument; static;
+  end;
+
   [caName('getChat')]
   [caMethod(TcaMethod.GET)]
   [caParameterType(TcaParameterType.GetOrPost)]
@@ -1101,6 +1111,13 @@ end;
 { TtgDeleteWebhookArgument }
 
 class function TtgDeleteWebhookArgument.Default: TtgDeleteWebhookArgument;
+begin
+
+end;
+
+{ TtgGetWebhookInfoArgument }
+
+class function TtgGetWebhookInfoArgument.Default: TtgGetWebhookInfoArgument;
 begin
 
 end;
