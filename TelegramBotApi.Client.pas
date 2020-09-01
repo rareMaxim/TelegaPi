@@ -130,14 +130,26 @@ type
     /// Message is returned, otherwise True is returned.</summary>
     function StopMessageLiveLocation(AEditMessageLiveLocationArgument: TtgStopMessageLiveLocationArgument)
       : ItgResponse<TtgMessage>; overload;
-{$ENDREGION}
+    /// <summary>
+    /// Use this method to send information about a venue. On success, the sent Message
+    /// is returned.
+    /// </summary>
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send phone contacts. On success, the sent Message is
+    /// returned.
+    /// </summary>
     function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
     /// <summary>
     /// Use this method to send a native poll. On success, the sent Message is returned.
     /// </summary>
     function SendPool(ASendPollArgument: TtgSendPollArgument): ItgResponse<TtgMessage>;
-
+    /// <summary>
+    /// Use this method to send an animated emoji that will display a random value. On
+    /// success, the sent Message is returned.
+    /// </summary>
+    function SendDice(ASendDice: TtgSendDiceArgument): ItgResponse<TtgMessage>;
+{$ENDREGION}
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
@@ -278,6 +290,11 @@ end;
 function TTelegramBotApi.SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendContactArgument, TtgMessage>(ASendContactArgument);
+end;
+
+function TTelegramBotApi.SendDice(ASendDice: TtgSendDiceArgument): ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgSendDiceArgument, TtgMessage>(ASendDice);
 end;
 
 function TTelegramBotApi.SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;

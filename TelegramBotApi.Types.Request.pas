@@ -1028,6 +1028,42 @@ type
     class function Default: TtgSendPollArgument; static;
   end;
 
+  /// <summary>
+  /// Use this method to send an animated emoji that will display a random value. On
+  /// success, the sent Message is returned.
+  /// </summary>
+  [caName('sendDice')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendDiceArgument = record
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    [caName('emoji')]
+    [caDefaultValueString('🎲')]
+    /// <summary>
+    /// Emoji on which the dice throw animation is based. Currently, must be
+    /// one of “🎲”, “🎯”, or “🏀”. Dice can have values 1-6 for “🎲” and “🎯”, and
+    /// values 1-5 for “🏀”. Defaults to “🎲”
+    /// </summary>
+    Emoji: string;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_notification')]
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.
+    /// </summary>
+    DisableNotification: Boolean;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    ReplyToMessageId: Int64;
+    class function Default: TtgSendDiceArgument; static;
+  end;
+
 implementation
 
 { TtgMessageArgument }
@@ -1302,6 +1338,16 @@ class function TtgStopMessageLiveLocationHaveInlineMessageIDArgument.Default
   : TtgStopMessageLiveLocationHaveInlineMessageIDArgument;
 begin
   Result.InlineMessageID := 0;
+end;
+
+{ TtgSendDiceArgument }
+
+class function TtgSendDiceArgument.Default: TtgSendDiceArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
+  Result.Emoji := '🎲';
+  Result.DisableNotification := False;
+  Result.ReplyToMessageId := 0;
 end;
 
 end.
