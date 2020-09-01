@@ -24,25 +24,78 @@ type
     function InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult; overload;
     function InternalExecuteCustom<TArgument: record; TResult>(AArgument: TArgument): TResult; overload;
   public
+{$REGION 'Getting updates'}
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     function SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
     function DeleteWebhook(): Boolean;
     function GetWebhookInfo(): ItgResponse<TtgWebhookInfo>; overload;
-
+{$ENDREGION}
+{$REGION 'Available methods'}
+    /// <summary>
+    /// A simple method for testing your bot's auth token. Requires no parameters.
+    /// Returns basic information about the bot in form of a User object.
+    /// </summary>
     function GetMe: ItgResponse<TtgUser>;
+    /// <summary>
+    /// Use this method to send text messages. On success, the sent Message is returned.
+    /// </summary>
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to forward messages of any kind. On success, the sent Message
+    /// is returned.
+    /// </summary>
     function ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
     /// <summary>
     /// Use this method to send photos. On success, the sent Message is returned.
     /// </summary>
     function SendPhoto(ASendPhotoArgument: TtgSendPhotoArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send audio files, if you want Telegram clients to display
+    /// them in the music player. Your audio must be in the .MP3 or .M4A format. On
+    /// success, the sent Message is returned. Bots can currently send audio files of
+    /// up to 50 MB in size, this limit may be changed in the future.
+    ///
+    /// For sending voice messages, use the sendVoice method instead.
+    /// </summary>
     function SendAudio(ASendAudioArgument: TtgSendAudioArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send general files. On success, the sent Message is returned.
+    /// Bots can currently send files of any type of up to 50 MB in size, this limit
+    /// may be changed in the future.
+    /// </summary>
     function SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send video files, Telegram clients support mp4 videos (other
+    /// formats may be sent as Document). On success, the sent Message is returned.
+    /// Bots can currently send video files of up to 50 MB in size, this limit may be
+    /// changed in the future.
+    /// </summary>
     function SendVideo(ASendVideoArgument: TtgSendVideoArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without
+    /// sound). On success, the sent Message is returned. Bots can currently send
+    /// animation files of up to 50 MB in size, this limit may be changed in the future.
+    /// </summary>
     function SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send audio files, if you want Telegram clients to display
+    /// the file as a playable voice message. For this to work, your audio must be in
+    /// an .OGG file encoded with OPUS (other formats may be sent as Audio or Document).
+    /// On success, the sent Message is returned. Bots can currently send voice
+    /// messages of up to 50 MB in size, this limit may be changed in the future.
+    /// </summary>
     function SendVoice(ASendVoiceArgument: TtgSendVoiceArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1
+    /// minute long. Use this method to send video messages. On success, the sent
+    /// Message is returned.
+    /// </summary>
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to send a group of photos or videos as an album. On success, an
+    /// array of the sent Messages is returned.
+    /// </summary>
     function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TArray<TtgMessage>>;
     /// <summary>
     /// Use this method to send point on the map. On success, the sent Message is
@@ -51,7 +104,23 @@ type
     /// <returns> :ItgResponse<TtgMessage>
     /// </returns>
     function SendLocation(ASendLocationArgument: TtgSendLocationArgument): ItgResponse<TtgMessage>;
-
+    /// <summary>
+    /// Use this method to edit live location messages. A location can be edited until
+    /// its live_period expires or editing is explicitly disabled by a call to
+    /// stopMessageLiveLocation. On success, if the edited message was sent by the bot,
+    /// the edited Message is returned, otherwise True is returned.
+    /// </summary>
+    function EditMessageLiveLocation(AEditMessageLiveLocationArgument
+      : TtgEditMessageLiveLocationHaveInlineMessageIDArgument): ItgResponse<TtgMessage>; overload;
+    /// <summary>
+    /// Use this method to edit live location messages. A location can be edited until
+    /// its live_period expires or editing is explicitly disabled by a call to
+    /// stopMessageLiveLocation. On success, if the edited message was sent by the bot,
+    /// the edited Message is returned, otherwise True is returned.
+    /// </summary>
+    function EditMessageLiveLocation(AEditMessageLiveLocationArgument: TtgEditMessageLiveLocationArgument)
+      : ItgResponse<TtgMessage>; overload;
+{$ENDREGION}
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
     function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
     /// <summary>
@@ -103,6 +172,19 @@ destructor TTelegramBotApi.Destroy;
 begin
   FCloudApi.Free;
   inherited Destroy;
+end;
+
+function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument: TtgEditMessageLiveLocationArgument)
+  : ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgEditMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument);
+end;
+
+function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument
+  : TtgEditMessageLiveLocationHaveInlineMessageIDArgument): ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgEditMessageLiveLocationHaveInlineMessageIDArgument, TtgMessage>
+    (AEditMessageLiveLocationArgument);
 end;
 
 function TTelegramBotApi.ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;

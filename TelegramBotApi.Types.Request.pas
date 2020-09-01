@@ -707,6 +707,65 @@ type
     class function Default: TtgSendLocationArgument; static;
   end;
 
+  [caName('editMessageLiveLocation')]
+  [caParameterType(TcaParameterType.QueryString)]
+  /// <summary>Use this method to edit live location messages. A location can be
+  /// edited until its live_period expires or editing is explicitly disabled by a
+  /// call to stopMessageLiveLocation. On success, if the edited message was sent by
+  /// the bot, the edited Message is returned, otherwise True is returned.</summary>
+  TtgEditMessageLiveLocationHaveInlineMessageIDArgument = record
+  public
+    [caName('inline_message_id')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    InlineMessageID: Int64;
+    [caName('latitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0.0)]
+    /// <summary> Latitude of the location</summary>
+    Latitude: Single;
+    [caName('longitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0.0)]
+    /// <summary> Longitude of the location</summary>
+    Longitude: Single;
+    class function Default: TtgEditMessageLiveLocationHaveInlineMessageIDArgument; static;
+  end;
+
+  [caName('editMessageLiveLocation')]
+  [caParameterType(TcaParameterType.QueryString)]
+  /// <summary>Use this method to edit live location messages. A location can be
+  /// edited until its live_period expires or editing is explicitly disabled by a
+  /// call to stopMessageLiveLocation. On success, if the edited message was sent by
+  /// the bot, the edited Message is returned, otherwise True is returned.</summary>
+  TtgEditMessageLiveLocationArgument = record
+  public
+    /// <summary>Required if inline_message_id is not specified. Unique identifier for
+    /// the target chat or username of the target channel (in the format
+    /// @channelusername)</summary>
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    ChatId: TtgUserLink;
+    /// <summary>Required if inline_message_id is not specified. Identifier of the
+    /// message to edit</summary>
+    [caName('message_id')]
+    [caDefaultValueInt64(0)]
+    MessageId: Int64;
+    [caName('latitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0.0)]
+    /// <summary> Latitude of the location</summary>
+    Latitude: Single;
+    [caName('longitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0.0)]
+    /// <summary> Longitude of the location</summary>
+    Longitude: Single;
+    class function Default: TtgEditMessageLiveLocationArgument; static;
+  end;
+
   [caName('getUpdates')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>
@@ -1170,6 +1229,26 @@ begin
   Result.LivePeriod := 0;
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
+end;
+
+{ TtgEditMessageLiveLocationHaveInlineMessageIDArgument }
+
+class function TtgEditMessageLiveLocationHaveInlineMessageIDArgument.Default
+  : TtgEditMessageLiveLocationHaveInlineMessageIDArgument;
+begin
+  Result.InlineMessageID := 0;
+  Result.Latitude := 0.0;
+  Result.Longitude := 0.0;
+end;
+
+{ TtgEditMessageLiveLocationArgument }
+
+class function TtgEditMessageLiveLocationArgument.Default: TtgEditMessageLiveLocationArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
+  Result.MessageId := 0;
+  Result.Latitude := 0.0;
+  Result.Longitude := 0.0;
 end;
 
 end.
