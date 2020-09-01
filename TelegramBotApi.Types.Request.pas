@@ -766,6 +766,43 @@ type
     class function Default: TtgEditMessageLiveLocationArgument; static;
   end;
 
+  /// <summary>Use this method to stop updating a live location message before
+  /// live_period expires. On success, if the message was sent by the bot, the sent
+  /// Message is returned, otherwise True is returned.</summary>
+  [caName('stopMessageLiveLocation')]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgStopMessageLiveLocationHaveInlineMessageIDArgument = record
+  public
+    [caName('inline_message_id')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    InlineMessageID: Int64;
+    class function Default: TtgStopMessageLiveLocationHaveInlineMessageIDArgument; static;
+  end;
+
+  /// <summary>Use this method to stop updating a live location message before
+  /// live_period expires. On success, if the message was sent by the bot, the sent
+  /// Message is returned, otherwise True is returned.</summary>
+  [caName('stopMessageLiveLocation')]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgStopMessageLiveLocationArgument = record
+  public
+    /// <summary>Required if inline_message_id is not specified. Unique identifier for
+    /// the target chat or username of the target channel (in the format
+    /// @channelusername)</summary>
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    ChatId: TtgUserLink;
+    /// <summary>Required if inline_message_id is not specified. Identifier of the
+    /// message to edit</summary>
+    [caName('message_id')]
+    [caDefaultValueInt64(0)]
+    MessageId: Int64;
+    class function Default: TtgStopMessageLiveLocationArgument; static;
+  end;
+
   [caName('getUpdates')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>
@@ -1249,6 +1286,22 @@ begin
   Result.MessageId := 0;
   Result.Latitude := 0.0;
   Result.Longitude := 0.0;
+end;
+
+{ TtgStopMessageLiveLocationArgument }
+
+class function TtgStopMessageLiveLocationArgument.Default: TtgStopMessageLiveLocationArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
+  Result.MessageId := 0;
+end;
+
+{ TtgStopMessageLiveLocationHaveInlineMessageIDArgument }
+
+class function TtgStopMessageLiveLocationHaveInlineMessageIDArgument.Default
+  : TtgStopMessageLiveLocationHaveInlineMessageIDArgument;
+begin
+  Result.InlineMessageID := 0;
 end;
 
 end.
