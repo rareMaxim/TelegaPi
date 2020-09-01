@@ -44,6 +44,14 @@ type
     function SendVoice(ASendVoiceArgument: TtgSendVoiceArgument): ItgResponse<TtgMessage>;
     function SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
     function SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument): ItgResponse<TArray<TtgMessage>>;
+    /// <summary>
+    /// Use this method to send point on the map. On success, the sent Message is
+    /// returned.
+    /// </summary>
+    /// <returns> :ItgResponse<TtgMessage>
+    /// </returns>
+    function SendLocation(ASendLocationArgument: TtgSendLocationArgument): ItgResponse<TtgMessage>;
+
     function SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
     function SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
     /// <summary>
@@ -183,6 +191,11 @@ end;
 function TTelegramBotApi.SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument);
+end;
+
+function TTelegramBotApi.SendLocation(ASendLocationArgument: TtgSendLocationArgument): ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgSendLocationArgument, TtgMessage>(ASendLocationArgument);
 end;
 
 function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
