@@ -149,6 +149,17 @@ type
     /// success, the sent Message is returned.
     /// </summary>
     function SendDice(ASendDice: TtgSendDiceArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method when you need to tell the user that something is happening on
+    /// the bot's side. The status is set for 5 seconds or less (when a message arrives
+    /// from your bot, Telegram clients clear its typing status). Returns True on
+    /// success.
+    /// </summary>
+    /// <remarks>
+    /// We only recommend using this method when a response from the bot will take a
+    /// noticeable amount of time to arrive.
+    /// </remarks>
+    function SendChatAction(AChatAction: TtgSendChatActionArgument): ItgResponse<Boolean>;
 {$ENDREGION}
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     constructor Create; overload;
@@ -285,6 +296,11 @@ end;
 function TTelegramBotApi.SendAudio(ASendAudioArgument: TtgSendAudioArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendAudioArgument, TtgMessage>(ASendAudioArgument);
+end;
+
+function TTelegramBotApi.SendChatAction(AChatAction: TtgSendChatActionArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgSendChatActionArgument, Boolean>(AChatAction);
 end;
 
 function TTelegramBotApi.SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
