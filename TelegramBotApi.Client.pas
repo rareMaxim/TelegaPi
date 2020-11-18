@@ -161,6 +161,13 @@ type
     /// </remarks>
     function SendChatAction(AChatAction: TtgSendChatActionArgument): ItgResponse<Boolean>;
 {$ENDREGION}
+    /// <summary> Use this method to generate a new invite link for a chat; any
+    /// previously generated link is revoked. The bot must be an administrator in the
+    /// chat for this to work and must have the appropriate admin rights.
+    /// </summary>
+    /// <returns>  Returns the new invite link as String on success.
+    /// </returns>
+    function ExportChatInviteLink(AChatID: TtgExportChatInviteLinkArgument): ItgResponse<string>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
@@ -218,6 +225,11 @@ function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgumen
 begin
   Result := InternalExecute<TtgEditMessageLiveLocationHaveInlineMessageIDArgument, TtgMessage>
     (AEditMessageLiveLocationArgument);
+end;
+
+function TTelegramBotApi.ExportChatInviteLink(AChatID: TtgExportChatInviteLinkArgument): ItgResponse<string>;
+begin
+  Result := InternalExecute<TtgExportChatInviteLinkArgument, string>(AChatID);
 end;
 
 function TTelegramBotApi.ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;

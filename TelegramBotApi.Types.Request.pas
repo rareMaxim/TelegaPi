@@ -921,6 +921,20 @@ type
     class function Default: TtgGetWebhookInfoArgument; static;
   end;
 
+  [caName('exportChatInviteLink')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  TtgExportChatInviteLinkArgument = record
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    class function Default: TtgExportChatInviteLinkArgument; static;
+  end;
+
   [caName('getChat')]
   [caMethod(TcaMethod.GET)]
   [caParameterType(TcaParameterType.GetOrPost)]
@@ -1387,6 +1401,13 @@ class function TtgSendChatActionArgument.Default: TtgSendChatActionArgument;
 begin
   Result.ChatId := TtgUserLink.Empty;
   Result.Action := TtgChatAction.Typing;
+end;
+
+{ TtgExportChatInviteLinkArgument }
+
+class function TtgExportChatInviteLinkArgument.Default: TtgExportChatInviteLinkArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
 end;
 
 end.
