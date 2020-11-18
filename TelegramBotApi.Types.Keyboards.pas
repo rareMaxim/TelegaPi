@@ -1,4 +1,4 @@
-unit TelegramBotApi.Types.Keyboards;
+﻿unit TelegramBotApi.Types.Keyboards;
 
 interface
 
@@ -29,6 +29,10 @@ type
   public
     property Keyboard: TArray < TArray < TtgKeyboardButton >> read FKeyboard write FKeyboard;
     property ResizeKeyboard: Boolean read FResizeKeyboard write FResizeKeyboard;
+  end;
+
+  TtgInlineKeyboardMarkup = class
+    { TODO -oOwner -cGeneral : Заполнить }
   end;
 
 implementation

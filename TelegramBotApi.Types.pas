@@ -11,7 +11,8 @@ uses
   System.Json.Serializers,
   TelegramBotApi.Json.Converter,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Intf;
+  TelegramBotApi.Types.Intf,
+  TelegramBotApi.Types.Keyboards;
 
 type
   /// <summary>
@@ -494,6 +495,58 @@ type
 
   end;
 
+  /// <summary>
+  /// This object represents a sticker.
+  /// </summary>
+  TtgSticker = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents an animated emoji that displays a random value.
+  /// </summary>
+  TtgDice = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
+  /// </summary>
+  TtgGame = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object contains basic information about an invoice.
+  /// </summary>
+  TtgInvoice = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object contains basic information about a successful payment.
+  /// </summary>
+  TtgSuccessfulPayment = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// Contains information about Telegram Passport data shared with the bot by the user.
+  /// </summary>
+  TtgPassportData = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.
+  /// </summary>
+  TtgProximityAlertTriggered = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents a message.
+  /// </summary>
   TtgMessage = class
   private type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
@@ -550,24 +603,150 @@ type
     FMediaGroupId: string;
     [JsonName('poll')]
     FPoll: TtgPoll;
+    [JsonName('sender_chat')]
+    FSenderChat: TtgChat;
+    [JsonName('forward_from')]
+    FForwardFrom: TtgUser;
+    [JsonName('forward_sender_name')]
+    FForwardSenderName: string;
+    [JsonName('reply_to_message')]
+    FReplyToMessage: TtgMessage;
+    [JsonName('via_bot')]
+    FViaBot: TtgUser;
+    [JsonName('edit_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FEditDate: TDateTime;
+    [JsonName('author_signature')]
+    FAuthorSignature: string;
+    [JsonName('sticker')]
+    FSticker: TtgSticker;
+    [JsonName('dice')]
+    FDice: TtgDice;
+    [JsonName('game')]
+    FGame: TtgGame;
+    [JsonName('location')]
+    FLocation: TtgLocation;
+    [JsonName('new_chat_members')]
+    FNewChatMembers: TArray<TtgUser>;
+    [JsonName('left_chat_member')]
+    FLeftChatMember: TtgUser;
+    [JsonName('new_chat_title')]
+    FNewChatTitle: string;
+    [JsonName('new_chat_photo')]
+    FNewChatPhoto: TArray<TtgPhotosize>;
+    [JsonName('delete_chat_photo')]
+    FDeleteChatPhoto: Boolean;
+    [JsonName('group_chat_created')]
+    FGroupChatCreated: Boolean;
+    [JsonName('supergroup_chat_created')]
+    FSupergroupChatCreated: Boolean;
+    [JsonName('channel_chat_created')]
+    FChannelChatCreated: Boolean;
+    [JsonName('migrate_from_chat_id')]
+    FMigrateFromChatId: Int64;
+    [JsonName('pinned_message')]
+    FPinnedMessage: TtgMessage;
+    [JsonName('invoice')]
+    FInvoice: TtgInvoice;
+    [JsonName('successful_payment')]
+    FSuccessfulPayment: TtgSuccessfulPayment;
+    [JsonName('connected_website')]
+    FConnectedWebsite: string;
+    [JsonName('passport_data')]
+    FPassportData: TtgPassportData;
+    [JsonName('proximity_alert_triggered')]
+    FProximityAlertTriggered: TtgProximityAlertTriggered;
+    [JsonName('reply_markup')]
+    FReplyMarkup: TtgInlineKeyboardMarkup;
   public
     constructor Create;
     destructor Destroy; override;
     function &Type: TtgMessageType;
   public
+    /// <summary>
+    /// Unique message identifier inside this chat
+    /// </summary>
     property MessageID: Int64 read FMessageID write FMessageID;
-    property Chat: TtgChat read FChat write FChat;
-    property ForwardFromChat: TtgChat read FForwardFromChat write FForwardFromChat;
-    property ForwardFromMessageId: Int64 read FForwardFromMessageId write FForwardFromMessageId;
-    property ForwardSignature: string read FForwardSignature write FForwardSignature;
-    property ForwardDate: TDateTime read FForwardDate write FForwardDate;
+    /// <summary>
+    /// Optional. Sender, empty for messages sent to channels
+    /// </summary>
     property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Optional. Sender of the message, sent on behalf of a chat. The channel itself
+    /// for channel messages. The supergroup itself for messages from anonymous group
+    /// administrators. The linked channel for messages automatically forwarded to the
+    /// discussion group
+    /// </summary>
+    property SenderChat: TtgChat read FSenderChat write FSenderChat;
+    /// <summary>
+    /// Date the message was sent in Unix time and converted to TDateTime
+    /// </summary>
     property Date: TDateTime read FDate write FDate;
+    /// <summary>
+    /// Conversation the message belongs to
+    /// </summary>
+    property Chat: TtgChat read FChat write FChat;
+    /// <summary>
+    /// Optional. For forwarded messages, sender of the original message
+    /// </summary>
+    property ForwardFrom: TtgUser read FForwardFrom write FForwardFrom;
+    /// <summary>
+    /// Optional. For messages forwarded from channels or from anonymous administrators,
+    /// information about the original sender chat
+    /// </summary>
+    property ForwardFromChat: TtgChat read FForwardFromChat write FForwardFromChat;
+    /// <summary>
+    /// Optional. For messages forwarded from channels, identifier of the original
+    /// message in the channel
+    /// </summary>
+    property ForwardFromMessageId: Int64 read FForwardFromMessageId write FForwardFromMessageId;
+    /// <summary>
+    /// Optional. For messages forwarded from channels, signature of the post author if
+    /// present
+    /// </summary>
+    property ForwardSignature: string read FForwardSignature write FForwardSignature;
+    /// <summary>
+    /// Optional. Sender's name for messages forwarded from users who disallow adding a
+    /// link to their account in forwarded messages
+    /// </summary>
+    property ForwardSenderName: string read FForwardSenderName write FForwardSenderName;
+    /// <summary>
+    /// Optional. For forwarded messages, date the original message was sent in Unix
+    /// time
+    /// </summary>
+    property ForwardDate: TDateTime read FForwardDate write FForwardDate;
+    /// <summary>
+    /// Optional. For replies, the original message. Note that the Message object in
+    /// this field will not contain further reply_to_message fields even if it itself
+    /// is a reply.
+    /// </summary>
+    property ReplyToMessage: TtgMessage read FReplyToMessage;
+    /// <summary>
+    /// Optional. Bot through which the message was sent
+    /// </summary>
+    property ViaBot: TtgUser read FViaBot write FViaBot;
+    /// <summary>
+    /// Optional. Date the message was last edited in Unix time
+    /// </summary>
+    property EditDate: TDateTime read FEditDate write FEditDate;
     /// <summary>
     /// Optional. The unique identifier of a media message group this message belongs to
     /// </summary>
     property MediaGroupId: string read FMediaGroupId write FMediaGroupId;
+    /// <summary>
+    /// Optional. Signature of the post author for messages in channels, or the custom
+    /// title of an anonymous group administrator
+    /// </summary>
+    property AuthorSignature: string read FAuthorSignature write FAuthorSignature;
+    /// <summary>
+    /// Optional. For text messages, the actual UTF-8 text of the message, 0-4096
+    /// characters
+    /// </summary>
     property Text: string read FText write FText;
+    /// <summary>
+    /// Optional. For text messages, special entities like usernames, URLs, bot
+    /// commands, etc. that appear in the text
+    /// </summary>
     property Entities: TObjectList<TtgMessageEntity> read FEntities write FEntities;
     /// <summary>
     /// Optional. Message is an animation, information about the animation. For
@@ -583,13 +762,30 @@ type
     /// Optional. Message is a general file, information about the file
     /// </summary>
     property Document: TtgDocument read FDocument write FDocument;
+    /// <summary>
+    /// Optional. Message is a photo, available sizes of the photo
+    /// </summary>
     property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
+    /// <summary>
+    /// Optional. Message is a sticker, information about the sticker
+    /// </summary>
+    property Sticker: TtgSticker read FSticker write FSticker;
+    /// <summary>
+    /// Optional. Message is a video, information about the video
+    /// </summary>
     property Video: TtgVideo read FVideo write FVideo;
+    /// <summary>
+    /// Optional. Message is a video note, information about the video message
+    /// </summary>
     property VideoNote: TtgVideoNote read FVideoNote write FVideoNote;
     /// <summary>
     /// Optional. Message is a voice message, information about the file
     /// </summary>
     property Voice: TtgVoice read FVoice write FVoice;
+    /// <summary>
+    /// Optional. Caption for the animation, audio, document, photo, video or voice,
+    /// 0-1024 characters
+    /// </summary>
     property Caption: string read FCaption write FCaption;
     /// <summary>
     /// Optional. For messages with a caption, special entities like usernames, URLs,
@@ -600,12 +796,112 @@ type
     /// Optional. Message is a shared contact, information about the contact
     /// </summary>
     property Contact: TtgContact read FContact write FContact;
+    /// <summary>
+    /// Optional. Message is a dice with random value from 1 to 6
+    /// </summary>
+    property Dice: TtgDice read FDice write FDice;
+    /// <summary>
+    /// Optional. Message is a game, information about the game. More about games »
+    /// </summary>
+    property Game: TtgGame read FGame write FGame;
+    /// <summary>
+    /// Optional. Message is a native poll, information about the poll
+    /// </summary>
     property Poll: TtgPoll read FPoll write FPoll;
     /// <summary>
     /// Optional. Message is a venue, information about the venue. For backward
     /// compatibility, when this field is set, the location field will also be set
     /// </summary>
     property Venue: TtgVenue read FVenue write FVenue;
+    /// <summary>
+    /// Optional. Message is a shared location, information about the location
+    /// </summary>
+    property Location: TtgLocation read FLocation write FLocation;
+    /// <summary>
+    /// Optional. New members that were added to the group or supergroup and
+    /// information about them (the bot itself may be one of these members)
+    /// </summary>
+    property NewChatMembers: TArray<TtgUser> read FNewChatMembers write FNewChatMembers;
+    /// <summary>
+    /// Optional. A member was removed from the group, information about them (this
+    /// member may be the bot itself)
+    /// </summary>
+    property LeftChatMember: TtgUser read FLeftChatMember write FLeftChatMember;
+    /// <summary>
+    /// Optional. A chat title was changed to this value
+    /// </summary>
+    property NewChatTitle: string read FNewChatTitle write FNewChatTitle;
+    /// <summary>
+    /// Optional. A chat photo was change to this value
+    /// </summary>
+    property NewChatPhoto: TArray<TtgPhotosize> read FNewChatPhoto write FNewChatPhoto;
+    /// <summary>
+    /// Optional. Service message: the chat photo was deleted
+    /// </summary>
+    property DeleteChatPhoto: Boolean read FDeleteChatPhoto write FDeleteChatPhoto;
+    /// <summary>
+    /// Optional. Service message: the group has been created
+    /// </summary>
+    property GroupChatCreated: Boolean read FGroupChatCreated write FGroupChatCreated;
+    /// <summary>
+    /// Optional. Service message: the supergroup has been created. This field can't be
+    /// received in a message coming through updates, because bot can't be a member of
+    /// a supergroup when it is created. It can only be found in reply_to_message if
+    /// someone replies to a very first message in a directly created supergroup.
+    /// </summary>
+    property SupergroupChatCreated: Boolean read FSupergroupChatCreated write FSupergroupChatCreated;
+    /// <summary>
+    /// Optional. Service message: the channel has been created. This field can't be
+    /// received in a message coming through updates, because bot can't be a member of
+    /// a channel when it is created. It can only be found in reply_to_message if
+    /// someone replies to a very first message in a channel.
+    /// </summary>
+    property ChannelChatCreated: Boolean read FChannelChatCreated write FChannelChatCreated;
+    /// <summary>
+    /// Optional. The supergroup has been migrated from a group with the specified
+    /// identifier. This number may be greater than 32 bits and some programming
+    /// languages may have difficulty/silent defects in interpreting it. But it is
+    /// smaller than 52 bits, so a signed 64 bit integer or double-precision float type
+    /// are safe for storing this identifier.
+    /// </summary>
+    property MigrateFromChatId: Int64 read FMigrateFromChatId write FMigrateFromChatId;
+
+    /// <summary>
+    /// Optional. Specified message was pinned. Note that the Message object in this
+    /// field will not contain further reply_to_message fields even if it is itself a
+    /// reply.
+    /// </summary>
+    property PinnedMessage: TtgMessage read FPinnedMessage write FPinnedMessage;
+    /// <summary>
+    /// Optional. Message is an invoice for a payment, information about the invoice.
+    /// More about payments »
+    /// </summary>
+    property Invoice: TtgInvoice read FInvoice write FInvoice;
+    /// <summary>
+    /// Optional. Message is a service message about a successful payment, information
+    /// about the payment. More about payments »
+    /// </summary>
+    property SuccessfulPayment: TtgSuccessfulPayment read FSuccessfulPayment write FSuccessfulPayment;
+    /// <summary>
+    /// Optional. The domain name of the website on which the user has logged in. More
+    /// about Telegram Login »
+    /// </summary>
+    property ConnectedWebsite: string read FConnectedWebsite write FConnectedWebsite;
+    /// <summary>
+    /// Optional. Telegram Passport data
+    /// </summary>
+    property PassportData: TtgPassportData read FPassportData write FPassportData;
+    /// <summary>
+    /// Optional. Service message. A user in the chat triggered another user's
+    /// proximity alert while sharing Live Location.
+    /// </summary>
+    property ProximityAlertTriggered: TtgProximityAlertTriggered read FProximityAlertTriggered
+      write FProximityAlertTriggered;
+    /// <summary>
+    /// Optional. Inline keyboard attached to the message. login_url buttons are
+    /// represented as ordinary url buttons.
+    /// </summary>
+    property ReplyMarkup: TtgInlineKeyboardMarkup read FReplyMarkup write FReplyMarkup;
   end;
 
   TtgChatPhoto = class

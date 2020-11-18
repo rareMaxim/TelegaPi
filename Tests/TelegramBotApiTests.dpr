@@ -6,13 +6,12 @@
 {$STRONGLINKTYPES ON}
 
 uses
-  FastMM5,
   System.SysUtils,
-  {$IFDEF TESTINSIGHT}
+{$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-  {$ELSE}
+{$ELSE}
   DUnitX.Loggers.Console,
-  {$ENDIF }
+{$ENDIF }
   DUnitX.TestFramework,
   TelegramBotApi.Client in '..\TelegramBotApi.Client.pas',
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
