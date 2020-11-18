@@ -674,6 +674,26 @@ type
     property CanPinMessages: Boolean read FCanPinMessages;
   end;
 
+  /// <summary>
+  /// Represents a location to which a chat is connected.
+  /// </summary>
+  TtgChatLocation = class
+  private
+    [JsonName('location')]
+    FLocation: TtgLocation;
+    [JsonName('address')]
+    FAddress: string;
+  public
+    /// <summary>
+    /// The location to which the supergroup is connected. Can't be a live location.
+    /// </summary>
+    property Location: TtgLocation read FLocation write FLocation;
+    /// <summary>
+    /// Location address; 1-64 characters, as defined by the chat owner
+    /// </summary>
+    property Address: string read FAddress write FAddress;
+  end;
+
   TtgChat = class
   private
     [JsonName('id')]
