@@ -14,45 +14,79 @@ uses
   TelegramBotApi.Types.Intf;
 
 type
-  TtgUser = class(TInterfacedObject, itgUser)
+  /// <summary>
+  /// This object represents a Telegram user or bot.
+  /// </summary>
+  TtgUser = class(TInterfacedObject, ItgUser)
   private
-    [JsonName('can_join_groups')]
-    FCanJoinGroups: Boolean;
-    [JsonName('can_read_all_group_messages')]
-    FCanReadAllGroupMessages: Boolean;
-    [JsonName('first_name')]
-    FFirstName: string;
     [JsonName('id')]
     FID: Int64;
     [JsonName('is_bot')]
     FIsBot: Boolean;
-    [JsonName('language_code')]
-    FLanguageCode: string;
+    [JsonName('first_name')]
+    FFirstName: string;
     [JsonName('last_name')]
     FLastName: string;
-    [JsonName('supports_inline_queries')]
-    FSupportsInlineQueries: Boolean;
     [JsonName('username')]
     FUsername: string;
-    function GetCanJoinGroups: Boolean;
-    function GetCanReadAllGroupMessages: Boolean;
-    function GetFirstName: string;
+    [JsonName('language_code')]
+    FLanguageCode: string;
+    [JsonName('can_join_groups')]
+    FCanJoinGroups: Boolean;
+    [JsonName('can_read_all_group_messages')]
+    FCanReadAllGroupMessages: Boolean;
+    [JsonName('supports_inline_queries')]
+    FSupportsInlineQueries: Boolean;
     function GetID: Int64;
     function GetIsBot: Boolean;
-    function GetLanguageCode: string;
+    function GetFirstName: string;
     function GetLastName: string;
-    function GetSupportsInlineQueries: Boolean;
     function GetUsername: string;
+    function GetLanguageCode: string;
+    function GetCanJoinGroups: Boolean;
+    function GetCanReadAllGroupMessages: Boolean;
+    function GetSupportsInlineQueries: Boolean;
   public
-    property CanJoinGroups: Boolean read GetCanJoinGroups;
-    property CanReadAllGroupMessages: Boolean read GetCanReadAllGroupMessages;
-    property FirstName: string read GetFirstName;
+    /// <summary>
+    /// Unique identifier for this user or bot
+    /// </summary>
     property ID: Int64 read GetID;
+    /// <summary>
+    /// True, if this user is a bot
+    /// </summary>
     property IsBot: Boolean read GetIsBot;
-    property LanguageCode: string read GetLanguageCode;
+    /// <summary>
+    /// User's or bot's first name
+    /// </summary>
+    property FirstName: string read GetFirstName;
+    /// <summary>
+    /// Optional. User's or bot's last name
+    /// </summary>
     property LastName: string read GetLastName;
-    property SupportsInlineQueries: Boolean read GetSupportsInlineQueries;
+    /// <summary>
+    /// Optional. User's or bot's username
+    /// </summary>
     property Username: string read GetUsername;
+    /// <summary>
+    /// Optional. IETF language tag of the user's language (https://en.wikipedia.
+    /// org/wiki/IETF_language_tag)
+    /// </summary>
+    property LanguageCode: string read GetLanguageCode;
+    /// <summary>
+    /// Optional. True, if the bot can be invited to groups. Returned only in getMe
+    /// <see cref="TTelegramBotApi.GetMe"/>.
+    /// </summary>
+    property CanJoinGroups: Boolean read GetCanJoinGroups;
+    /// <summary>
+    /// Optional. True, if privacy mode is disabled for the bot. Returned only in getMe
+    /// <see cref="TTelegramBotApi.GetMe"/>.
+    /// </summary>
+    property CanReadAllGroupMessages: Boolean read GetCanReadAllGroupMessages;
+    /// <summary>
+    /// Optional. True, if the bot supports inline queries. Returned only in getMe <see
+    /// cref="TTelegramBotApi.GetMe"/>.
+    /// </summary>
+    property SupportsInlineQueries: Boolean read GetSupportsInlineQueries;
   end;
 
   TtgChat = class;
