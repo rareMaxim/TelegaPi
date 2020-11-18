@@ -694,6 +694,9 @@ type
     property Address: string read FAddress write FAddress;
   end;
 
+  /// <summary>
+  /// This object represents a chat.
+  /// </summary>
   TtgChat = class
   private
     [JsonName('id')]
@@ -722,22 +725,105 @@ type
     FStickerSetName: string;
     [JsonName('can_set_sticker_set')]
     FCanSetStickerSet: Boolean;
+    [JsonName('bio')]
+    FBio: string;
+    [JsonName('permissions')]
+    FPermissions: TtgChatPermissions;
+    [JsonName('linked_chat_id')]
+    FLinkedChatId: Int64;
+    [JsonName('location')]
+    FLocation: TtgChatLocation;
   public
     constructor Create;
     destructor Destroy; override;
+    /// <summary>
+    /// Unique identifier for this chat. This number may be greater than 32 bits and
+    /// some programming languages may have difficulty/silent defects in interpreting
+    /// it. But it is smaller than 52 bits, so a signed 64 bit integer or
+    /// double-precision float type are safe for storing this identifier.
+    /// </summary>
     property ID: Int64 read FID write FID;
+    /// <summary>
+    /// Type of chat, can be either “private”, “group”, “supergroup” or “channel”
+    /// </summary>
     property &Type: string read FType write FType;
+    /// <summary>
+    /// Optional. Title, for supergroups, channels and group chats
+    /// </summary>
     property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Optional. Username, for private chats, supergroups and channels if available
+    /// </summary>
     property Username: string read FUsername write FUsername;
+    /// <summary>
+    /// Optional. First name of the other party in a private chat
+    /// </summary>
     property FirstName: string read FFirstName write FFirstName;
+    /// <summary>
+    /// Optional. Last name of the other party in a private chat
+    /// </summary>
     property LastName: string read FLastName write FLastName;
+    /// <summary> Optional. Chat photo. Returned only in getChat <see
+    /// cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property Photo: TtgChatPhoto read FPhoto write FPhoto;
+    /// <summary>
+    /// Optional. Bio of the other party in a private chat. Returned only in getChat
+    /// <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
+    property Bio: string read FBio write FBio;
+    /// <summary>
+    /// Optional. Description, for groups, supergroups and channel chats. Returned only
+    /// in getChat <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property Description: string read FDescription write FDescription;
+    /// <summary> Optional. Chat invite link, for groups, supergroups and channel chats.
+    /// Each administrator in a chat generates their own invite links, so the bot must
+    /// first generate the link using exportChatInviteLink <see cref="TTelegramBotApi.
+    /// ExportChatInviteLink"/>.
+    /// Returned only in getChat <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property InviteLink: string read FInviteLink write FInviteLink;
+    /// <summary>
+    /// Optional. The most recent pinned message (by sending date). Returned only in
+    /// getChat <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property PinnedMessage: TtgMessage read FPinnedMessage write FPinnedMessage;
+    /// <summary>
+    /// Optional. Default chat member permissions, for groups and supergroups. Returned
+    /// only in getChat <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
+    property Permissions: TtgChatPermissions read FPermissions write FPermissions;
+    /// <summary>
+    /// Optional. For supergroups, the minimum allowed delay between consecutive
+    /// messages sent by each unpriviledged user. Returned only in getChat <see
+    /// cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property SlowModeDelay: Int64 read FSlowModeDelay write FSlowModeDelay;
+    /// <summary>
+    /// Optional. For supergroups, name of group sticker set. Returned only in getChat
+    /// <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property StickerSetName: string read FStickerSetName write FStickerSetName;
+    /// <summary>
+    /// Optional. True, if the bot can change the group sticker set. Returned only in
+    /// getChat <see cref="TTelegramBotApi.getChat"/>.
+    /// </summary>
     property CanSetStickerSet: Boolean read FCanSetStickerSet write FCanSetStickerSet;
+    /// <summary>
+    /// Optional. Unique identifier for the linked chat, i.e. the discussion group
+    /// identifier for a channel and vice versa; for supergroups and channel chats.
+    /// This identifier may be greater than 32 bits and some programming languages may
+    /// have difficulty/silent defects in interpreting it. But it is smaller than 52
+    /// bits, so a signed 64 bit integer or double-precision float type are safe for
+    /// storing this identifier. Returned only in getChat.
+    /// </summary>
+    property LinkedChatId: Int64 read FLinkedChatId write FLinkedChatId;
+    /// <summary>
+    /// Optional. For supergroups, the location to which the supergroup is connected.
+    /// Returned only in getChat.
+    /// </summary>
+    property Location: TtgChatLocation read FLocation write FLocation;
   end;
 
   TtgInlineQuery = class
