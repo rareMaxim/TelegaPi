@@ -15,30 +15,1004 @@ uses
   TelegramBotApi.Types.Keyboards;
 
 type
-  TtgMessageEntity = class;
-  TtgChatPhoto = class;
+  // TtgMessageEntity = class;
+  // TtgChatPhoto = class;
   TtgMessage = class;
-  TtgChatPermissions = class;
-  TtgChatLocation = class;
-  TtgPhotosize = class;
-  TtgAnimation = class;
-  TtgVideo = class;
-  TtgVideoNote = class;
-  TtgVenue = class;
-  TtgContact = class;
-  TtgDocument = class;
-  TtgAudio = class;
-  TtgVoice = class;
-  TtgPoll = class;
-  TtgSticker = class;
-  TtgDice = class;
-  TtgGame = class;
-  TtgLocation = class;
-  TtgInvoice = class;
-  TtgSuccessfulPayment = class;
-  TtgPassportData = class;
-  TtgProximityAlertTriggered = class;
-  TtgFileInfo = class;
+  // TtgChatPermissions = class;
+  // TtgChatLocation = class;
+  // TtgPhotosize = class;
+  // TtgAnimation = class;
+  // TtgVideo = class;
+  // TtgVideoNote = class;
+  // TtgVenue = class;
+  // TtgContact = class;
+  // TtgDocument = class;
+  // TtgAudio = class;
+  // TtgVoice = class;
+  // TtgPoll = class;
+  // TtgSticker = class;
+  // TtgDice = class;
+  // TtgGame = class;
+  // TtgLocation = class;
+  // TtgInvoice = class;
+  // TtgSuccessfulPayment = class;
+  // TtgPassportData = class;
+  // TtgProximityAlertTriggered = class;
+  // TtgFileInfo = class;
+
+  /// <summary>
+  /// This object represents a unique message identifier.
+  /// </summary>
+  TtgMessageId = class
+  private
+    [JsonName('message_id')]
+    FMessageID: Int64;
+  public
+    /// <summary>
+    /// Unique message identifier
+    /// </summary>
+    property MessageID: Int64 read FMessageID write FMessageID;
+  end;
+
+  TtgFileInfo = class
+  private
+    [JsonName('file_id')]
+    FFileId: string;
+    [JsonName('file_unique_id')]
+    FFileUniqueId: string;
+    [JsonName('file_size')]
+    FFileSize: Int64;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId: string read FFileId write FFileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId: string read FFileUniqueId write FFileUniqueId;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize: Int64 read FFileSize write FFileSize;
+  end;
+
+  /// <summary>
+  /// This object represents one size of a photo or a file / sticker thumbnail
+  /// </summary>
+  TtgPhotosize = class(TtgFileInfo)
+  private
+    [JsonName('width')]
+    FWidth: Int64;
+    [JsonName('height')]
+    FHeight: Int64;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Photo width
+    /// </summary>
+    property Width: Int64 read FWidth write FWidth;
+    /// <summary>
+    /// Photo height
+    /// </summary>
+    property Height: Int64 read FHeight write FHeight;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize;
+  end;
+
+  /// <summary>
+  /// This object represents a general file (as opposed to photos, voice messages and audio files).
+  /// </summary>
+  TtgDocument = class(TtgFileInfo)
+  private
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+    [JsonName('file_name')]
+    FFilename: string;
+    [JsonName('mime_type')]
+    FMimeType: string;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Optional. Document thumbnail as defined by sender
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Original filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
+  /// <summary>
+  /// This object represents a voice note.
+  /// </summary>
+  TtgVoice = class(TtgFileInfo)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('mime_type')]
+    FMimeType: string;
+  public
+    /// <summary>
+    /// Duration of the audio in seconds as defined by sender
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
+  /// <summary>
+  /// This object represents an audio file to be treated as music by the Telegram clients.
+  /// </summary>
+  TtgAudio = class(TtgVoice)
+  private
+    [JsonName('performer')]
+    FPerformer: string;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Optional. Performer of the audio as defined by sender or by audio tags
+    /// </summary>
+    property Performer: string read FPerformer write FPerformer;
+    /// <summary>
+    /// Optional. Title of the audio as defined by sender or by audio tags
+    /// </summary>
+    property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Optional. Thumbnail of the album cover to which the music file belongs
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+  end;
+
+  TtgVideo = class(TtgPhotosize)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+    [JsonName('mime_type')]
+    FMimeType: string;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Duration of the video in seconds as defined by sender
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. Video thumbnail
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Mime type of a file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
+  end;
+
+  /// <summary>
+  /// This object represents an animation file (GIF or H.264/MPEG-4 AVC video without
+  /// sound).
+  /// </summary>
+  TtgAnimation = class(TtgVideo)
+  private
+    [JsonName('file_name')]
+    FFilename: string;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Video width as defined by sender
+    /// </summary>
+    property Width;
+    /// <summary>
+    /// Video height as defined by sender
+    /// </summary>
+    property Height;
+    /// <summary>
+    /// Duration of the video in seconds as defined by sender
+    /// </summary>
+    property Duration;
+    /// <summary>
+    /// Optional. Animation thumbnail as defined by sender
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Original animation filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+    /// <summary>
+    /// Optional. Mime type of a file as defined by sender
+    /// </summary>
+    property MimeType;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize;
+  end;
+
+  TtgVideoNote = class(TtgFileInfo)
+  private
+    [JsonName('length')]
+    FLength: Int64;
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('thumb')]
+    FThumb: TtgPhotosize;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    property Length: Int64 read FLength write FLength;
+    property Duration: Int64 read FDuration write FDuration;
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+  end;
+
+  /// <summary>This object represents a point on the map.</summary>
+  TtgLocation = class
+  private
+    [JsonName('longitude')]
+    FLongitude: Single;
+    [JsonName('latitude')]
+    FLatitude: Single;
+  public
+    /// <summary>Longitude as defined by sender</summary>
+    property Longitude: Single read FLongitude write FLongitude;
+    /// <summary>
+    /// Latitude as defined by sender
+    /// </summary>
+    property Latitude: Single read FLatitude write FLatitude;
+  end;
+
+  /// <summary>
+  /// This object represents a venue.
+  /// </summary>
+  TtgVenue = class
+  private
+    [JsonName('location')]
+    FLocation: TtgLocation;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('address')]
+    FAddress: string;
+    [JsonName('foursquare_id')]
+    FFoursquareId: string;
+    [JsonName('foursquare_type')]
+    FFoursquareType: string;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Venue location
+    /// </summary>
+    property Location: TtgLocation read FLocation write FLocation;
+    /// <summary>Name of the venue</summary>
+    property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Address of the venue
+    /// </summary>
+    property Address: string read FAddress write FAddress;
+    /// <summary>
+    /// Optional. Foursquare identifier of the venue
+    /// </summary>
+    property FoursquareId: string read FFoursquareId write FFoursquareId;
+    /// <summary>
+    /// Optional. Foursquare type of the venue. (For example,
+    /// “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
+    /// </summary>
+    property FoursquareType: string read FFoursquareType write FFoursquareType;
+  end;
+
+  /// <summary>
+  /// This object represents a phone contact.
+  /// </summary>
+  TtgContact = class
+  private
+    [JsonName('phone_number')]
+    FPhoneNumber: string;
+    [JsonName('first_name')]
+    FFirstName: string;
+    [JsonName('last_name')]
+    FLastName: string;
+    [JsonName('user_id')]
+    FUserId: Int64;
+    [JsonName('vcard')]
+    FVCard: string;
+  public
+    /// <summary>
+    /// Contact's phone number
+    /// </summary>
+    property PhoneNumber: string read FPhoneNumber write FPhoneNumber;
+    /// <summary>
+    /// Contact's first name
+    /// </summary>
+    property FirstName: string read FFirstName write FFirstName;
+    /// <summary>
+    /// Optional. Contact's last name
+    /// </summary>
+    property LastName: string read FLastName write FLastName;
+    /// <summary>
+    /// Optional. Contact's user identifier in Telegram
+    /// </summary>
+    property UserId: Int64 read FUserId write FUserId;
+    /// <summary>
+    /// Optional. Additional data about the contact in the form of a vCard
+    /// </summary>
+    property VCard: string read FVCard write FVCard;
+  end;
+
+  /// <summary>
+  /// This object contains information about one answer option in a poll.
+  /// </summary>
+  TtgPollOption = class
+  private
+    [JsonName('text')]
+    FText: string;
+    [JsonName('voter_count')]
+    FVoterCount: Integer;
+  public
+    /// <summary>
+    /// Option text, 1-100 characters
+    /// </summary>
+    property Text: string read FText write FText;
+    /// <summary>
+    /// Number of users that voted for this option
+    /// </summary>
+    property VoterCount: Integer read FVoterCount write FVoterCount;
+  end;
+
+  TtgPollAnswer = class
+
+  end;
+
+  /// <summary>
+  /// This object represents a sticker.
+  /// </summary>
+  TtgSticker = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents an animated emoji that displays a random value.
+  /// </summary>
+  TtgDice = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
+  /// </summary>
+  TtgGame = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object contains basic information about an invoice.
+  /// </summary>
+  TtgInvoice = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object contains basic information about a successful payment.
+  /// </summary>
+  TtgSuccessfulPayment = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// Contains information about Telegram Passport data shared with the bot by the user.
+  /// </summary>
+  TtgPassportData = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  /// <summary>
+  /// This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.
+  /// </summary>
+  TtgProximityAlertTriggered = class
+    { TODO -oOwner -cGeneral : Заполнить }
+  end;
+
+  TtgChatPhoto = class
+
+  end;
+
+  /// <summary>
+  /// Describes actions that a non-administrator user is allowed to take in a chat.
+  /// </summary>
+  TtgChatPermissions = class
+  private
+    [JsonName('can_send_messages')]
+    FCanSendMessages: Boolean;
+    [JsonName('can_send_media_messages')]
+    FCanSendMediaMessages: Boolean;
+    [JsonName('can_send_polls')]
+    FCanSendPolls: Boolean;
+    [JsonName('can_send_other_messages')]
+    FCanSendOtherMessages: Boolean;
+    [JsonName('can_add_web_page_previews')]
+    FCanAddWebPagePreviews: Boolean;
+    [JsonName('can_change_info')]
+    FCanChangeInfo: Boolean;
+    [JsonName('can_invite_users')]
+    FCanInviteUsers: Boolean;
+    [JsonName('can_pin_messages')]
+    FCanPinMessages: Boolean;
+  public
+    /// <summary>
+    /// Optional. True, if the user is allowed to send text messages, contacts,
+    /// locations and venues
+    /// </summary>
+    property CanSendMessages: Boolean read FCanSendMessages;
+    /// <summary>
+    /// Optional. True, if the user is allowed to send audios, documents, photos,
+    /// videos, video notes and voice notes, implies can_send_messages
+    /// </summary>
+    property CanSendMediaMessages: Boolean read FCanSendMediaMessages;
+    /// <summary>
+    /// Optional. True, if the user is allowed to send polls, implies can_send_messages
+    /// </summary>
+    property CanSendPolls: Boolean read FCanSendPolls;
+    /// <summary>
+    /// Optional. True, if the user is allowed to send animations, games, stickers and
+    /// use inline bots, implies can_send_media_messages
+    /// </summary>
+    property CanSendOtherMessages: Boolean read FCanSendOtherMessages;
+    /// <summary>
+    /// Optional. True, if the user is allowed to add web page previews to their
+    /// messages, implies can_send_media_messages
+    /// </summary>
+    property CanAddWebPagePreviews: Boolean read FCanAddWebPagePreviews;
+    /// <summary>
+    /// Optional. True, if the user is allowed to change the chat title, photo and
+    /// other settings. Ignored in public supergroups
+    /// </summary>
+    property CanChangeInfo: Boolean read FCanChangeInfo;
+    /// <summary>
+    /// Optional. True, if the user is allowed to invite new users to the chat
+    /// </summary>
+    property CanInviteUsers: Boolean read FCanInviteUsers;
+    /// <summary>
+    /// Optional. True, if the user is allowed to pin messages. Ignored in public
+    /// supergroups
+    /// </summary>
+    property CanPinMessages: Boolean read FCanPinMessages;
+  end;
+
+  /// <summary>
+  /// Represents a location to which a chat is connected.
+  /// </summary>
+  TtgChatLocation = class
+  private
+    [JsonName('location')]
+    FLocation: TtgLocation;
+    [JsonName('address')]
+    FAddress: string;
+  public
+    /// <summary>
+    /// The location to which the supergroup is connected. Can't be a live location.
+    /// </summary>
+    property Location: TtgLocation read FLocation write FLocation;
+    /// <summary>
+    /// Location address; 1-64 characters, as defined by the chat owner
+    /// </summary>
+    property Address: string read FAddress write FAddress;
+  end;
+
+  TtgInlineQuery = class
+
+  end;
+
+  TtgAnswerInlineQuery = class
+
+  end;
+
+  TtgChosenInlineResult = class
+
+  end;
+
+  TtgCallbackQuery = class
+
+  end;
+
+  TtgShippingQuery = class
+
+  end;
+
+  TtgPreCheckoutQuery = class
+
+  end;
+
+  /// <summary>
+  /// Contains information about why a request was unsuccessful.
+  /// </summary>
+  TtgResponseParameters = class
+  private
+    [JsonName('migrate_to_chat_id')]
+    FMigrateToChatId: Int64;
+    [JsonName('retry_after')]
+    FRetryAfter: Integer;
+  public
+    /// <summary>
+    /// Optional. The group has been migrated to a supergroup
+    /// with the specified identifier. This number may be greater than 32 bits
+    /// and some programming languages may have difficulty/silent
+    /// defects in interpreting it. But it is smaller than 52 bits,
+    /// so a signed 64 bit integer or double-precision float type are safe
+    /// for storing this identifier.
+    /// </summary>
+    property MigrateToChatId: Int64 read FMigrateToChatId write FMigrateToChatId;
+    /// <summary>
+    /// Optional. In case of exceeding flood control, the number of seconds left
+    /// to wait before the request can be repeated.
+    /// </summary>
+    property RetryAfter: Integer read FRetryAfter write FRetryAfter;
+  end;
+
+  ItgResponseBase = interface
+    ['{1657D8E5-0B41-4983-B1BE-443A266CFD40}']
+    // private
+    function GetDescription: string;
+    function GetErrorCode: Integer;
+    function GetOk: Boolean;
+    procedure SetDescription(const Value: string);
+    procedure SetErrorCode(const Value: Integer);
+    procedure SetOk(const Value: Boolean);
+    function GerParameters: TtgResponseParameters;
+    // public
+    property Description: string read GetDescription write SetDescription;
+    property ErrorCode: Integer read GetErrorCode write SetErrorCode;
+    property Ok: Boolean read GetOk write SetOk;
+    property Parameters: TtgResponseParameters read GerParameters;
+  end;
+
+  /// <summary>
+  /// Represents bot API response
+  /// </summary>
+  TtgResponseBase = class(TInterfacedObject, ItgResponseBase)
+  private
+    [JsonName('description')]
+    FDescription: string;
+    [JsonName('error_code')]
+    FErrorCode: Integer;
+    [JsonName('Ok')]
+    FOk: Boolean;
+    [JsonName('parameters')]
+    FParameters: TtgResponseParameters;
+    function GetDescription: string;
+    function GetErrorCode: Integer;
+    function GetOk: Boolean;
+    procedure SetDescription(const Value: string);
+    procedure SetErrorCode(const Value: Integer);
+    procedure SetOk(const Value: Boolean);
+    function GerParameters: TtgResponseParameters;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Gets the error message.
+    /// </summary>
+    property Description: string read GetDescription write SetDescription;
+    /// <summary>
+    /// Gets the error code.
+    /// </summary>
+    property ErrorCode: Integer read GetErrorCode write SetErrorCode;
+    /// <summary>
+    /// Gets a value indicating whether the request was successful.
+    /// </summary>
+    property Ok: Boolean read GetOk write SetOk;
+    /// <summary>
+    /// Contains information about why a request was unsuccessful.
+    /// </summary>
+    property Parameters: TtgResponseParameters read GerParameters;
+  end;
+
+  ItgResponse<t> = interface(ItgResponseBase)
+    ['{B98FE3AF-73DF-4A1D-BC25-C36EA264055B}']
+    // private
+    function GetResult: t;
+    procedure SetResult(const Value: t);
+    function GetResponse: IcaResponseBase;
+    procedure SetResponse(const Value: IcaResponseBase);
+    // public
+    /// <summary>
+    /// Gets the result object.
+    /// </summary>
+    property Result: t read GetResult write SetResult;
+    property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
+  end;
+
+  TtgResponse<t> = class(TtgResponseBase, ItgResponse<t>)
+  private
+    [JsonName('result')]
+    FResult: t;
+    FResponse: IcaResponseBase;
+    function GetResult: t;
+    procedure SetResult(const Value: t);
+    function GetResponse: IcaResponseBase;
+    procedure SetResponse(const Value: IcaResponseBase);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    property Result: t read GetResult write SetResult;
+    property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
+  end;
+
+  TtgUserLink = record
+  private
+    FID: Int64;
+    FUsername: string;
+    class function FromID(const AID: Int64): TtgUserLink; static;
+    class function FromUserName(const AUsername: string): TtgUserLink; static;
+  public
+    function IsEmpty: Boolean;
+    function IsHaveID: Boolean;
+    function IsHaveUsername: Boolean;
+    function GetUsernameWithDog: string;
+    function ToString: string;
+  public
+    property ID: Int64 read FID write FID;
+    property Username: string read FUsername write FUsername;
+  public
+    class function Empty: TtgUserLink; static;
+    class operator Implicit(AID: Int64): TtgUserLink;
+    class operator Implicit(AUsername: string): TtgUserLink;
+  end;
+
+  /// <summary>
+  /// This object represents the content of a media message to be sent.
+  /// </summary>
+  TtgInputMedia = class abstract
+  protected
+    [JsonName('type')]
+    FType: string;
+    [JsonName('media')]
+    FMedia: string;
+    [JsonName('caption')]
+    FCaption: string;
+    [JsonName('parse_mode')]
+    [JsonConverter(TtgParseModeConverter)]
+    FParseMode: TtgParseMode;
+    [JsonIgnoreAttribute]
+    FFileToSend: TcaFileToSend;
+  public
+    function GetFileToSend: TcaFileToSend;
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); virtual;
+    property &Type: string read FType;
+    property Media: string read FMedia;
+    property Caption: string read FCaption write FCaption;
+    property ParseMode: TtgParseMode read FParseMode write FParseMode;
+  end;
+
+  /// <summary>
+  /// Represents a photo to be sent.
+  /// </summary>
+  TtgInputMediaPhoto = class(TtgInputMedia)
+  public
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
+    /// <summary>
+    /// Type of the result, must be "photo"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Caption of the photo to be sent, 0-1024 characters after entities
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the photo caption. See formatting
+    /// options for more details.
+    /// </summary>
+    property ParseMode;
+  end;
+
+  /// <summary>
+  /// Represents a general file to be sent.
+  /// </summary>
+  TtgInputMediaDocument = class(TtgInputMediaPhoto)
+  private
+    [JsonName('thumb')]
+    FThumb: TcaFileToSend;
+  public
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
+    /// <summary>
+    /// Type of the result, must be "document"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb: TcaFileToSend read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Caption of the document  to be sent, 0-1024 characters after entities
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the document caption. See formatting
+    /// options for more details.
+    /// </summary>
+    property ParseMode;
+  end;
+
+  /// <summary>
+  /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to
+  /// be sent.
+  /// </summary>
+  TtgInputMediaAnimation = class(TtgInputMediaDocument)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('width')]
+    FWidth: Int64;
+    [JsonName('height')]
+    FHeight: Int64;
+  public
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
+    /// <summary>
+    /// Type of the result, must be "animation"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the animation caption.
+    /// See formatting options for more details.
+    /// </summary>
+    property ParseMode;
+    /// <summary>
+    /// Optional. Animation  width
+    /// </summary>
+    property Width: Int64 read FWidth write FWidth;
+    /// <summary>
+    /// Optional. Animation  height
+    /// </summary>
+    property Height: Int64 read FHeight write FHeight;
+    /// <summary>
+    /// Optional. Animation  duration
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+  end;
+
+  /// <summary>
+  /// Represents a video to be sent.
+  /// </summary>
+  TtgInputMediaVideo = class(TtgInputMediaAnimation)
+  private
+    [JsonName('supports_streaming')]
+    FSupportsStreaming: Boolean;
+  public
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''; const AHeight: Integer = 0;
+      const AWidth: Integer = 0; const ADuration: Integer = 0); reintroduce;
+    /// <summary>
+    /// Type of the result, must be "photo"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the video caption.
+    /// See formatting options for more details.
+    /// </summary>
+    property ParseMode;
+    /// <summary>
+    /// Optional. Video width
+    /// </summary>
+    property Width;
+    /// <summary>
+    /// Optional. Video height
+    /// </summary>
+    property Height;
+    /// <summary>
+    /// Optional. Video duration
+    /// </summary>
+    property Duration;
+    /// <summary>
+    /// Optional. Pass True, if the uploaded video is suitable for streaming
+    /// </summary>
+    property SupportsStreaming: Boolean read FSupportsStreaming write FSupportsStreaming;
+  end;
+
+  /// <summary>
+  /// Represents an audio file to be treated as music to be sent.
+  /// </summary>
+  TtgInputMediaAudio = class(TtgInputMediaDocument)
+  private
+    [JsonName('duration')]
+    FDuration: Int64;
+    [JsonName('performer')]
+    FPerformer: string;
+    [JsonName('title')]
+    FTitle: string;
+  public
+    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
+    /// <summary>
+    /// Type of the result, must be "audio"
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
+    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
+    /// or pass “attach://<file_attach_name>” to upload a new one using
+    /// multipart/form-data under <file_attach_name> name.
+    /// </summary>
+    property Media;
+    /// <summary>
+    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
+    /// for the file is supported server-side. The thumbnail should be in JPEG format
+    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
+    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
+    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
+    /// under <file_attach_name>
+    /// </summary>
+    property Thumb;
+    /// <summary>
+    /// Optional. Caption of the audio to be sent, 0-1024 characters after entities parsing
+    /// parsing
+    /// </summary>
+    property Caption;
+    /// <summary>
+    /// Optional. Mode for parsing entities in the audio caption.
+    /// See formatting options for more details.
+    /// </summary>
+    property ParseMode;
+    /// <summary>
+    /// Optional. Duration of the audio in seconds
+    /// </summary>
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. Performer of the audio
+    /// </summary>
+    property Performer: string read FPerformer write FPerformer;
+    /// <summary>
+    /// Optional. Title of the audio
+    /// </summary>
+    property Title: string read FTitle write FTitle;
+  end;
+
+  /// <summary> Contains information about the current status of a webhook.</summary>
+  TtgWebhookInfo = class
+  private
+    [JsonName('allowed_updates')]
+    [JsonName('url')]
+    FUrl: string;
+    [JsonName('has_custom_certificate')]
+    FHasCustomCertificate: Boolean;
+    [JsonName('pending_update_count')]
+    FPendingUpdateCount: Integer;
+    [JsonName('last_error_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FLastErrorDate: TDateTime;
+    [JsonName('last_error_message')]
+    FLastErrorMessage: string;
+    [JsonName('max_connections')]
+    FMaxConnections: Integer;
+    [JsonName('allowed_updates')]
+    FAllowedUpdates: TAllowedUpdates;
+  public
+    /// <summary>
+    /// Webhook URL, may be empty if webhook is not set up
+    /// </summary>
+    property Url: string read FUrl write FUrl;
+    /// <summary>
+    /// True, if a custom certificate was provided for webhook certificate checks
+    /// </summary>
+    property HasCustomCertificate: Boolean read FHasCustomCertificate write FHasCustomCertificate;
+    /// <summary>
+    /// Number of updates awaiting delivery
+    /// </summary>
+    property PendingUpdateCount: Integer read FPendingUpdateCount write FPendingUpdateCount;
+    /// <summary>
+    /// Optional. Unix time for the most recent error that happened when trying to
+    /// deliver an update via webhook
+    /// </summary>
+    property LastErrorDate: TDateTime read FLastErrorDate write FLastErrorDate;
+    /// <summary>
+    /// Optional. Error message in human-readable format for the most recent error that
+    /// happened when trying to deliver an update via webhook
+    /// </summary>
+    property LastErrorMessage: string read FLastErrorMessage write FLastErrorMessage;
+    /// <summary>
+    /// Optional. Maximum allowed number of simultaneous HTTPS connections to the
+    /// webhook for update delivery
+    /// </summary>
+    property MaxConnections: Integer read FMaxConnections write FMaxConnections;
+    /// <summary>
+    /// Optional. A list of update types the bot is subscribed to. Defaults to all
+    /// update types
+    /// </summary>
+    property AllowedUpdates: TAllowedUpdates read FAllowedUpdates write FAllowedUpdates;
+  end;
 
   /// <summary>
   /// This object represents a Telegram user or bot.
@@ -113,6 +1087,154 @@ type
     /// cref="TTelegramBotApi.GetMe"/>.
     /// </summary>
     property SupportsInlineQueries: Boolean read GetSupportsInlineQueries;
+  end;
+
+  /// <summary>
+  /// This object represents one special entity in a text message. For example,
+  /// hashtags, usernames, URLs, etc.
+  /// </summary>
+  TtgMessageEntity = class
+  private
+    [JsonName('language')]
+    FLanguage: string;
+    [JsonName('user')]
+    FUser: TtgUser;
+    [JsonName('url')]
+    FUrl: string;
+    [JsonName('length')]
+    FLength: Int64;
+    [JsonName('offset')]
+    FOffset: Int64;
+    [JsonName('type')]
+    [JsonConverter(TtgMessageEntityTypeConverter)]
+    FType: TtgMessageEntityType;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    /// <summary>
+    /// Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag),
+    /// “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org),
+    /// “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (
+    /// bold text), “italic” (italic text), “underline” (underlined text),
+    /// “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (
+    /// monowidth block), “text_link” (for clickable text URLs), “text_mention” (for
+    /// users without usernames)
+    /// </summary>
+    property &Type: TtgMessageEntityType read FType write FType;
+    /// <summary>
+    /// Offset in UTF-16 code units to the start of the entity
+    /// </summary>
+    property Offset: Int64 read FOffset write FOffset;
+    /// <summary>
+    /// Length of the entity in UTF-16 code units
+    /// </summary>
+    property Length: Int64 read FLength write FLength;
+    /// <summary>
+    /// Optional. For “text_link” only, url that will be opened after user taps on the
+    /// text
+    /// </summary>
+    property Url: string read FUrl write FUrl;
+    /// <summary>
+    /// Optional. For “text_mention” only, the mentioned user
+    /// </summary>
+    property User: TtgUser read FUser write FUser;
+    /// <summary>
+    /// Optional. For “pre” only, the programming language of the entity text
+    /// </summary>
+    property Language: string read FLanguage write FLanguage;
+  end;
+
+  /// <summary>
+  /// This object contains information about a poll.
+  /// </summary>
+  TtgPoll = class
+  private
+    [JsonName('id')]
+    FID: string;
+    [JsonName('question')]
+    FQuestion: string;
+    [JsonName('options')]
+    FOptions: TArray<TtgPollOption>;
+    [JsonName('total_voter_count')]
+    FTotalVoterCount: Integer;
+    [JsonName('is_closed')]
+    FIsClosed: Boolean;
+    [JsonName('is_anonymous')]
+    FIsAnonymous: Boolean;
+    [JsonName('type')]
+    FType: string;
+    [JsonName('allows_multiple_answers')]
+    FAllowsMultipleAnswers: Boolean;
+    [JsonName('correct_option_id')]
+    FCorrectOptionId: Integer;
+    [JsonName('explanation')]
+    FExplanation: string;
+    [JsonName('explanation_entities')]
+    FExplanationEntities: TArray<TtgMessageEntity>;
+    [JsonName('open_period')]
+    FOpenPeriod: Integer;
+    [JsonName('close_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FCloseDate: TDateTime;
+  public
+    destructor Destroy; override;
+    /// <summary>
+    /// Unique poll identifier
+    /// </summary>
+    property ID: string read FID write FID;
+    /// <summary>
+    /// Poll question, 1-255 characters
+    /// </summary>
+    property Question: string read FQuestion write FQuestion;
+    /// <summary>
+    /// List of poll options
+    /// </summary>
+    property Options: TArray<TtgPollOption> read FOptions write FOptions;
+    /// <summary>
+    /// Total number of users that voted in the poll
+    /// </summary>
+    property TotalVoterCount: Integer read FTotalVoterCount write FTotalVoterCount;
+    /// <summary>
+    /// True, if the poll is closed
+    /// </summary>
+    property IsClosed: Boolean read FIsClosed write FIsClosed;
+    /// <summary>
+    /// True, if the poll is anonymous
+    /// </summary>
+    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
+    /// <summary>
+    /// Poll type, currently can be “regular” or “quiz”
+    /// </summary>
+    property &Type: string read FType write FType;
+    /// <summary>
+    /// True, if the poll allows multiple answers
+    /// </summary>
+    property AllowsMultipleAnswers: Boolean read FAllowsMultipleAnswers write FAllowsMultipleAnswers;
+    /// <summary>
+    /// Optional. 0-based identifier of the correct answer option. Available only for
+    /// polls in the quiz mode, which are closed, or was sent (not forwarded) by the
+    /// bot or to the private chat with the bot.
+    /// </summary>
+    property CorrectOptionId: Integer read FCorrectOptionId write FCorrectOptionId;
+    /// <summary>
+    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear
+    /// in the explanation
+    /// </summary>
+    property Explanation: string read FExplanation write FExplanation;
+    /// <summary>
+    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear
+    /// in the explanation
+    /// </summary>
+    property ExplanationEntities: TArray<TtgMessageEntity> read FExplanationEntities write FExplanationEntities;
+    /// <summary>
+    /// Optional. Amount of time in seconds the poll will be active after creation
+    /// </summary>
+    property OpenPeriod: Integer read FOpenPeriod write FOpenPeriod;
+    /// <summary>
+    /// Optional. Point in time (Unix timestamp) when the poll will be automatically
+    /// closed
+    /// </summary>
+    property CloseDate: TDateTime read FCloseDate write FCloseDate;
   end;
 
   /// <summary>
@@ -606,668 +1728,6 @@ type
     property ReplyMarkup: TtgInlineKeyboardMarkup read FReplyMarkup write FReplyMarkup;
   end;
 
-  /// <summary>
-  /// This object represents a unique message identifier.
-  /// </summary>
-  TtgMessageId = class
-  private
-    [JsonName('message_id')]
-    FMessageID: Int64;
-  public
-    /// <summary>
-    /// Unique message identifier
-    /// </summary>
-    property MessageID: Int64 read FMessageID write FMessageID;
-  end;
-
-  /// <summary>
-  /// This object represents one special entity in a text message. For example,
-  /// hashtags, usernames, URLs, etc.
-  /// </summary>
-  TtgMessageEntity = class
-  private
-    [JsonName('language')]
-    FLanguage: string;
-    [JsonName('user')]
-    FUser: TtgUser;
-    [JsonName('url')]
-    FUrl: string;
-    [JsonName('length')]
-    FLength: Int64;
-    [JsonName('offset')]
-    FOffset: Int64;
-    [JsonName('type')]
-    [JsonConverter(TtgMessageEntityTypeConverter)]
-    FType: TtgMessageEntityType;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    /// <summary>
-    /// Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag),
-    /// “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org),
-    /// “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (
-    /// bold text), “italic” (italic text), “underline” (underlined text),
-    /// “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (
-    /// monowidth block), “text_link” (for clickable text URLs), “text_mention” (for
-    /// users without usernames)
-    /// </summary>
-    property &Type: TtgMessageEntityType read FType write FType;
-    /// <summary>
-    /// Offset in UTF-16 code units to the start of the entity
-    /// </summary>
-    property Offset: Int64 read FOffset write FOffset;
-    /// <summary>
-    /// Length of the entity in UTF-16 code units
-    /// </summary>
-    property Length: Int64 read FLength write FLength;
-    /// <summary>
-    /// Optional. For “text_link” only, url that will be opened after user taps on the
-    /// text
-    /// </summary>
-    property Url: string read FUrl write FUrl;
-    /// <summary>
-    /// Optional. For “text_mention” only, the mentioned user
-    /// </summary>
-    property User: TtgUser read FUser write FUser;
-    /// <summary>
-    /// Optional. For “pre” only, the programming language of the entity text
-    /// </summary>
-    property Language: string read FLanguage write FLanguage;
-  end;
-
-  /// <summary>
-  /// This object represents one size of a photo or a file / sticker thumbnail
-  /// </summary>
-  TtgPhotosize = class(TtgFileInfo)
-  private
-    [JsonName('width')]
-    FWidth: Int64;
-    [JsonName('height')]
-    FHeight: Int64;
-  public
-    /// <summary>
-    /// Identifier for this file, which can be used to download or reuse the file
-    /// </summary>
-    property FileId: string;
-    /// <summary>
-    /// Unique identifier for this file, which is supposed to be the same over time and
-    /// for different bots. Can't be used to download or reuse the file.
-    /// </summary>
-    property FileUniqueId: string;
-    /// <summary>
-    /// Photo width
-    /// </summary>
-    property Width: Int64 read FWidth write FWidth;
-    /// <summary>
-    /// Photo height
-    /// </summary>
-    property Height: Int64 read FHeight write FHeight;
-    /// <summary>
-    /// Optional. File size
-    /// </summary>
-    property FileSize: Int64;
-  end;
-
-  /// <summary>
-  /// This object represents an animation file (GIF or H.264/MPEG-4 AVC video without
-  /// sound).
-  /// </summary>
-  TtgAnimation = class(TtgVideo)
-  private
-    [JsonName('file_name')]
-    FFilename: string;
-  public
-    /// <summary>
-    /// Identifier for this file, which can be used to download or reuse the file
-    /// </summary>
-    property FileId: string;
-    /// <summary>
-    /// Unique identifier for this file, which is supposed to be the same over time and
-    /// for different bots. Can't be used to download or reuse the file.
-    /// </summary>
-    property FileUniqueId: string;
-    /// <summary>
-    /// Video width as defined by sender
-    /// </summary>
-    property Width: Int64;
-    /// <summary>
-    /// Video height as defined by sender
-    /// </summary>
-    property Height: Int64;
-
-    /// <summary>
-    /// Duration of the video in seconds as defined by sender
-    /// </summary>
-    property Duration: Int64;
-    /// <summary>
-    /// Optional. Animation thumbnail as defined by sender
-    /// </summary>
-    property Thumb: TtgPhotosize;
-
-    /// <summary>
-    /// Optional. Original animation filename as defined by sender
-    /// </summary>
-    property Filename: string read FFilename write FFilename;
-    /// <summary>
-    /// Optional. Mime type of a file as defined by sender
-    /// </summary>
-    property MimeType: string;
-    /// <summary>
-    /// Optional. File size
-    /// </summary>
-    property FileSize: Int64;
-  end;
-
-  TtgFileInfo = class
-  private
-    [JsonName('file_id')]
-    FFileId: string;
-    [JsonName('file_unique_id')]
-    FFileUniqueId: string;
-    [JsonName('file_size')]
-    FFileSize: Int64;
-  public
-    /// <summary>
-    /// Identifier for this file, which can be used to download or reuse the file
-    /// </summary>
-    property FileId: string read FFileId write FFileId;
-    /// <summary>
-    /// Unique identifier for this file, which is supposed to be the same over time and
-    /// for different bots. Can't be used to download or reuse the file.
-    /// </summary>
-    property FileUniqueId: string read FFileUniqueId write FFileUniqueId;
-    /// <summary>
-    /// Optional. File size
-    /// </summary>
-    property FileSize: Int64 read FFileSize write FFileSize;
-  end;
-
-  /// <summary>
-  /// This object represents a general file (as opposed to photos, voice messages and audio files).
-  /// </summary>
-  TtgDocument = class(TtgFileInfo)
-  private
-    [JsonName('thumb')]
-    FThumb: TtgPhotosize;
-    [JsonName('file_name')]
-    FFilename: string;
-    [JsonName('mime_type')]
-    FMimeType: string;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    /// <summary>
-    /// Optional. Document thumbnail as defined by sender
-    /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
-    /// <summary>
-    /// Optional. Original filename as defined by sender
-    /// </summary>
-    property Filename: string read FFilename write FFilename;
-    /// <summary>
-    /// Optional. MIME type of the file as defined by sender
-    /// </summary>
-    property MimeType: string read FMimeType write FMimeType;
-  end;
-
-  /// <summary>
-  /// This object represents a voice note.
-  /// </summary>
-  TtgVoice = class(TtgFileInfo)
-  private
-    [JsonName('duration')]
-    FDuration: Int64;
-    [JsonName('mime_type')]
-    FMimeType: string;
-  public
-    /// <summary>
-    /// Duration of the audio in seconds as defined by sender
-    /// </summary>
-    property Duration: Int64 read FDuration write FDuration;
-    /// <summary>
-    /// Optional. MIME type of the file as defined by sender
-    /// </summary>
-    property MimeType: string read FMimeType write FMimeType;
-  end;
-
-  /// <summary>
-  /// This object represents an audio file to be treated as music by the Telegram clients.
-  /// </summary>
-  TtgAudio = class(TtgVoice)
-  private
-    [JsonName('performer')]
-    FPerformer: string;
-    [JsonName('title')]
-    FTitle: string;
-    [JsonName('thumb')]
-    FThumb: TtgPhotosize;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    /// <summary>
-    /// Optional. Performer of the audio as defined by sender or by audio tags
-    /// </summary>
-    property Performer: string read FPerformer write FPerformer;
-    /// <summary>
-    /// Optional. Title of the audio as defined by sender or by audio tags
-    /// </summary>
-    property Title: string read FTitle write FTitle;
-    /// <summary>
-    /// Optional. Thumbnail of the album cover to which the music file belongs
-    /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
-  end;
-
-  TtgVideo = class(TtgPhotosize)
-  private
-    [JsonName('duration')]
-    FDuration: Int64;
-    [JsonName('thumb')]
-    FThumb: TtgPhotosize;
-    [JsonName('mime_type')]
-    FMimeType: string;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    /// <summary>
-    /// Duration of the video in seconds as defined by sender
-    /// </summary>
-    property Duration: Int64 read FDuration write FDuration;
-    /// <summary>
-    /// Optional. Video thumbnail
-    /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
-    /// <summary>
-    /// Optional. Mime type of a file as defined by sender
-    /// </summary>
-    property MimeType: string read FMimeType write FMimeType;
-  end;
-
-  TtgVideoNote = class(TtgFileInfo)
-  private
-    [JsonName('length')]
-    FLength: Int64;
-    [JsonName('duration')]
-    FDuration: Int64;
-    [JsonName('thumb')]
-    FThumb: TtgPhotosize;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    property Length: Int64 read FLength write FLength;
-    property Duration: Int64 read FDuration write FDuration;
-    property Thumb: TtgPhotosize read FThumb write FThumb;
-  end;
-
-  /// <summary>This object represents a point on the map.</summary>
-  TtgLocation = class
-  private
-    [JsonName('longitude')]
-    FLongitude: Single;
-    [JsonName('latitude')]
-    FLatitude: Single;
-  public
-    /// <summary>Longitude as defined by sender</summary>
-    property Longitude: Single read FLongitude write FLongitude;
-    /// <summary>
-    /// Latitude as defined by sender
-    /// </summary>
-    property Latitude: Single read FLatitude write FLatitude;
-  end;
-
-  /// <summary>
-  /// This object represents a venue.
-  /// </summary>
-  TtgVenue = class
-  private
-    [JsonName('location')]
-    FLocation: TtgLocation;
-    [JsonName('title')]
-    FTitle: string;
-    [JsonName('address')]
-    FAddress: string;
-    [JsonName('foursquare_id')]
-    FFoursquareId: string;
-    [JsonName('foursquare_type')]
-    FFoursquareType: string;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    /// <summary>
-    /// Venue location
-    /// </summary>
-    property Location: TtgLocation read FLocation write FLocation;
-    /// <summary>Name of the venue</summary>
-    property Title: string read FTitle write FTitle;
-    /// <summary>
-    /// Address of the venue
-    /// </summary>
-    property Address: string read FAddress write FAddress;
-    /// <summary>
-    /// Optional. Foursquare identifier of the venue
-    /// </summary>
-    property FoursquareId: string read FFoursquareId write FFoursquareId;
-    /// <summary>
-    /// Optional. Foursquare type of the venue. (For example,
-    /// “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
-    /// </summary>
-    property FoursquareType: string read FFoursquareType write FFoursquareType;
-  end;
-
-  /// <summary>
-  /// This object represents a phone contact.
-  /// </summary>
-  TtgContact = class
-  private
-    [JsonName('phone_number')]
-    FPhoneNumber: string;
-    [JsonName('first_name')]
-    FFirstName: string;
-    [JsonName('last_name')]
-    FLastName: string;
-    [JsonName('user_id')]
-    FUserId: Int64;
-    [JsonName('vcard')]
-    FVCard: string;
-  public
-    /// <summary>
-    /// Contact's phone number
-    /// </summary>
-    property PhoneNumber: string read FPhoneNumber write FPhoneNumber;
-    /// <summary>
-    /// Contact's first name
-    /// </summary>
-    property FirstName: string read FFirstName write FFirstName;
-    /// <summary>
-    /// Optional. Contact's last name
-    /// </summary>
-    property LastName: string read FLastName write FLastName;
-    /// <summary>
-    /// Optional. Contact's user identifier in Telegram
-    /// </summary>
-    property UserId: Int64 read FUserId write FUserId;
-    /// <summary>
-    /// Optional. Additional data about the contact in the form of a vCard
-    /// </summary>
-    property VCard: string read FVCard write FVCard;
-  end;
-
-  /// <summary>
-  /// This object contains information about one answer option in a poll.
-  /// </summary>
-  TtgPollOption = class
-  private
-    [JsonName('text')]
-    FText: string;
-    [JsonName('voter_count')]
-    FVoterCount: Integer;
-  public
-    /// <summary>
-    /// Option text, 1-100 characters
-    /// </summary>
-    property Text: string read FText write FText;
-    /// <summary>
-    /// Number of users that voted for this option
-    /// </summary>
-    property VoterCount: Integer read FVoterCount write FVoterCount;
-  end;
-
-  /// <summary>
-  /// This object contains information about a poll.
-  /// </summary>
-  TtgPoll = class
-  private
-    [JsonName('id')]
-    FID: string;
-    [JsonName('question')]
-    FQuestion: string;
-    [JsonName('options')]
-    FOptions: TArray<TtgPollOption>;
-    [JsonName('total_voter_count')]
-    FTotalVoterCount: Integer;
-    [JsonName('is_closed')]
-    FIsClosed: Boolean;
-    [JsonName('is_anonymous')]
-    FIsAnonymous: Boolean;
-    [JsonName('type')]
-    FType: string;
-    [JsonName('allows_multiple_answers')]
-    FAllowsMultipleAnswers: Boolean;
-    [JsonName('correct_option_id')]
-    FCorrectOptionId: Integer;
-    [JsonName('explanation')]
-    FExplanation: string;
-    [JsonName('explanation_entities')]
-    FExplanationEntities: TArray<TtgMessageEntity>;
-    [JsonName('open_period')]
-    FOpenPeriod: Integer;
-    [JsonName('close_date')]
-    [JsonConverter(TJsonUnixTimeConverter)]
-    FCloseDate: TDateTime;
-  public
-    destructor Destroy; override;
-    /// <summary>
-    /// Unique poll identifier
-    /// </summary>
-    property ID: string read FID write FID;
-    /// <summary>
-    /// Poll question, 1-255 characters
-    /// </summary>
-    property Question: string read FQuestion write FQuestion;
-    /// <summary>
-    /// List of poll options
-    /// </summary>
-    property Options: TArray<TtgPollOption> read FOptions write FOptions;
-    /// <summary>
-    /// Total number of users that voted in the poll
-    /// </summary>
-    property TotalVoterCount: Integer read FTotalVoterCount write FTotalVoterCount;
-    /// <summary>
-    /// True, if the poll is closed
-    /// </summary>
-    property IsClosed: Boolean read FIsClosed write FIsClosed;
-    /// <summary>
-    /// True, if the poll is anonymous
-    /// </summary>
-    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
-    /// <summary>
-    /// Poll type, currently can be “regular” or “quiz”
-    /// </summary>
-    property &Type: string read FType write FType;
-    /// <summary>
-    /// True, if the poll allows multiple answers
-    /// </summary>
-    property AllowsMultipleAnswers: Boolean read FAllowsMultipleAnswers write FAllowsMultipleAnswers;
-    /// <summary>
-    /// Optional. 0-based identifier of the correct answer option. Available only for
-    /// polls in the quiz mode, which are closed, or was sent (not forwarded) by the
-    /// bot or to the private chat with the bot.
-    /// </summary>
-    property CorrectOptionId: Integer read FCorrectOptionId write FCorrectOptionId;
-    /// <summary>
-    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear
-    /// in the explanation
-    /// </summary>
-    property Explanation: string read FExplanation write FExplanation;
-    /// <summary>
-    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear
-    /// in the explanation
-    /// </summary>
-    property ExplanationEntities: TArray<TtgMessageEntity> read FExplanationEntities write FExplanationEntities;
-    /// <summary>
-    /// Optional. Amount of time in seconds the poll will be active after creation
-    /// </summary>
-    property OpenPeriod: Integer read FOpenPeriod write FOpenPeriod;
-    /// <summary>
-    /// Optional. Point in time (Unix timestamp) when the poll will be automatically
-    /// closed
-    /// </summary>
-    property CloseDate: TDateTime read FCloseDate write FCloseDate;
-  end;
-
-  TtgPollAnswer = class
-
-  end;
-
-  /// <summary>
-  /// This object represents a sticker.
-  /// </summary>
-  TtgSticker = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  /// <summary>
-  /// This object represents an animated emoji that displays a random value.
-  /// </summary>
-  TtgDice = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  /// <summary>
-  /// This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
-  /// </summary>
-  TtgGame = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  /// <summary>
-  /// This object contains basic information about an invoice.
-  /// </summary>
-  TtgInvoice = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  /// <summary>
-  /// This object contains basic information about a successful payment.
-  /// </summary>
-  TtgSuccessfulPayment = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  /// <summary>
-  /// Contains information about Telegram Passport data shared with the bot by the user.
-  /// </summary>
-  TtgPassportData = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  /// <summary>
-  /// This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.
-  /// </summary>
-  TtgProximityAlertTriggered = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
-  TtgChatPhoto = class
-
-  end;
-
-  /// <summary>
-  /// Describes actions that a non-administrator user is allowed to take in a chat.
-  /// </summary>
-  TtgChatPermissions = class
-  private
-    [JsonName('can_send_messages')]
-    FCanSendMessages: Boolean;
-    [JsonName('can_send_media_messages')]
-    FCanSendMediaMessages: Boolean;
-    [JsonName('can_send_polls')]
-    FCanSendPolls: Boolean;
-    [JsonName('can_send_other_messages')]
-    FCanSendOtherMessages: Boolean;
-    [JsonName('can_add_web_page_previews')]
-    FCanAddWebPagePreviews: Boolean;
-    [JsonName('can_change_info')]
-    FCanChangeInfo: Boolean;
-    [JsonName('can_invite_users')]
-    FCanInviteUsers: Boolean;
-    [JsonName('can_pin_messages')]
-    FCanPinMessages: Boolean;
-  public
-    /// <summary>
-    /// Optional. True, if the user is allowed to send text messages, contacts,
-    /// locations and venues
-    /// </summary>
-    property CanSendMessages: Boolean read FCanSendMessages;
-    /// <summary>
-    /// Optional. True, if the user is allowed to send audios, documents, photos,
-    /// videos, video notes and voice notes, implies can_send_messages
-    /// </summary>
-    property CanSendMediaMessages: Boolean read FCanSendMediaMessages;
-    /// <summary>
-    /// Optional. True, if the user is allowed to send polls, implies can_send_messages
-    /// </summary>
-    property CanSendPolls: Boolean read FCanSendPolls;
-    /// <summary>
-    /// Optional. True, if the user is allowed to send animations, games, stickers and
-    /// use inline bots, implies can_send_media_messages
-    /// </summary>
-    property CanSendOtherMessages: Boolean read FCanSendOtherMessages;
-    /// <summary>
-    /// Optional. True, if the user is allowed to add web page previews to their
-    /// messages, implies can_send_media_messages
-    /// </summary>
-    property CanAddWebPagePreviews: Boolean read FCanAddWebPagePreviews;
-    /// <summary>
-    /// Optional. True, if the user is allowed to change the chat title, photo and
-    /// other settings. Ignored in public supergroups
-    /// </summary>
-    property CanChangeInfo: Boolean read FCanChangeInfo;
-    /// <summary>
-    /// Optional. True, if the user is allowed to invite new users to the chat
-    /// </summary>
-    property CanInviteUsers: Boolean read FCanInviteUsers;
-    /// <summary>
-    /// Optional. True, if the user is allowed to pin messages. Ignored in public
-    /// supergroups
-    /// </summary>
-    property CanPinMessages: Boolean read FCanPinMessages;
-  end;
-
-  /// <summary>
-  /// Represents a location to which a chat is connected.
-  /// </summary>
-  TtgChatLocation = class
-  private
-    [JsonName('location')]
-    FLocation: TtgLocation;
-    [JsonName('address')]
-    FAddress: string;
-  public
-    /// <summary>
-    /// The location to which the supergroup is connected. Can't be a live location.
-    /// </summary>
-    property Location: TtgLocation read FLocation write FLocation;
-    /// <summary>
-    /// Location address; 1-64 characters, as defined by the chat owner
-    /// </summary>
-    property Address: string read FAddress write FAddress;
-  end;
-
-  TtgInlineQuery = class
-
-  end;
-
-  TtgAnswerInlineQuery = class
-
-  end;
-
-  TtgChosenInlineResult = class
-
-  end;
-
-  TtgCallbackQuery = class
-
-  end;
-
-  TtgShippingQuery = class
-
-  end;
-
-  TtgPreCheckoutQuery = class
-
-  end;
-
   TtgUpdate = class
   private
     [JsonName('update_id')]
@@ -1343,468 +1803,6 @@ type
     /// receive new votes only in polls that were sent by the bot itself.
     /// </summary>
     property PollAnswer: TtgPollAnswer read FPollAnswer write FPollAnswer;
-  end;
-
-  /// <summary>
-  /// Contains information about why a request was unsuccessful.
-  /// </summary>
-  TtgResponseParameters = class
-  private
-    [JsonName('migrate_to_chat_id')]
-    FMigrateToChatId: Int64;
-    [JsonName('retry_after')]
-    FRetryAfter: Integer;
-  public
-    /// <summary>
-    /// Optional. The group has been migrated to a supergroup
-    /// with the specified identifier. This number may be greater than 32 bits
-    /// and some programming languages may have difficulty/silent
-    /// defects in interpreting it. But it is smaller than 52 bits,
-    /// so a signed 64 bit integer or double-precision float type are safe
-    /// for storing this identifier.
-    /// </summary>
-    property MigrateToChatId: Int64 read FMigrateToChatId write FMigrateToChatId;
-    /// <summary>
-    /// Optional. In case of exceeding flood control, the number of seconds left
-    /// to wait before the request can be repeated.
-    /// </summary>
-    property RetryAfter: Integer read FRetryAfter write FRetryAfter;
-  end;
-
-  ItgResponseBase = interface
-    ['{1657D8E5-0B41-4983-B1BE-443A266CFD40}']
-    // private
-    function GetDescription: string;
-    function GetErrorCode: Integer;
-    function GetOk: Boolean;
-    procedure SetDescription(const Value: string);
-    procedure SetErrorCode(const Value: Integer);
-    procedure SetOk(const Value: Boolean);
-    function GerParameters: TtgResponseParameters;
-    // public
-    property Description: string read GetDescription write SetDescription;
-    property ErrorCode: Integer read GetErrorCode write SetErrorCode;
-    property Ok: Boolean read GetOk write SetOk;
-    property Parameters: TtgResponseParameters read GerParameters;
-  end;
-
-  /// <summary>
-  /// Represents bot API response
-  /// </summary>
-  TtgResponseBase = class(TInterfacedObject, ItgResponseBase)
-  private
-    [JsonName('description')]
-    FDescription: string;
-    [JsonName('error_code')]
-    FErrorCode: Integer;
-    [JsonName('Ok')]
-    FOk: Boolean;
-    [JsonName('parameters')]
-    FParameters: TtgResponseParameters;
-    function GetDescription: string;
-    function GetErrorCode: Integer;
-    function GetOk: Boolean;
-    procedure SetDescription(const Value: string);
-    procedure SetErrorCode(const Value: Integer);
-    procedure SetOk(const Value: Boolean);
-    function GerParameters: TtgResponseParameters;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    /// <summary>
-    /// Gets the error message.
-    /// </summary>
-    property Description: string read GetDescription write SetDescription;
-    /// <summary>
-    /// Gets the error code.
-    /// </summary>
-    property ErrorCode: Integer read GetErrorCode write SetErrorCode;
-    /// <summary>
-    /// Gets a value indicating whether the request was successful.
-    /// </summary>
-    property Ok: Boolean read GetOk write SetOk;
-    /// <summary>
-    /// Contains information about why a request was unsuccessful.
-    /// </summary>
-    property Parameters: TtgResponseParameters read GerParameters;
-  end;
-
-  ItgResponse<t> = interface(ItgResponseBase)
-    ['{B98FE3AF-73DF-4A1D-BC25-C36EA264055B}']
-    // private
-    function GetResult: t;
-    procedure SetResult(const Value: t);
-    function GetResponse: IcaResponseBase;
-    procedure SetResponse(const Value: IcaResponseBase);
-    // public
-    /// <summary>
-    /// Gets the result object.
-    /// </summary>
-    property Result: t read GetResult write SetResult;
-    property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
-  end;
-
-  TtgResponse<t> = class(TtgResponseBase, ItgResponse<t>)
-  private
-    [JsonName('result')]
-    FResult: t;
-    FResponse: IcaResponseBase;
-    function GetResult: t;
-    procedure SetResult(const Value: t);
-    function GetResponse: IcaResponseBase;
-    procedure SetResponse(const Value: IcaResponseBase);
-  public
-    constructor Create;
-    destructor Destroy; override;
-    property Result: t read GetResult write SetResult;
-    property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
-  end;
-
-  TtgUserLink = record
-  private
-    FID: Int64;
-    FUsername: string;
-    class function FromID(const AID: Int64): TtgUserLink; static;
-    class function FromUserName(const AUsername: string): TtgUserLink; static;
-  public
-    function IsEmpty: Boolean;
-    function IsHaveID: Boolean;
-    function IsHaveUsername: Boolean;
-    function GetUsernameWithDog: string;
-    function ToString: string;
-  public
-    property ID: Int64 read FID write FID;
-    property Username: string read FUsername write FUsername;
-  public
-    class function Empty: TtgUserLink; static;
-    class operator Implicit(AID: Int64): TtgUserLink;
-    class operator Implicit(AUsername: string): TtgUserLink;
-  end;
-
-  /// <summary>
-  /// This object represents the content of a media message to be sent.
-  /// </summary>
-  TtgInputMedia = class abstract
-  protected
-    [JsonName('type')]
-    FType: string;
-    [JsonName('media')]
-    FMedia: string;
-    [JsonName('caption')]
-    FCaption: string;
-    [JsonName('parse_mode')]
-    [JsonConverter(TtgParseModeConverter)]
-    FParseMode: TtgParseMode;
-    [JsonIgnoreAttribute]
-    FFileToSend: TcaFileToSend;
-  public
-    function GetFileToSend: TcaFileToSend;
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); virtual;
-    property &Type: string read FType;
-    property Media: string read FMedia;
-    property Caption: string read FCaption write FCaption;
-    property ParseMode: TtgParseMode read FParseMode write FParseMode;
-  end;
-
-  /// <summary>
-  /// Represents a photo to be sent.
-  /// </summary>
-  TtgInputMediaPhoto = class(TtgInputMedia)
-  public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
-    /// <summary>
-    /// Type of the result, must be "photo"
-    /// </summary>
-    property &Type;
-    /// <summary>
-    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
-    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
-    /// or pass “attach://<file_attach_name>” to upload a new one using
-    /// multipart/form-data under <file_attach_name> name.
-    /// </summary>
-    property Media;
-    /// <summary>
-    /// Optional. Caption of the photo to be sent, 0-1024 characters after entities
-    /// parsing
-    /// </summary>
-    property Caption;
-    /// <summary>
-    /// Optional. Mode for parsing entities in the photo caption. See formatting
-    /// options for more details.
-    /// </summary>
-    property ParseMode;
-  end;
-
-  /// <summary>
-  /// Represents a general file to be sent.
-  /// </summary>
-  TtgInputMediaDocument = class(TtgInputMediaPhoto)
-  private
-    [JsonName('thumb')]
-    FThumb: TcaFileToSend;
-  public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
-    /// <summary>
-    /// Type of the result, must be "document"
-    /// </summary>
-    property &Type;
-    /// <summary>
-    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
-    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
-    /// or pass “attach://<file_attach_name>” to upload a new one using
-    /// multipart/form-data under <file_attach_name> name.
-    /// </summary>
-    property Media;
-    /// <summary>
-    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
-    /// for the file is supported server-side. The thumbnail should be in JPEG format
-    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
-    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
-    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
-    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
-    /// under <file_attach_name>
-    /// </summary>
-    property Thumb: TcaFileToSend read FThumb write FThumb;
-    /// <summary>
-    /// Optional. Caption of the document  to be sent, 0-1024 characters after entities
-    /// parsing
-    /// </summary>
-    property Caption;
-    /// <summary>
-    /// Optional. Mode for parsing entities in the document caption. See formatting
-    /// options for more details.
-    /// </summary>
-    property ParseMode;
-  end;
-
-  /// <summary>
-  /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to
-  /// be sent.
-  /// </summary>
-  TtgInputMediaAnimation = class(TtgInputMediaDocument)
-  private
-    [JsonName('duration')]
-    FDuration: Int64;
-    [JsonName('width')]
-    FWidth: Int64;
-    [JsonName('height')]
-    FHeight: Int64;
-  public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
-    /// <summary>
-    /// Type of the result, must be "animation"
-    /// </summary>
-    property &Type;
-    /// <summary>
-    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
-    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
-    /// or pass “attach://<file_attach_name>” to upload a new one using
-    /// multipart/form-data under <file_attach_name> name.
-    /// </summary>
-    property Media;
-    /// <summary>
-    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
-    /// for the file is supported server-side. The thumbnail should be in JPEG format
-    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
-    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
-    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
-    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
-    /// under <file_attach_name>
-    /// </summary>
-    property Thumb;
-    /// <summary>
-    /// Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
-    /// parsing
-    /// </summary>
-    property Caption;
-    /// <summary>
-    /// Optional. Mode for parsing entities in the animation caption.
-    /// See formatting options for more details.
-    /// </summary>
-    property ParseMode;
-    /// <summary>
-    /// Optional. Animation  width
-    /// </summary>
-    property Width: Int64 read FWidth write FWidth;
-    /// <summary>
-    /// Optional. Animation  height
-    /// </summary>
-    property Height: Int64 read FHeight write FHeight;
-    /// <summary>
-    /// Optional. Animation  duration
-    /// </summary>
-    property Duration: Int64 read FDuration write FDuration;
-  end;
-
-  /// <summary>
-  /// Represents a video to be sent.
-  /// </summary>
-  TtgInputMediaVideo = class(TtgInputMediaAnimation)
-  private
-    [JsonName('supports_streaming')]
-    FSupportsStreaming: Boolean;
-  public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''; const AHeight: Integer = 0;
-      const AWidth: Integer = 0; const ADuration: Integer = 0); reintroduce;
-    /// <summary>
-    /// Type of the result, must be "photo"
-    /// </summary>
-    property &Type;
-    /// <summary>
-    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
-    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
-    /// or pass “attach://<file_attach_name>” to upload a new one using
-    /// multipart/form-data under <file_attach_name> name.
-    /// </summary>
-    property Media;
-    /// <summary>
-    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
-    /// for the file is supported server-side. The thumbnail should be in JPEG format
-    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
-    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
-    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
-    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
-    /// under <file_attach_name>
-    /// </summary>
-    property Thumb;
-    /// <summary>
-    /// Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
-    /// parsing
-    /// </summary>
-    property Caption;
-    /// <summary>
-    /// Optional. Mode for parsing entities in the video caption.
-    /// See formatting options for more details.
-    /// </summary>
-    property ParseMode;
-    /// <summary>
-    /// Optional. Video width
-    /// </summary>
-    property Width;
-    /// <summary>
-    /// Optional. Video height
-    /// </summary>
-    property Height;
-    /// <summary>
-    /// Optional. Video duration
-    /// </summary>
-    property Duration;
-    /// <summary>
-    /// Optional. Pass True, if the uploaded video is suitable for streaming
-    /// </summary>
-    property SupportsStreaming: Boolean read FSupportsStreaming write FSupportsStreaming;
-  end;
-
-  /// <summary>
-  /// Represents an audio file to be treated as music to be sent.
-  /// </summary>
-  TtgInputMediaAudio = class(TtgInputMediaDocument)
-  private
-    [JsonName('duration')]
-    FDuration: Int64;
-    [JsonName('performer')]
-    FPerformer: string;
-    [JsonName('title')]
-    FTitle: string;
-  public
-    constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
-    /// <summary>
-    /// Type of the result, must be "audio"
-    /// </summary>
-    property &Type;
-    /// <summary>
-    /// File to send. Pass a file_id to send a file that exists on the Telegram servers
-    /// (recommended), pass an HTTP URL for Telegram to get a file from the Internet,
-    /// or pass “attach://<file_attach_name>” to upload a new one using
-    /// multipart/form-data under <file_attach_name> name.
-    /// </summary>
-    property Media;
-    /// <summary>
-    /// Optional. Thumbnail of the file sent; can be ignored if thumbnail generation
-    /// for the file is supported server-side. The thumbnail should be in JPEG format
-    /// and less than 200 kB in size. A thumbnail's width and height should not exceed
-    /// 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails
-    /// can't be reused and can be only uploaded as a new file, so you can pass “attach:
-    /// //<file_attach_name>” if the thumbnail was uploaded using multipart/form-data
-    /// under <file_attach_name>
-    /// </summary>
-    property Thumb;
-    /// <summary>
-    /// Optional. Caption of the audio to be sent, 0-1024 characters after entities parsing
-    /// parsing
-    /// </summary>
-    property Caption;
-    /// <summary>
-    /// Optional. Mode for parsing entities in the audio caption.
-    /// See formatting options for more details.
-    /// </summary>
-    property ParseMode;
-    /// <summary>
-    /// Optional. Duration of the audio in seconds
-    /// </summary>
-    property Duration: Int64 read FDuration write FDuration;
-    /// <summary>
-    /// Optional. Performer of the audio
-    /// </summary>
-    property Performer: string read FPerformer write FPerformer;
-    /// <summary>
-    /// Optional. Title of the audio
-    /// </summary>
-    property Title: string read FTitle write FTitle;
-  end;
-
-  /// <summary> Contains information about the current status of a webhook.</summary>
-  TtgWebhookInfo = class
-  private
-    [JsonName('allowed_updates')]
-    [JsonName('url')]
-    FUrl: string;
-    [JsonName('has_custom_certificate')]
-    FHasCustomCertificate: Boolean;
-    [JsonName('pending_update_count')]
-    FPendingUpdateCount: Integer;
-    [JsonName('last_error_date')]
-    [JsonConverter(TJsonUnixTimeConverter)]
-    FLastErrorDate: TDateTime;
-    [JsonName('last_error_message')]
-    FLastErrorMessage: string;
-    [JsonName('max_connections')]
-    FMaxConnections: Integer;
-    [JsonName('allowed_updates')]
-    FAllowedUpdates: TAllowedUpdates;
-  public
-    /// <summary>
-    /// Webhook URL, may be empty if webhook is not set up
-    /// </summary>
-    property Url: string read FUrl write FUrl;
-    /// <summary>
-    /// True, if a custom certificate was provided for webhook certificate checks
-    /// </summary>
-    property HasCustomCertificate: Boolean read FHasCustomCertificate write FHasCustomCertificate;
-    /// <summary>
-    /// Number of updates awaiting delivery
-    /// </summary>
-    property PendingUpdateCount: Integer read FPendingUpdateCount write FPendingUpdateCount;
-    /// <summary>
-    /// Optional. Unix time for the most recent error that happened when trying to
-    /// deliver an update via webhook
-    /// </summary>
-    property LastErrorDate: TDateTime read FLastErrorDate write FLastErrorDate;
-    /// <summary>
-    /// Optional. Error message in human-readable format for the most recent error that
-    /// happened when trying to deliver an update via webhook
-    /// </summary>
-    property LastErrorMessage: string read FLastErrorMessage write FLastErrorMessage;
-    /// <summary>
-    /// Optional. Maximum allowed number of simultaneous HTTPS connections to the
-    /// webhook for update delivery
-    /// </summary>
-    property MaxConnections: Integer read FMaxConnections write FMaxConnections;
-    /// <summary>
-    /// Optional. A list of update types the bot is subscribed to. Defaults to all
-    /// update types
-    /// </summary>
-    property AllowedUpdates: TAllowedUpdates read FAllowedUpdates write FAllowedUpdates;
   end;
 
 implementation
