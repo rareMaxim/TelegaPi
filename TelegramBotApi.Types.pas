@@ -38,6 +38,7 @@ type
   TtgSuccessfulPayment = class;
   TtgPassportData = class;
   TtgProximityAlertTriggered = class;
+  TtgFileInfo = class;
 
   /// <summary>
   /// This object represents a Telegram user or bot.
@@ -674,6 +675,39 @@ type
     property Language: string read FLanguage write FLanguage;
   end;
 
+  /// <summary>
+  /// This object represents one size of a photo or a file / sticker thumbnail
+  /// </summary>
+  TtgPhotosize = class(TtgFileInfo)
+  private
+    [JsonName('width')]
+    FWidth: Int64;
+    [JsonName('height')]
+    FHeight: Int64;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId: string;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId: string;
+    /// <summary>
+    /// Photo width
+    /// </summary>
+    property Width: Int64 read FWidth write FWidth;
+    /// <summary>
+    /// Photo height
+    /// </summary>
+    property Height: Int64 read FHeight write FHeight;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize: Int64;
+  end;
+
   TtgFileInfo = class
   private
     [JsonName('file_id')]
@@ -696,26 +730,6 @@ type
     /// Optional. File size
     /// </summary>
     property FileSize: Int64 read FFileSize write FFileSize;
-  end;
-
-  /// <summary>
-  /// This object represents one size of a photo or a file / sticker thumbnail
-  /// </summary>
-  TtgPhotosize = class(TtgFileInfo)
-  private
-    [JsonName('width')]
-    FWidth: Int64;
-    [JsonName('height')]
-    FHeight: Int64;
-  public
-    /// <summary>
-    /// Photo width
-    /// </summary>
-    property Width: Int64 read FWidth write FWidth;
-    /// <summary>
-    /// Photo height
-    /// </summary>
-    property Height: Int64 read FHeight write FHeight;
   end;
 
   /// <summary>
