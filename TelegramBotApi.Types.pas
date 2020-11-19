@@ -226,6 +226,9 @@ type
     property Thumb: TtgPhotosize read FThumb write FThumb;
   end;
 
+  /// <summary>
+  /// This object represents a video file.
+  /// </summary>
   TtgVideo = class(TtgPhotosize)
   private
     [JsonName('duration')]
@@ -234,9 +237,27 @@ type
     FThumb: TtgPhotosize;
     [JsonName('mime_type')]
     FMimeType: string;
+    FFilename: string;
   public
     constructor Create;
     destructor Destroy; override;
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Video width as defined by sender
+    /// </summary>
+    property Width;
+    /// <summary>
+    /// Video height as defined by sender
+    /// </summary>
+    property Height;
     /// <summary>
     /// Duration of the video in seconds as defined by sender
     /// </summary>
@@ -246,9 +267,17 @@ type
     /// </summary>
     property Thumb: TtgPhotosize read FThumb write FThumb;
     /// <summary>
+    /// Optional. Original animation filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+    /// <summary>
     /// Optional. Mime type of a file as defined by sender
     /// </summary>
     property MimeType: string read FMimeType write FMimeType;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize;
   end;
 
   /// <summary>
