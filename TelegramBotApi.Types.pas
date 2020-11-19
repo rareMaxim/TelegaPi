@@ -696,7 +696,26 @@ type
   /// This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.
   /// </summary>
   TtgProximityAlertTriggered = class
-    { TODO -oOwner -cGeneral : Заполнить }
+  private
+    [JsonName('traveler')]
+    FTraveler: TtgUser;
+    [JsonName('watcher')]
+    FWatcher: TtgUser;
+    [JsonName('distance')]
+    FDistance: Integer;
+  public
+    /// <summary>
+    /// User that triggered the alert
+    /// </summary>
+    property Traveler: TtgUser read FTraveler write FTraveler;
+    /// <summary>
+    /// User that set the alert
+    /// </summary>
+    property Watcher: TtgUser read FWatcher write FWatcher;
+    /// <summary>
+    /// The distance between the users
+    /// </summary>
+    property Distance: Integer read FDistance write FDistance;
   end;
 
   TtgChatPhoto = class
