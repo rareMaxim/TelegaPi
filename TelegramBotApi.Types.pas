@@ -79,6 +79,40 @@ type
   end;
 
   /// <summary>
+  /// This object represents a file ready to be downloaded. The file can be
+  /// downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>.
+  /// It is guaranteed that the link will be valid for at least 1 hour. When the link
+  /// expires, a new one can be requested by calling getFile.
+  /// </summary>
+  /// <remarks>
+  /// Maximum file size to download is 20 MB
+  /// </remarks>
+  TtgFile = class(TtgFileInfo)
+  private
+    [JsonName('file_path')]
+    FFilePath: string;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Optional. File size, if known
+    /// </summary>
+    property FileSize;
+    /// <summary>
+    /// Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path>
+    /// to get the file.
+    /// </summary>
+    property FilePath: string read FFilePath write FFilePath;
+  end;
+
+  /// <summary>
   /// This object represents one size of a photo or a file / sticker thumbnail
   /// </summary>
   TtgPhotosize = class(TtgFileInfo)
