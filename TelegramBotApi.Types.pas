@@ -904,6 +904,20 @@ type
     property ReplyMarkup: TtgInlineKeyboardMarkup read FReplyMarkup write FReplyMarkup;
   end;
 
+  /// <summary>
+  /// This object represents a unique message identifier.
+  /// </summary>
+  TtgMessageId = class
+  private
+    [JsonName('message_id')]
+    FMessageID: Int64;
+  public
+    /// <summary>
+    /// Unique message identifier
+    /// </summary>
+    property MessageID: Int64 read FMessageID write FMessageID;
+  end;
+
   TtgChatPhoto = class
 
   end;
