@@ -510,7 +510,21 @@ type
   /// This object represents an animated emoji that displays a random value.
   /// </summary>
   TtgDice = class
-    { TODO -oOwner -cGeneral : Заполнить }
+  private
+    [JsonName('emoji')]
+    FEmoji: string;
+    [JsonName('value')]
+    FValue: Integer;
+  public
+    /// <summary>
+    /// Emoji on which the dice throw animation is based
+    /// </summary>
+    property Emoji: string read FEmoji write FEmoji;
+    /// <summary>
+    /// Value of the dice, 1-6 for “🎲” and “🎯” base emoji, 1-5 for “🏀” and “⚽” base
+    /// emoji, 1-64 for “🎰” base emoji
+    /// </summary>
+    property Value: Integer read FValue write FValue;
   end;
 
   /// <summary>
