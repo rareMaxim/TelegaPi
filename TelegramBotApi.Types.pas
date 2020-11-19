@@ -163,6 +163,15 @@ type
     FMimeType: string;
   public
     /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
     /// Duration of the audio in seconds as defined by sender
     /// </summary>
     property Duration: Int64 read FDuration write FDuration;
@@ -170,6 +179,10 @@ type
     /// Optional. MIME type of the file as defined by sender
     /// </summary>
     property MimeType: string read FMimeType write FMimeType;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize;
   end;
 
   /// <summary>
