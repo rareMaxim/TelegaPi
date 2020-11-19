@@ -708,6 +708,56 @@ type
     property FileSize: Int64;
   end;
 
+  /// <summary>
+  /// This object represents an animation file (GIF or H.264/MPEG-4 AVC video without
+  /// sound).
+  /// </summary>
+  TtgAnimation = class(TtgVideo)
+  private
+    [JsonName('file_name')]
+    FFilename: string;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId: string;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId: string;
+    /// <summary>
+    /// Video width as defined by sender
+    /// </summary>
+    property Width: Int64;
+    /// <summary>
+    /// Video height as defined by sender
+    /// </summary>
+    property Height: Int64;
+
+    /// <summary>
+    /// Duration of the video in seconds as defined by sender
+    /// </summary>
+    property Duration: Int64;
+    /// <summary>
+    /// Optional. Animation thumbnail as defined by sender
+    /// </summary>
+    property Thumb: TtgPhotosize;
+
+    /// <summary>
+    /// Optional. Original animation filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+    /// <summary>
+    /// Optional. Mime type of a file as defined by sender
+    /// </summary>
+    property MimeType: string;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize: Int64;
+  end;
+
   TtgFileInfo = class
   private
     [JsonName('file_id')]
@@ -819,24 +869,18 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    property Duration: Int64 read FDuration write FDuration;
-    property Thumb: TtgPhotosize read FThumb write FThumb;
-    property MimeType: string read FMimeType write FMimeType;
-  end;
-
-  /// <summary>
-  /// This object represents an animation file (GIF or H.264/MPEG-4 AVC video without
-  /// sound).
-  /// </summary>
-  TtgAnimation = class(TtgVideo)
-  private
-    [JsonName('file_name')]
-    FFilename: string;
-  public
     /// <summary>
-    /// Optional. Original animation filename as defined by sender
+    /// Duration of the video in seconds as defined by sender
     /// </summary>
-    property Filename: string read FFilename write FFilename;
+    property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. Video thumbnail
+    /// </summary>
+    property Thumb: TtgPhotosize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Mime type of a file as defined by sender
+    /// </summary>
+    property MimeType: string read FMimeType write FMimeType;
   end;
 
   TtgVideoNote = class(TtgFileInfo)
@@ -1385,34 +1429,34 @@ type
     property Parameters: TtgResponseParameters read GerParameters;
   end;
 
-  ItgResponse<T> = interface(ItgResponseBase)
+  ItgResponse<t> = interface(ItgResponseBase)
     ['{B98FE3AF-73DF-4A1D-BC25-C36EA264055B}']
     // private
-    function GetResult: T;
-    procedure SetResult(const Value: T);
+    function GetResult: t;
+    procedure SetResult(const Value: t);
     function GetResponse: IcaResponseBase;
     procedure SetResponse(const Value: IcaResponseBase);
     // public
     /// <summary>
     /// Gets the result object.
     /// </summary>
-    property Result: T read GetResult write SetResult;
+    property Result: t read GetResult write SetResult;
     property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
 
-  TtgResponse<T> = class(TtgResponseBase, ItgResponse<T>)
+  TtgResponse<t> = class(TtgResponseBase, ItgResponse<t>)
   private
     [JsonName('result')]
-    FResult: T;
+    FResult: t;
     FResponse: IcaResponseBase;
-    function GetResult: T;
-    procedure SetResult(const Value: T);
+    function GetResult: t;
+    procedure SetResult(const Value: t);
     function GetResponse: IcaResponseBase;
     procedure SetResponse(const Value: IcaResponseBase);
   public
     constructor Create;
     destructor Destroy; override;
-    property Result: T read GetResult write SetResult;
+    property Result: t read GetResult write SetResult;
     property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
 
@@ -1816,39 +1860,39 @@ begin
   FOk := Value;
 end;
 
-constructor TtgResponse<T>.Create;
+constructor TtgResponse<t>.Create;
 begin
   inherited Create;
 
 end;
 
-destructor TtgResponse<T>.Destroy;
+destructor TtgResponse<t>.Destroy;
 begin
-  case GetTypeKind(T) of
+  case GetTypeKind(t) of
     tkClass:
       PObject(@FResult).Free; // DONE -o@rareMax -cMemLeack: Проверить, рабочий ли это способ очистки памяти
   end;
   inherited Destroy;
 end;
 
-function TtgResponse<T>.GetResponse: IcaResponseBase;
+function TtgResponse<t>.GetResponse: IcaResponseBase;
 begin
   Result := FResponse;
 end;
 
-function TtgResponse<T>.GetResult: T;
+function TtgResponse<t>.GetResult: t;
 begin
   Result := FResult;
 end;
 
 { TtgResponse<T> }
 
-procedure TtgResponse<T>.SetResponse(const Value: IcaResponseBase);
+procedure TtgResponse<t>.SetResponse(const Value: IcaResponseBase);
 begin
   FResponse := Value;
 end;
 
-procedure TtgResponse<T>.SetResult(const Value: T);
+procedure TtgResponse<t>.SetResult(const Value: t);
 begin
   FResult := Value;
 end;
