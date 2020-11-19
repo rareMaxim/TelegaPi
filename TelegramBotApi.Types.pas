@@ -440,6 +440,10 @@ type
     FFoursquareId: string;
     [JsonName('foursquare_type')]
     FFoursquareType: string;
+    [JsonName('google_place_id')]
+    FGooglePlaceId: string;
+    [JsonName('google_place_type')]
+    FGooglePlaceType: string;
   public
     constructor Create;
     destructor Destroy; override;
@@ -462,6 +466,14 @@ type
     /// “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
     /// </summary>
     property FoursquareType: string read FFoursquareType write FFoursquareType;
+    /// <summary>
+    /// Optional. Google Places identifier of the venue
+    /// </summary>
+    property GooglePlaceId: string read FGooglePlaceId write FGooglePlaceId;
+    /// <summary>
+    /// Optional. Google Places type of the venue. (See supported types.)
+    /// </summary>
+    property GooglePlaceType: string read FGooglePlaceType write FGooglePlaceType;
   end;
 
   /// <summary>
