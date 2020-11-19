@@ -328,6 +328,9 @@ type
     property FileSize;
   end;
 
+  /// <summary>
+  /// This object represents a video message (available in Telegram apps as of v.4.0).
+  /// </summary>
   TtgVideoNote = class(TtgFileInfo)
   private
     [JsonName('length')]
@@ -339,9 +342,31 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Video width and height (diameter of the video message) as defined by sender
+    /// </summary>
     property Length: Int64 read FLength write FLength;
+    /// <summary>
+    /// Duration of the video in seconds as defined by sender
+    /// </summary>
     property Duration: Int64 read FDuration write FDuration;
+    /// <summary>
+    /// Optional. Video thumbnail
+    /// </summary>
     property Thumb: TtgPhotosize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize;
   end;
 
   /// <summary>This object represents a point on the map.</summary>
