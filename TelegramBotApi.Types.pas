@@ -389,6 +389,14 @@ type
     FLongitude: Single;
     [JsonName('latitude')]
     FLatitude: Single;
+    [JsonName('horizontal_accuracy')]
+    FHorizontalAccuracy: Single;
+    [JsonName('live_period')]
+    FLivePeriod: Integer;
+    [JsonName('heading')]
+    FHeading: Integer;
+    [JsonName('proximity_alert_radius')]
+    FProximityAlertRadius: Integer;
   public
     /// <summary>Longitude as defined by sender</summary>
     property Longitude: Single read FLongitude write FLongitude;
@@ -396,6 +404,25 @@ type
     /// Latitude as defined by sender
     /// </summary>
     property Latitude: Single read FLatitude write FLatitude;
+    /// <summary>
+    /// Optional. The radius of uncertainty for the location, measured in meters; 0-1500
+    /// </summary>
+    property HorizontalAccuracy: Single read FHorizontalAccuracy write FHorizontalAccuracy;
+    /// <summary>
+    /// Optional. Time relative to the message sending date, during which the location
+    /// can be updated, in seconds. For active live locations only.
+    /// </summary>
+    property LivePeriod: Integer read FLivePeriod write FLivePeriod;
+    /// <summary>
+    /// Optional. The direction in which user is moving, in degrees; 1-360. For active
+    /// live locations only.
+    /// </summary>
+    property Heading: Integer read FHeading write FHeading;
+    /// <summary>
+    /// Optional. Maximum distance for proximity alerts about approaching another chat
+    /// member, in meters. For sent live locations only.
+    /// </summary>
+    property ProximityAlertRadius: Integer read FProximityAlertRadius write FProximityAlertRadius;
   end;
 
   /// <summary>
