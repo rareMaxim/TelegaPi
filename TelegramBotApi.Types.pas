@@ -170,9 +170,23 @@ type
     FTitle: string;
     [JsonName('thumb')]
     FThumb: TtgPhotosize;
+    FFilename: string;
   public
     constructor Create;
     destructor Destroy; override;
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Duration of the audio in seconds as defined by sender
+    /// </summary>
+    property Duration;
     /// <summary>
     /// Optional. Performer of the audio as defined by sender or by audio tags
     /// </summary>
@@ -181,6 +195,18 @@ type
     /// Optional. Title of the audio as defined by sender or by audio tags
     /// </summary>
     property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// Optional. Original animation filename as defined by sender
+    /// </summary>
+    property Filename: string read FFilename write FFilename;
+    /// <summary>
+    /// Optional. MIME type of the file as defined by sender
+    /// </summary>
+    property MimeType;
+    /// <summary>
+    /// Optional. File size
+    /// </summary>
+    property FileSize;
     /// <summary>
     /// Optional. Thumbnail of the album cover to which the music file belongs
     /// </summary>
