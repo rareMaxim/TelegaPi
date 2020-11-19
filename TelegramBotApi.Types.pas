@@ -2006,6 +2006,26 @@ type
     property PollAnswer: TtgPollAnswer read FPollAnswer write FPollAnswer;
   end;
 
+  /// <summary>
+  /// This object represent a user's profile pictures.
+  /// </summary>
+  TtgUserProfilePhotos = class
+  private
+    [JsonName('total_count')]
+    FTotalCount: Integer;
+    [JsonName('photos')]
+    FPhotos: TArray<TArray<TtgPhotosize>>;
+  public
+    /// <summary>
+    /// Total number of profile pictures the target user has
+    /// </summary>
+    property TotalCount: Integer read FTotalCount write FTotalCount;
+    /// <summary>
+    /// Requested profile pictures (in up to 4 sizes each)
+    /// </summary>
+    property Photos: TArray < TArray < TtgPhotosize >> read FPhotos write FPhotos;
+  end;
+
 implementation
 
 uses
