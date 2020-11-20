@@ -203,7 +203,7 @@ type
   end;
 
   { TODO -oOwner -cGeneral : Создать объект }
-  TtgCallbackGame = string;
+  TtgCallbackGame = class(TObject);
 
   /// <summary>
   /// This object represents one button of an inline keyboard. You must use exactly

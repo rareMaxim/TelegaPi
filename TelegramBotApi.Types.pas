@@ -850,8 +850,64 @@ type
 
   end;
 
+  /// <summary>
+  /// This object represents an incoming callback query from a callback button in an
+  /// inline keyboard. If the button that originated the query was attached to a
+  /// message sent by the bot, the field message will be present. If the button was
+  /// attached to a message sent via the bot (in inline mode), the field
+  /// inline_message_id will be present. Exactly one of the fields data or
+  /// game_short_name will be present.
+  /// </summary>
   TtgCallbackQuery = class
-
+  private
+    [JsonName('id')]
+    FID: string;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('message')]
+    FMessage: TtgMessage;
+    [JsonName('inline_message_id')]
+    FInlineMessageId: string;
+    [JsonName('chat_instance')]
+    FChatInstance: string;
+    [JsonName('data')]
+    FData: string;
+    [JsonName('game_short_name')]
+    FGameShortName: string;
+  public
+    /// <summary>
+    /// Unique identifier for this query
+    /// </summary>
+    property ID: string read FID write FID;
+    /// <summary>
+    /// Sender
+    /// </summary>
+    property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Optional. Message with the callback button that originated the query. Note that
+    /// message content and message date will not be available if the message is too old
+    /// </summary>
+    property Message: TtgMessage read FMessage write FMessage;
+    /// <summary>
+    /// Optional. Identifier of the message sent via the bot in inline mode, that
+    /// originated the query.
+    /// </summary>
+    property InlineMessageId: string read FInlineMessageId write FInlineMessageId;
+    /// <summary>
+    /// Global identifier, uniquely corresponding to the chat to which the message with
+    /// the callback button was sent. Useful for high scores in games.
+    /// </summary>
+    property ChatInstance: string read FChatInstance write FChatInstance;
+    /// <summary>
+    /// Optional. Data associated with the callback button. Be aware that a bad client
+    /// can send arbitrary data in this field.
+    /// </summary>
+    property Data: string read FData write FData;
+    /// <summary>
+    /// Optional. Short name of a Game to be returned, serves as the unique identifier
+    /// for the game
+    /// </summary>
+    property GameShortName: string read FGameShortName write FGameShortName;
   end;
 
   TtgShippingQuery = class
