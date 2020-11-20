@@ -6,13 +6,14 @@ uses
   System.JSON.Serializers;
 
 type
-
+{$REGION 'Standard keyboards'}
   /// <summary>
   /// This object represents type of a poll, which is allowed to be created and sent
   /// when the corresponding button is pressed.
   /// </summary>
   TtgKeyboardButtonPollType = class
   private
+    [JsonName('type')]
     FType: string;
   public
     /// <summary>
@@ -38,7 +39,7 @@ type
   /// </remarks>
   TtgKeyboardButton = class
   private
-    [JsonName('can_join_groups')]
+    [JsonName('text')]
     FText: string;
     [JsonName('request_contact')]
     FRequestContact: Boolean;
@@ -115,10 +116,6 @@ type
     property Selective: Boolean read FSelective write FSelective;
   end;
 
-  TtgInlineKeyboardMarkup = class
-    { TODO -oOwner -cGeneral : Заполнить }
-  end;
-
   /// <summary>
   /// Upon receiving a message with this object, Telegram clients will remove the
   /// current custom keyboard and display the default letter-keyboard. By default,
@@ -151,6 +148,110 @@ type
     /// </summary>
     property Selective: Boolean read FSelective write FSelective;
   end;
+{$ENDREGION}
+{$REGION 'Inline keyboards'}
+
+  TtgLoginUrl = class
+    { TODO -oOwner -cGeneral : Создать объект }
+  end;
+
+  { TODO -oOwner -cGeneral : Создать объект }
+  TtgCallbackGame = string;
+
+  /// <summary>
+  /// This object represents one button of an inline keyboard. You must use exactly
+  /// one of the optional fields.
+  /// </summary>
+  TtgInlineKeyboardButton = class
+  private
+    [JsonName('text')]
+    FText: string;
+    [JsonName('url')]
+    FUrl: string;
+    [JsonName('login_url')]
+    FLoginUrl: TtgLoginUrl;
+    [JsonName('callback_data')]
+    FCallbackData: string;
+    [JsonName('switch_inline_query')]
+    FSwitchInlineQuery: string;
+    [JsonName('switch_inline_query_current_chat')]
+    FSwitchInlineQueryCurrentChat: string;
+    [JsonName('callback_game')]
+    FCallbackGame: TtgCallbackGame;
+    [JsonName('pay')]
+    FPay: Boolean;
+  public
+    /// <summary>
+    /// Label text on the button
+    /// </summary>
+    property Text: string read FText write FText;
+    /// <summary>
+    /// Optional. HTTP or tg:// url to be opened when button is pressed
+    /// </summary>
+    property Url: string read FUrl write FUrl;
+    /// <summary>
+    /// Optional. An HTTP URL used to automatically authorize the user. Can be used as
+    /// a replacement for the Telegram Login Widget.
+    /// </summary>
+    property LoginUrl: TtgLoginUrl read FLoginUrl write FLoginUrl;
+    /// <summary>
+    /// Optional. Data to be sent in a callback query to the bot when button is pressed,
+    /// 1-64 bytes
+    /// </summary>
+    property CallbackData: string read FCallbackData write FCallbackData;
+    /// <summary>
+    /// Optional. If set, pressing the button will prompt the user to select one of
+    /// their chats, open that chat and insert the bot's username and the specified
+    /// inline query in the input field. Can be empty, in which case just the bot's
+    /// username will be inserted.
+    ///
+    /// Note: This offers an easy way for users to start using your bot in inline mode
+    /// when they are currently in a private chat with it. Especially useful when
+    /// combined with switch_pm… actions – in this case the user will be automatically
+    /// returned to the chat they switched from, skipping the chat selection screen.
+    /// </summary>
+    property SwitchInlineQuery: string read FSwitchInlineQuery write FSwitchInlineQuery;
+    /// <summary>
+    /// Optional. If set, pressing the button will insert the bot's username and the
+    /// specified inline query in the current chat's input field. Can be empty, in
+    /// which case only the bot's username will be inserted.
+    ///
+    /// This offers a quick way for the user to open your bot in inline mode in the
+    /// same chat – good for selecting something from multiple options.
+    /// </summary>
+    property SwitchInlineQueryCurrentChat: string read FSwitchInlineQueryCurrentChat
+      write FSwitchInlineQueryCurrentChat;
+    /// <summary>
+    /// Optional. Description of the game that will be launched when the user presses
+    /// the button.
+    ///
+    /// NOTE: This type of button must always be the first button in the first row.
+    /// </summary>
+    property CallbackGame: TtgCallbackGame read FCallbackGame write FCallbackGame;
+    /// <summary>
+    /// Optional. Specify True, to send a Pay button.
+    ///
+    /// NOTE: This type of button must always be the first button in the first row.
+    /// </summary>
+    property Pay: Boolean read FPay write FPay;
+  end;
+
+  /// <summary>
+  /// This object represents an inline keyboard that appears right next to the
+  /// message it belongs to.
+  /// </summary>
+  TtgInlineKeyboardMarkup = class
+  private
+    [JsonName('inline_keyboard')]
+    FInlineKeyboard: TArray<TArray<TtgInlineKeyboardButton>>;
+  public
+    /// <summary>
+    /// Array of button rows, each represented by an Array of InlineKeyboardButton
+    /// objects
+    /// </summary>
+    property InlineKeyboard: TArray < TArray < TtgInlineKeyboardButton >> read FInlineKeyboard write FInlineKeyboard;
+  end;
+{$ENDREGION}
 
 implementation
 
