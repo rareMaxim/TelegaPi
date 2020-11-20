@@ -151,8 +151,55 @@ type
 {$ENDREGION}
 {$REGION 'Inline keyboards'}
 
+  /// <summary>
+  /// This object represents a parameter of the inline keyboard button used to
+  /// automatically authorize a user. Serves as a great replacement for the Telegram
+  /// Login Widget when the user is coming from Telegram. All the user needs to do is
+  /// tap/click a button and confirm that they want to log in:
+  ///
+  /// TITLE
+  /// Telegram apps support these buttons as of version 5.7.
+  ///
+  /// Sample bot: @discussbot
+  /// </summary>
   TtgLoginUrl = class
-    { TODO -oOwner -cGeneral : Создать объект }
+  private
+    [JsonName('url')]
+    FUrl: string;
+    [JsonName('forward_text')]
+    FForwardText: string;
+    [JsonName('bot_username')]
+    FBotUsername: string;
+    [JsonName('request_write_access')]
+    FRequestWriteAccess: Boolean;
+  public
+    /// <summary>
+    /// An HTTP URL to be opened with user authorization data added to the query string
+    /// when the button is pressed. If the user refuses to provide authorization data,
+    /// the original URL without information about the user will be opened. The data
+    /// added is the same as described in Receiving authorization data.
+    ///
+    /// NOTE: You must always check the hash of the received data to verify the
+    /// authentication and the integrity of the data as described in Checking
+    /// authorization.
+    /// </summary>
+    property Url: string read FUrl write FUrl;
+    /// <summary>
+    /// Optional. New text of the button in forwarded messages.
+    /// </summary>
+    property ForwardText: string read FForwardText write FForwardText;
+    /// <summary>
+    /// Optional. Username of a bot, which will be used for user authorization. See
+    /// Setting up a bot for more details. If not specified, the current bot's username
+    /// will be assumed. The url's domain must be the same as the domain linked with
+    /// the bot. See Linking your domain to the bot for more details.
+    /// </summary>
+    property BotUsername: string read FBotUsername write FBotUsername;
+    /// <summary>
+    /// Optional. Pass True to request the permission for your bot to send messages to
+    /// the user.
+    /// </summary>
+    property RequestWriteAccess: Boolean read FRequestWriteAccess write FRequestWriteAccess;
   end;
 
   { TODO -oOwner -cGeneral : Создать объект }
