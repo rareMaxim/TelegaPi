@@ -752,8 +752,43 @@ type
     property Distance: Integer read FDistance write FDistance;
   end;
 
+  /// <summary>
+  /// This object represents a chat photo.
+  /// </summary>
   TtgChatPhoto = class
-
+  private
+    [JsonName('big_file_unique_id')]
+    [JsonName('small_file_id')]
+    FSmallFileId: string;
+    [JsonName('small_file_unique_id')]
+    FSmallFileUniqueId: string;
+    [JsonName('big_file_id')]
+    FBigFileId: string;
+    [JsonName('big_file_unique_id')]
+    FBigFileUniqueId: string;
+  public
+    /// <summary>
+    /// File identifier of small (160x160) chat photo. This file_id can be used only
+    /// for photo download and only for as long as the photo is not changed.
+    /// </summary>
+    property SmallFileId: string read FSmallFileId write FSmallFileId;
+    /// <summary>
+    /// Unique file identifier of small (160x160) chat photo, which is supposed to be
+    /// the same over time and for different bots. Can't be used to download or reuse
+    /// the file.
+    /// </summary>
+    property SmallFileUniqueId: string read FSmallFileUniqueId write FSmallFileUniqueId;
+    /// <summary>
+    /// File identifier of big (640x640) chat photo. This file_id can be used only
+    /// for photo download and only for as long as the photo is not changed.
+    /// </summary>
+    property BigFileId: string read FBigFileId write FBigFileId;
+    /// <summary>
+    /// Unique file identifier of big (640x640) chat photo, which is supposed to be the
+    /// same over time and for different bots. Can't be used to download or reuse the
+    /// file.
+    /// </summary>
+    property BigFileUniqueId: string read FBigFileUniqueId write FBigFileUniqueId;
   end;
 
   /// <summary>
