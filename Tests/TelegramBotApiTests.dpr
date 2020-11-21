@@ -6,6 +6,7 @@
 {$STRONGLINKTYPES ON}
 
 uses
+  FastMM5,
   System.SysUtils,
 {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,

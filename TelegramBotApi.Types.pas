@@ -2695,6 +2695,8 @@ begin
     FPhoto.Free;
   if Assigned(FPinnedMessage) then
     FPinnedMessage.Free;
+  if Assigned(FPermissions) then
+    FPermissions.Free;
   inherited;
 end;
 
