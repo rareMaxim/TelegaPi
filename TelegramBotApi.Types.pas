@@ -2299,6 +2299,27 @@ type
     property UntilDate: TDateTime read FUntilDate write FUntilDate;
   end;
 
+  /// <summary>
+  /// This object represents a bot command.
+  /// </summary>
+  TtgBotCommand = class
+  private
+    [JsonName('command')]
+    FCommand: string;
+    [JsonName('description')]
+    FDescription: string;
+  published
+    /// <summary>
+    /// Text of the command, 1-32 characters. Can contain only lowercase English
+    /// letters, digits and underscores.
+    /// </summary>
+    property Command: string read FCommand write FCommand;
+    /// <summary>
+    /// Description of the command, 3-256 characters.
+    /// </summary>
+    property Description: string read FDescription write FDescription;
+  end;
+
 implementation
 
 uses
