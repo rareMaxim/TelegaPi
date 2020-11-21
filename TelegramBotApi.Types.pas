@@ -2151,6 +2151,154 @@ type
     property Photos: TArray < TArray < TtgPhotosize >> read FPhotos write FPhotos;
   end;
 
+  /// <summary>
+  /// This object contains information about one member of a chat.
+  /// </summary>
+  TtgChatMember = class
+  private
+    [JsonName('user')]
+    FUser: TtgUser;
+    [JsonName('status')]
+    FStatus: string;
+    [JsonName('custom_title')]
+    FCustomTitle: string;
+    [JsonName('is_anonymous')]
+    FIsAnonymous: Boolean;
+    [JsonName('can_be_edited')]
+    FCanBeEdited: Boolean;
+    [JsonName('can_post_messages')]
+    FCanPostMessages: Boolean;
+    [JsonName('can_edit_messages')]
+    FCanEditMessages: Boolean;
+    [JsonName('can_delete_messages')]
+    FCanDeleteMessages: Boolean;
+    [JsonName('can_restrict_members')]
+    FCanRestrictMembers: Boolean;
+    [JsonName('can_promote_members')]
+    FCanPromoteMembers: Boolean;
+    [JsonName('can_change_info')]
+    FCanChangeInfo: Boolean;
+    [JsonName('can_invite_users')]
+    FCanInviteUsers: Boolean;
+    [JsonName('can_pin_messages')]
+    FCanPinMessages: Boolean;
+    [JsonName('is_member')]
+    FIsMember: Boolean;
+    [JsonName('can_send_messages')]
+    FCanSendMessages: Boolean;
+    [JsonName('can_send_media_messages')]
+    FCanSendMediaMessages: Boolean;
+    [JsonName('can_send_polls')]
+    FCanSendPolls: Boolean;
+    [JsonName('can_send_other_messages')]
+    FCanSendOtherMessages: Boolean;
+    [JsonName('can_add_web_page_previews')]
+    FCanAddWebPagePreviews: Boolean;
+    [JsonName('until_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FUntilDate: TDateTime;
+  public
+    /// <summary>
+    /// Information about the user
+    /// </summary>
+    property User: TtgUser read FUser write FUser;
+    /// <summary>
+    /// The member's status in the chat. Can be “creator”, “administrator”, “member”,
+    /// “restricted”, “left” or “kicked”
+    /// </summary>
+    property Status: string read FStatus write FStatus;
+    /// <summary>
+    /// Optional. Owner and administrators only. Custom title for this user
+    /// </summary>
+    property CustomTitle: string read FCustomTitle write FCustomTitle;
+    /// <summary>
+    /// Optional. Owner and administrators only. True, if the user's presence in the
+    /// chat is hidden
+    /// </summary>
+    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
+    /// <summary>
+    /// Optional. Administrators only. True, if the bot is allowed to edit
+    /// administrator privileges of that user
+    /// </summary>
+    property CanBeEdited: Boolean read FCanBeEdited write FCanBeEdited;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can post in the
+    /// channel; channels only
+    /// </summary>
+    property CanPostMessages: Boolean read FCanPostMessages write FCanPostMessages;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can edit messages of
+    /// other users and can pin messages; channels only
+    /// </summary>
+    property CanEditMessages: Boolean read FCanEditMessages write FCanEditMessages;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can delete messages
+    /// of other users
+    /// </summary>
+    property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can restrict, ban or
+    /// unban chat members
+    /// </summary>
+    property CanRestrictMembers: Boolean read FCanRestrictMembers write FCanRestrictMembers;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can add new
+    /// administrators with a subset of their own privileges or demote administrators
+    /// that he has promoted, directly or indirectly (promoted by administrators that
+    /// were appointed by the user)
+    /// </summary>
+    property CanPromoteMembers: Boolean read FCanPromoteMembers write FCanPromoteMembers;
+    /// <summary>
+    /// Optional. Administrators and restricted only. True, if the user is allowed to
+    /// change the chat title, photo and other settings
+    /// </summary>
+    property CanChangeInfo: Boolean read FCanChangeInfo write FCanChangeInfo;
+    /// <summary>
+    /// Optional. Administrators and restricted only. True, if the user is allowed to
+    /// invite new users to the chat
+    /// </summary>
+    property CanInviteUsers: Boolean read FCanInviteUsers write FCanInviteUsers;
+    /// <summary>
+    /// Optional. Administrators and restricted only. True, if the user is allowed to
+    /// pin messages; groups and supergroups only
+    /// </summary>
+    property CanPinMessages: Boolean read FCanPinMessages write FCanPinMessages;
+    /// <summary>
+    /// Optional. Restricted only. True, if the user is a member of the chat at the
+    /// moment of the request
+    /// </summary>
+    property IsMember: Boolean read FIsMember write FIsMember;
+    /// <summary>
+    /// Optional. Restricted only. True, if the user is allowed to send text messages,
+    /// contacts, locations and venues
+    /// </summary>
+    property CanSendMessages: Boolean read FCanSendMessages write FCanSendMessages;
+    /// <summary>
+    /// Optional. Restricted only. True, if the user is allowed to send audios,
+    /// documents, photos, videos, video notes and voice notes
+    /// </summary>
+    property CanSendMediaMessages: Boolean read FCanSendMediaMessages write FCanSendMediaMessages;
+    /// <summary>
+    /// Optional. Restricted only. True, if the user is allowed to send polls
+    /// </summary>
+    property CanSendPolls: Boolean read FCanSendPolls write FCanSendPolls;
+    /// <summary>
+    /// Optional. Restricted only. True, if the user is allowed to send animations,
+    /// games, stickers and use inline bots
+    /// </summary>
+    property CanSendOtherMessages: Boolean read FCanSendOtherMessages write FCanSendOtherMessages;
+    /// <summary>
+    /// Optional. Restricted only. True, if the user is allowed to add web page
+    /// previews to their messages
+    /// </summary>
+    property CanAddWebPagePreviews: Boolean read FCanAddWebPagePreviews write FCanAddWebPagePreviews;
+    /// <summary>
+    /// Optional. Restricted and kicked only. Date when restrictions will be lifted for
+    /// this user; unix time
+    /// </summary>
+    property UntilDate: TDateTime read FUntilDate write FUntilDate;
+  end;
+
 implementation
 
 uses
