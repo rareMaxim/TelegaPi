@@ -9,18 +9,16 @@ uses
   TelegramBotApi.Types.Enums;
 
 type
+  TtgEmptyArgument = class(TInterfacedObject);
 
+  [caName('getMe')]
+  [caParameterType(TcaParameterType.QueryString)]
   /// <summary>
   /// A simple method for testing your bot's auth token.
   /// Requires no parameters.
   /// Returns basic information about the bot in form of a User object.
   /// </summary>
-  [caName('getMe')]
-  [caParameterType(TcaParameterType.QueryString)]
-  TtgGetMeArgument = record
-  public
-    class function Default: TtgGetMeArgument; static;
-  end;
+  TtgGetMeArgunentNew = class(TtgEmptyArgument);
 
   [caName('sendMessage')]
   [caParameterType(TcaParameterType.QueryString)]
@@ -1144,13 +1142,6 @@ begin
   Result.ParseMode := TtgParseMode.Default;
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
-end;
-
-{ TtgGetMeArgument }
-
-class function TtgGetMeArgument.Default: TtgGetMeArgument;
-begin
-
 end;
 
 { TtgSendAudioArgument }

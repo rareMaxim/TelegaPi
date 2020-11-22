@@ -19,7 +19,7 @@ type
     function GetBotToken: string;
     procedure SetBotToken(const Value: string);
   protected
-    function InternalExecute<TArgument: record; TResult>(AArgument: TArgument): ItgResponse<TResult>; overload;
+    function InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>; overload;
     function InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>; overload;
     function InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult; overload;
     function InternalExecuteCustom<TArgument: record; TResult>(AArgument: TArgument): TResult; overload;
@@ -248,8 +248,15 @@ begin
 end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;
+var
+  lGetMe: TtgGetMeArgunentNew;
 begin
-  Result := InternalExecute<TtgGetMeArgument, TtgUser>(TtgGetMeArgument.Default);
+  lGetMe := TtgGetMeArgunentNew.Create;
+  try
+    Result := InternalExecute<TtgGetMeArgunentNew, TtgUser>(lGetMe);
+  finally
+    lGetMe.Free;
+  end;
 end;
 
 function TTelegramBotApi.GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>;

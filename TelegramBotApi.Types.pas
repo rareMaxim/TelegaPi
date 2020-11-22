@@ -2687,6 +2687,7 @@ constructor TtgChat.Create;
 begin
   FPhoto := nil;
   FPinnedMessage := nil;
+  FPermissions := nil;
 end;
 
 destructor TtgChat.Destroy;
