@@ -43,9 +43,15 @@ begin
     function(AValue: TValue): string
     var
       LArray: TArray<TcaFileToSend>;
+      lCA: TCloudApiClientBase;
     begin
       LArray := AValue.AsType<TArray<TcaFileToSend>>;
-      Result := TCloudApiClientBase.Serializer.Serialize < TArray < TcaFileToSend >> (LArray);
+      lCA := TCloudApiClientBase.Create;
+      try
+        Result := lCA.Serializer.Serialize < TArray < TcaFileToSend >> (LArray);
+      finally
+        lCA.Free;
+      end;
     end);
 end;
 
@@ -55,9 +61,15 @@ begin
     function(AValue: TValue): string
     var
       LArray: TArray<TtgInputMedia>;
+      lCA: TCloudApiClientBase;
     begin
       LArray := AValue.AsType<TArray<TtgInputMedia>>;
-      Result := TCloudApiClientBase.Serializer.Serialize < TArray < TtgInputMedia >> (LArray);
+      lCA := TCloudApiClientBase.Create;
+      try
+        Result := lCA.Serializer.Serialize < TArray < TtgInputMedia >> (LArray);
+      finally
+        lCA.Free;
+      end;
     end);
 end;
 

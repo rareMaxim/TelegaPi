@@ -2308,7 +2308,7 @@ type
     FCommand: string;
     [JsonName('description')]
     FDescription: string;
-  published
+  public
     /// <summary>
     /// Text of the command, 1-32 characters. Can contain only lowercase English
     /// letters, digits and underscores.

@@ -265,8 +265,15 @@ begin
 end;
 
 class function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
+var
+  lCA: TCloudApiClient;
 begin
-  Result := TCloudApiClient.Serializer.Deserialize < TtgResponse < TArray<TtgUpdate> >> (AJson);
+  lCA := TCloudApiClient.Create;
+  try
+    Result := lCA.Serializer.Deserialize < TtgResponse < TArray<TtgUpdate> >> (AJson);
+  finally
+    lCA.Free;
+  end;
 end;
 
 function TTelegramBotApi.GetWebhookInfo: ItgResponse<TtgWebhookInfo>;
