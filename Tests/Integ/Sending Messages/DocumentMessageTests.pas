@@ -39,20 +39,24 @@ var
   LResult: ItgResponse<TtgMessage>;
   LMessage: TtgMessage;
 begin
-  LSendDocumentArgument := TtgSendDocumentArgument.Default;
-  LSendDocumentArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LSendDocumentArgument.Document := TtgConst.PathToFile.Documents.Hamlet;
-  LSendDocumentArgument.Caption := 'تراژدی هملت' + #10 + 'شاهزاده دانمارک';
-  LResult := Bot.SendDocument(LSendDocumentArgument);
-  Assert.AreEqual(True, LResult.Ok, LResult.Description);
-  LMessage := LResult.Result;
-  Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
-  Assert.AreEqual(LSendDocumentArgument.Document.FilePath, LMessage.Document.Filename);
-  Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
-  TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
-  Assert.IsNotEmpty(LMessage.Document.FileId);
-  Assert.IsNotEmpty(LMessage.Document.FileUniqueId);
-  Assert.AreEqual(LSendDocumentArgument.Caption, LMessage.Caption);
+  LSendDocumentArgument := TtgSendDocumentArgument.Create;
+  try
+    LSendDocumentArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LSendDocumentArgument.Document := TtgConst.PathToFile.Documents.Hamlet;
+    LSendDocumentArgument.Caption := 'تراژدی هملت' + #10 + 'شاهزاده دانمارک';
+    LResult := Bot.SendDocument(LSendDocumentArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
+    Assert.AreEqual(LSendDocumentArgument.Document.Name, LMessage.Document.Filename);
+    Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
+    TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
+    Assert.IsNotEmpty(LMessage.Document.FileId);
+    Assert.IsNotEmpty(LMessage.Document.FileUniqueId);
+    Assert.AreEqual(LSendDocumentArgument.Caption, LMessage.Caption);
+  finally
+    LSendDocumentArgument.free;
+  end;
 
 end;
 
@@ -62,28 +66,32 @@ var
   LResult: ItgResponse<TtgMessage>;
   LMessage: TtgMessage;
 begin
-  LSendDocumentArgument := TtgSendDocumentArgument.Default;
-  LSendDocumentArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LSendDocumentArgument.Document := TtgConst.PathToFile.Documents.Hamlet;
-  LSendDocumentArgument.Thumb := TtgConst.PathToFile.Thumbnail.TheAbilityToBreak;
-  LResult := Bot.SendDocument(LSendDocumentArgument);
-  Assert.AreEqual(True, LResult.Ok, LResult.Description);
-  LMessage := LResult.Result;
+  LSendDocumentArgument := TtgSendDocumentArgument.Create;
+  try
+    LSendDocumentArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LSendDocumentArgument.Document := TtgConst.PathToFile.Documents.Hamlet;
+    LSendDocumentArgument.Thumb := TtgConst.PathToFile.Thumbnail.TheAbilityToBreak;
+    LResult := Bot.SendDocument(LSendDocumentArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
 
-  Assert.IsNotNull(LMessage.Document.Thumb);
-  Assert.IsNotEmpty(LMessage.Document.Thumb.FileId);
-  Assert.IsNotEmpty(LMessage.Document.Thumb.FileUniqueId);
-  Assert.AreEqual(Int64(90), LMessage.Document.Thumb.Width);
-  Assert.AreEqual(Int64(90), LMessage.Document.Thumb.Height);
-  TgAssert.InRange(LMessage.Document.Thumb.FileSize, 11000, 12000);
+    Assert.IsNotNull(LMessage.Document.Thumb);
+    Assert.IsNotEmpty(LMessage.Document.Thumb.FileId);
+    Assert.IsNotEmpty(LMessage.Document.Thumb.FileUniqueId);
+    Assert.AreEqual(Int64(90), LMessage.Document.Thumb.Width);
+    Assert.AreEqual(Int64(90), LMessage.Document.Thumb.Height);
+    TgAssert.InRange(LMessage.Document.Thumb.FileSize, 11000, 12000);
 
-  Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
-  Assert.AreEqual(LSendDocumentArgument.Document.FilePath, LMessage.Document.Filename);
-  Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
-  TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
-  Assert.IsNotEmpty(LMessage.Document.FileId);
-  Assert.IsNotEmpty(LMessage.Document.FileUniqueId);
-  Assert.IsEmpty(LMessage.Caption);
+    Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
+    Assert.AreEqual(LSendDocumentArgument.Document.Name, LMessage.Document.Filename);
+    Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
+    TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
+    Assert.IsNotEmpty(LMessage.Document.FileId);
+    Assert.IsNotEmpty(LMessage.Document.FileUniqueId);
+    Assert.IsEmpty(LMessage.Caption);
+  finally
+    LSendDocumentArgument.free;
+  end;
 end;
 
 procedure TSendingDocumentMessageTests.Should_Send_Pdf_Document;
@@ -92,20 +100,24 @@ var
   LResult: ItgResponse<TtgMessage>;
   LMessage: TtgMessage;
 begin
-  LSendDocumentArgument := TtgSendDocumentArgument.Default;
-  LSendDocumentArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LSendDocumentArgument.Document := TtgConst.PathToFile.Documents.Hamlet;
-  LSendDocumentArgument.Caption := 'The Tragedy of Hamlet,' + #10 + 'Prince of Denmark';
-  LResult := Bot.SendDocument(LSendDocumentArgument);
-  Assert.AreEqual(True, LResult.Ok, LResult.Description);
-  LMessage := LResult.Result;
-  Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
-  Assert.AreEqual(LSendDocumentArgument.Document.FilePath, LMessage.Document.Filename);
-  Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
-  TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
-  Assert.IsNotEmpty(LMessage.Document.FileId);
-  Assert.IsNotEmpty(LMessage.Document.FileUniqueId);
-  Assert.AreEqual(LSendDocumentArgument.Caption, LMessage.Caption);
+  LSendDocumentArgument := TtgSendDocumentArgument.Create;
+  try
+    LSendDocumentArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LSendDocumentArgument.Document := TtgConst.PathToFile.Documents.Hamlet;
+    LSendDocumentArgument.Caption := 'The Tragedy of Hamlet,' + #10 + 'Prince of Denmark';
+    LResult := Bot.SendDocument(LSendDocumentArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(TtgMessageType.Document, LMessage.&Type);
+    Assert.AreEqual(LSendDocumentArgument.Document.Name, LMessage.Document.Filename);
+    Assert.AreEqual('application/pdf', LResult.Result.Document.MimeType);
+    TgAssert.InRange(LMessage.Document.FileSize, 253000, 257000);
+    Assert.IsNotEmpty(LMessage.Document.FileId);
+    Assert.IsNotEmpty(LMessage.Document.FileUniqueId);
+    Assert.AreEqual(LSendDocumentArgument.Caption, LMessage.Caption);
+  finally
+    LSendDocumentArgument.free;
+  end;
 end;
 
 end.

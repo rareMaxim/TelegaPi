@@ -371,24 +371,31 @@ type
   [caName('sendDocument')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.QueryString)]
-  TtgSendDocumentArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
+  TtgSendDocumentArgument = class(TtgSendMediaAbstractArgument)
+  private
     [caName('document')]
     [caIsRequaired]
-    [caDefaultValueStringAttribute('')]
-    /// <summary>Audio file to send. Pass a file_id as String to send an audio file
-    /// that exists on the Telegram servers (recommended), pass an HTTP URL as a String
-    /// for Telegram to get an audio file from the Internet, or upload a new one using
-    /// multipart/form-data. More info on Sending Files »</summary>
-    Document: TcaFileToSend;
+    [caDefaultValueString('')]
+    fDocument: TcaFileToSend;
     [caName('thumb')]
-    [caDefaultValueStringAttribute('')]
+    [caDefaultValueString('')]
+    fThumb: TcaFileToSend;
+    [caName('disable_content_type_detection')]
+    [caDefaultValueBoolean(False)]
+    FDisableContentTypeDetection: Boolean;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target channel (in
+    /// the format @channelusername)
+    /// </summary>
+    property ChatId;
+    /// <summary>File to send. Pass a file_id as String to send a file that exists on
+    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
+    /// to get a file from the Internet, or upload a new one using multipart/form-data..
+    /// More info on Sending Files »</summary>
+    property Document: TcaFileToSend read fDocument write fDocument;
     /// <summary>Thumbnail of the file sent; can be ignored if thumbnail generation for
     /// the file is supported server-side. The thumbnail should be in JPEG format and
     /// less than 200 kB in size. A thumbnail‘s width and height should not exceed 320.
@@ -396,30 +403,32 @@ type
     /// be reused and can be only uploaded as a new file, so you can pass “attach:
     /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
     /// under file_attach_name. More info on Sending Files »</summary>
-    Thumb: TcaFileToSend;
-    [caName('caption')]
-    [caDefaultValueStringAttribute('')]
-    [caParameterType(TcaParameterType.GetOrPost)]
-    /// <summary>
-    /// Document caption (may also be used when resending documents by file_id), 0-1024
-    /// characters after entities parsing
-    /// </summary>
-    Caption: string;
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
+    property Thumb: TcaFileToSend read fThumb write fThumb;
+    /// <summary>Document caption (may also be used when resending documents by file_id)
+    /// , 0-1024 characters after entities parsing</summary>
+    property Caption;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in the media caption.</summary>
-    ParseMode: TtgParseMode;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities;
+    /// <summary>
+    /// Disables automatic server-side content type detection for files uploaded using
+    /// multipart/form-data
+    /// </summary>
+    property DisableContentTypeDetection: Boolean read FDisableContentTypeDetection write FDisableContentTypeDetection;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
+    property DisableNotification;
     /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendDocumentArgument; static;
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
   end;
 
   /// <summary>
@@ -1304,15 +1313,18 @@ end;
 
 { TtgSendDocumentArgument }
 
-class function TtgSendDocumentArgument.Default: TtgSendDocumentArgument;
+constructor TtgSendDocumentArgument.Create;
 begin
-  Result.ChatId := 0;
-  Result.Document := TcaFileToSend.Empty;
-  Result.Caption := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.Thumb := TcaFileToSend.Empty;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
+  inherited Create();
+  fDocument := TcaFileToSend.Empty;
+  fThumb := TcaFileToSend.Empty;
+  FDisableContentTypeDetection := False;
+end;
+
+destructor TtgSendDocumentArgument.Destroy;
+begin
+
+  inherited;
 end;
 
 { TtgSendVideoArgument }
