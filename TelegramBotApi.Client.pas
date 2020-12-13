@@ -47,6 +47,11 @@ type
     /// is returned.
     /// </summary>
     function ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
+    /// <summary> Use this method to copy messages of any kind. The method is analogous
+    /// to the method forwardMessages, but the copied message doesn't have a link to
+    /// the original message. Returns the MessageId of the sent message on success.
+    /// </summary>
+    function CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
     /// <summary>
     /// Use this method to send photos. On success, the sent Message is returned.
     /// </summary>
@@ -215,6 +220,11 @@ destructor TTelegramBotApi.Destroy;
 begin
   FCloudApi.Free;
   inherited Destroy;
+end;
+
+function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
+begin
+  Result := InternalExecute<TtgMessageArgument, Int64>(ACopyMessageArgument);
 end;
 
 function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument: TtgEditMessageLiveLocationArgument)
