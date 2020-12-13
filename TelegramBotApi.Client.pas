@@ -39,6 +39,15 @@ type
     /// </summary>
     function GetMe: ItgResponse<TtgUser>;
     /// <summary>
+    /// Use this method to log out from the cloud Bot API server before launching the
+    /// bot locally. You must log out the bot before running it locally, otherwise
+    /// there is no guarantee that the bot will receive updates. After a successful
+    /// call, you can immediately log in on a local server, but will not be able to log
+    /// in back to the cloud Bot API server for 10 minutes. Returns True on success.
+    /// Requires no parameters.
+    /// </summary>
+    function LogOut: ItgResponse<Boolean>;
+    /// <summary>
     /// Use this method to send text messages. On success, the sent Message is returned.
     /// </summary>
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
@@ -262,11 +271,11 @@ end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;
 var
-  lGetMe: TtgGetMeArgunentNew;
+  lGetMe: TtgGetMeArgunent;
 begin
-  lGetMe := TtgGetMeArgunentNew.Create;
+  lGetMe := TtgGetMeArgunent.Create;
   try
-    Result := InternalExecute<TtgGetMeArgunentNew, TtgUser>(lGetMe);
+    Result := InternalExecute<TtgGetMeArgunent, TtgUser>(lGetMe);
   finally
     lGetMe.Free;
   end;
@@ -325,6 +334,18 @@ var
 begin
   LCloudResponse := FCloudApi.Execute<TResult>(ARequest);
   Result := LCloudResponse.Data;
+end;
+
+function TTelegramBotApi.LogOut: ItgResponse<Boolean>;
+var
+  lLogOut: TtgLogOutArgunent;
+begin
+  lLogOut := TtgLogOutArgunent.Create;
+  try
+    Result := InternalExecute<TtgLogOutArgunent, Boolean>(lLogOut);
+  finally
+    lLogOut.Free;
+  end;
 end;
 
 function TTelegramBotApi.SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;
