@@ -519,6 +519,33 @@ type
     property AllowSendingWithoutReply;
   end;
 
+  [caName('sendAnimation')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  /// <summary>
+  /// Use this method to send video files, Telegram clients support mp4 videos (other
+  /// formats may be sent as Document). On success, the sent Message is returned.
+  /// Bots can currently send video files of up to 50 MB in size, this limit may be
+  /// changed in the future.
+  /// </summary>
+  TtgSendAnimationArgument = class(TtgSendVideoArgument)
+  private
+    [caName('animation')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    fAnimation: TcaFileToSend;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>
+    /// Animation to send. Pass a file_id as String to send an animation that exists on
+    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
+    /// to get an animation from the Internet, or upload a new animation using
+    /// multipart/form-data. More info on Sending Files »
+    /// </summary>
+    property Animation: TcaFileToSend read fAnimation write fAnimation;
+  end;
+
   /// <summary>
   /// Use this method to send phone contacts. On success, the sent Message is returned.
   /// </summary>
@@ -560,77 +587,6 @@ type
     /// <summary>If the message is a reply, ID of the original message</summary>
     ReplyToMessageId: Int64;
     class function Default: TtgSendContactArgument; static;
-  end;
-
-  [caName('sendAnimation')]
-  [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.GetOrPost)]
-  /// <summary>
-  /// Use this method to send video files, Telegram clients support mp4 videos (other
-  /// formats may be sent as Document). On success, the sent Message is returned.
-  /// Bots can currently send video files of up to 50 MB in size, this limit may be
-  /// changed in the future.
-  /// </summary>
-  TtgSendAnimationArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
-    [caName('animation')]
-    [caIsRequaired]
-    [caDefaultValueString('')]
-    /// <summary>
-    /// Animation to send. Pass a file_id as String to send an animation that exists on
-    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
-    /// to get an animation from the Internet, or upload a new animation using
-    /// multipart/form-data. More info on Sending Files »
-    /// </summary>
-    Animation: TcaFileToSend;
-    [caName('duration')]
-    [caDefaultValueInt64(0)]
-    /// <summary>Duration of sent animation in seconds</summary>
-    Duration: Int64;
-    [caName('width')]
-    [caDefaultValueInt64(0)]
-    /// <summary>Animation width</summary>
-    Width: Int64;
-    [caName('height')]
-    [caDefaultValueInt64(0)]
-    /// <summary>Animation height</summary>
-    Height: Int64;
-    [caName('thumb')]
-    [caDefaultValueString('')]
-    /// <summary>Thumbnail of the file sent; can be ignored if thumbnail generation for
-    /// the file is supported server-side. The thumbnail should be in JPEG format and
-    /// less than 200 kB in size. A thumbnail‘s width and height should not exceed 320.
-    /// Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t
-    /// be reused and can be only uploaded as a new file, so you can pass “attach:
-    /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
-    /// under file_attach_name. More info on Sending Files »</summary>
-    Thumb: TcaFileToSend;
-    [caName('caption')]
-    [caDefaultValueString('')]
-    /// <summary> Animation caption (may also be used when resending videos by file_id),
-    /// 0-1024 characters after entities parsing</summary>
-    Caption: string;
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
-    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-    /// fixed-width text or inline URLs in the media caption.</summary>
-    ParseMode: TtgParseMode;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
-    /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendAnimationArgument; static;
   end;
 
   /// <summary> Use this method to send audio files, if you want Telegram clients to
@@ -1342,22 +1298,6 @@ begin
   inherited;
 end;
 
-{ TtgSendAnimationArgument }
-
-class function TtgSendAnimationArgument.Default: TtgSendAnimationArgument;
-begin
-  Result.ChatId := 0;
-  Result.Animation := TcaFileToSend.Empty;
-  Result.Duration := 0;
-  Result.Width := 0;
-  Result.Height := 0;
-  Result.Thumb := TcaFileToSend.Empty;
-  Result.Caption := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
-end;
-
 { TtgGetUpdatesArgument }
 
 class function TtgGetUpdatesArgument.Default: TtgGetUpdatesArgument;
@@ -1678,6 +1618,20 @@ begin
 end;
 
 destructor TtgSendMediaWithThumbAbstractArgument.Destroy;
+begin
+
+  inherited;
+end;
+
+{ TtgSendAnimationArgument }
+
+constructor TtgSendAnimationArgument.Create;
+begin
+  inherited Create();
+  fAnimation := TcaFileToSend.Empty;
+end;
+
+destructor TtgSendAnimationArgument.Destroy;
 begin
 
   inherited;
