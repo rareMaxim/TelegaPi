@@ -27,7 +27,8 @@ implementation
 uses
   TelegramBotApi.Types.Request,
   TelegramBotApi.Types,
-  Test.Constants, TelegramBotApi.Types.Enums;
+  Test.Constants,
+  TelegramBotApi.Types.Enums;
 
 { TAudioMessageTests }
 
@@ -97,23 +98,27 @@ var
   LResult: ItgResponse<TtgMessage>;
   LMessage: TtgMessage;
 begin
-  LAudioArgument := TtgSendVoiceArgument.Default;
-  LAudioArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LAudioArgument.Voice := TtgConst.PathToFile.Audio.TestOgg;
-  LAudioArgument.Caption := 'Test Voice in .ogg format';
-  LAudioArgument.Duration := 24;
+  LAudioArgument := TtgSendVoiceArgument.Create;
+  try
+    LAudioArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LAudioArgument.Voice := TtgConst.PathToFile.Audio.TestOgg;
+    LAudioArgument.Caption := 'Test Voice in .ogg format';
+    LAudioArgument.Duration := 24;
 
-  LResult := Bot.SendVoice(LAudioArgument);
-  Assert.AreEqual(True, LResult.Ok, LResult.Description);
-  LMessage := LResult.Result;
+    LResult := Bot.SendVoice(LAudioArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
 
-  Assert.AreEqual(TtgMessageType.Voice, LMessage.&Type);
-  Assert.AreEqual(LAudioArgument.Caption, LMessage.Caption);
-  Assert.AreEqual(LAudioArgument.Duration, LMessage.Voice.Duration);
-  Assert.AreEqual('audio/ogg', LMessage.Voice.MimeType);
-  Assert.IsNotEmpty(LMessage.Voice.FileId);
-  Assert.IsNotEmpty(LMessage.Voice.FileUniqueId);
-  Assert.IsTrue(LMessage.Voice.FileSize > 200);
+    Assert.AreEqual(TtgMessageType.Voice, LMessage.&Type);
+    Assert.AreEqual(LAudioArgument.Caption, LMessage.Caption);
+    Assert.AreEqual(LAudioArgument.Duration, LMessage.Voice.Duration);
+    Assert.AreEqual('audio/ogg', LMessage.Voice.MimeType);
+    Assert.IsNotEmpty(LMessage.Voice.FileId);
+    Assert.IsNotEmpty(LMessage.Voice.FileUniqueId);
+    Assert.IsTrue(LMessage.Voice.FileSize > 200);
+  finally
+    LAudioArgument.Free;
+  end;
 end;
 
 end.

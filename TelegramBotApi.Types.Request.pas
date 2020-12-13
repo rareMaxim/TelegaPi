@@ -251,7 +251,6 @@ type
     [caIsRequaired]
     [caDefaultValueStringAttribute('')]
     fPhoto: TcaFileToSend;
-    procedure SetReplyToMessageId(const Value: Int64);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -305,6 +304,67 @@ type
     property Thumb: TcaFileToSend read fThumb write fThumb;
   end;
 
+  /// <summary> Use this method to send audio files, if you want Telegram clients to
+  /// display the file as a playable voice message. For this to work, your audio must
+  /// be in an .OGG file encoded with OPUS (other formats may be sent as Audio or
+  /// Document). On success, the sent Message is returned. Bots can currently send
+  /// voice messages of up to 50 MB in size, this limit may be changed in the future.
+  /// </summary>
+  [caName('sendVoice')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendVoiceArgument = class(TtgSendMediaAbstractArgument)
+  private
+    [caName('voice')]
+    [caIsRequaired]
+    [caDefaultValueStringAttribute('')]
+    fVoice: TcaFileToSend;
+    [caName('duration')]
+    [caDefaultValueInt64Attribute(0)]
+    fDuration: Int64;
+    [caName('performer')]
+    [caDefaultValueString('')]
+    fPerformer: string;
+    [caName('title')]
+    [caDefaultValueString('')]
+    fTitle: string;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target channel (in
+    /// the format @channelusername)
+    /// </summary>
+    property ChatId;
+    /// <summary>Audio file to send. Pass a file_id as String to send an audio file
+    /// that exists on the Telegram servers (recommended), pass an HTTP URL as a String
+    /// for Telegram to get an audio file from the Internet, or upload a new one using
+    /// multipart/form-data. More info on Sending Files »</summary>
+    property Voice: TcaFileToSend read fVoice write fVoice;
+    /// <summary>Audio caption,
+    /// 0-1024 characters after entities parsing</summary>
+    property Caption;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in the media caption.</summary>
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities;
+    /// <summary>Duration of the audio in seconds</summary>
+    property Duration: Int64 read fDuration write fDuration;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+  end;
+
   [caName('sendAudio')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.QueryString)]
@@ -314,15 +374,15 @@ type
   /// of up to 50 MB in size, this limit may be changed in the future.
   ///
   /// For sending voice messages, use the sendVoice method instead.</summary>
-  TtgSendAudioArgument = class(TtgSendMediaWithThumbAbstractArgument)
+  TtgSendAudioArgument = class(TtgSendVoiceArgument)
   private
+    [caName('thumb')]
+    [caDefaultValueStringAttribute('')]
+    fThumb: TcaFileToSend;
     [caName('audio')]
     [caIsRequaired]
     [caDefaultValueStringAttribute('')]
     fAudio: TcaFileToSend;
-    [caName('duration')]
-    [caDefaultValueInt64Attribute(0)]
-    fDuration: Int64;
     [caName('performer')]
     [caDefaultValueString('')]
     fPerformer: string;
@@ -353,7 +413,7 @@ type
     /// </summary>
     property CaptionEntities;
     /// <summary>Duration of the audio in seconds</summary>
-    property Duration: Int64 read fDuration write fDuration;
+    property Duration;
     /// <summary>Performer</summary>
     property Performer: string read fPerformer write fPerformer;
     /// <summary>Track name</summary>
@@ -365,7 +425,7 @@ type
     /// be reused and can be only uploaded as a new file, so you can pass “attach:
     /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
     /// under file_attach_name. More info on Sending Files »</summary>
-    property Thumb;
+    property Thumb: TcaFileToSend read fThumb write fThumb;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
@@ -587,60 +647,6 @@ type
     /// <summary>If the message is a reply, ID of the original message</summary>
     ReplyToMessageId: Int64;
     class function Default: TtgSendContactArgument; static;
-  end;
-
-  /// <summary> Use this method to send audio files, if you want Telegram clients to
-  /// display the file as a playable voice message. For this to work, your audio must
-  /// be in an .OGG file encoded with OPUS (other formats may be sent as Audio or
-  /// Document). On success, the sent Message is returned. Bots can currently send
-  /// voice messages of up to 50 MB in size, this limit may be changed in the future.
-  /// </summary>
-  [caName('sendVoice')]
-  [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
-  TtgSendVoiceArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
-    [caName('voice')]
-    [caIsRequaired]
-    [caDefaultValueString('')]
-    /// <summary>
-    /// Audio file to send. Pass a file_id as String to send an animation that exists on
-    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
-    /// to get a file from the Internet, or upload a new one using
-    /// multipart/form-data. More info on Sending Files »
-    /// </summary>
-    Voice: TcaFileToSend;
-    /// <summary> Voice message caption, 0-1024 characters after entities
-    /// parsing</summary>
-    [caName('caption')]
-    [caDefaultValueString('')]
-    Caption: string;
-
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
-    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-    /// fixed-width text or inline URLs in the media caption.</summary>
-    ParseMode: TtgParseMode;
-    /// <summary>Duration of the voice message in seconds</summary>
-    [caName('duration')]
-    [caDefaultValueInt64(0)]
-    Duration: Int64;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
-    /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendVoiceArgument; static;
   end;
 
   /// <summary> Use this method to send audio files, if you want Telegram clients to
@@ -1277,11 +1283,6 @@ begin
   inherited Destroy;
 end;
 
-procedure TtgSendPhotoArgument.SetReplyToMessageId(const Value: Int64);
-begin
-  fReplyToMessageId := Value;
-end;
-
 { TtgSendDocumentArgument }
 
 constructor TtgSendDocumentArgument.Create;
@@ -1310,15 +1311,17 @@ end;
 
 { TtgSendVoiceArgument }
 
-class function TtgSendVoiceArgument.Default: TtgSendVoiceArgument;
+constructor TtgSendVoiceArgument.Create;
 begin
-  Result.ChatId := 0;
-  Result.Voice := TcaFileToSend.Empty;
-  Result.Duration := 0;
-  Result.Caption := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
+  inherited Create();
+  fVoice := TcaFileToSend.Empty;
+  fDuration := 0;
+end;
+
+destructor TtgSendVoiceArgument.Destroy;
+begin
+
+  inherited;
 end;
 
 { TtgSendVideoNoteArgument }
@@ -1581,7 +1584,7 @@ begin
   fDuration := 0;
   fPerformer := '';
   fTitle := '';
-
+  fThumb := TcaFileToSend.Empty;
 end;
 
 destructor TtgSendAudioArgument.Destroy;
