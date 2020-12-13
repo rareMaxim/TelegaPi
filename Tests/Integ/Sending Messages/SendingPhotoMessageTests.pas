@@ -48,6 +48,7 @@ var
   I: Integer;
 begin
   LEntityValueMappings := TDictionary<string, TtgMessageEntityType>.Create;
+  LSendPhotoArgument := TtgSendPhotoArgument.Create;
   try
     LEntityValueMappings.Add('+38 063 126 48 33', TtgMessageEntityType.PhoneNumber);
     LEntityValueMappings.Add('$UAH', TtgMessageEntityType.Cashtag);
@@ -57,7 +58,7 @@ begin
     LEntityValueMappings.Add('security@telegram.org', TtgMessageEntityType.Email);
     LEntityValueMappings.Add('/test', TtgMessageEntityType.BotCommand);
     LEntityValueMappings.Add(Format('/test@%s', [TTestData.Current.BotUser.Username]), TtgMessageEntityType.BotCommand);
-    LSendPhotoArgument := TtgSendPhotoArgument.Default;
+
     LSendPhotoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
     LSendPhotoArgument.Photo := TtgConst.PathToFile.Photos.Logo;
     LSendPhotoArgument.Caption := string.Join(#13#10, LEntityValueMappings.Keys.ToArray);
@@ -71,6 +72,7 @@ begin
     end;
   finally
     LEntityValueMappings.Free;
+    LSendPhotoArgument.Free;
   end;
 
 end;
@@ -81,11 +83,16 @@ var
   LResult: ItgResponse<TtgMessage>;
   LPhoto: TtgPhotosize;
 begin
-  LSendPhotoArgument := TtgSendPhotoArgument.Default;
-  LSendPhotoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LSendPhotoArgument.Caption := '👆 This is a ' + #13#10 + 'Telegram Bot';
-  LSendPhotoArgument.Photo := TtgConst.PathToFile.Photos.Bot;
-  LResult := Bot.SendPhoto(LSendPhotoArgument);
+  LSendPhotoArgument := TtgSendPhotoArgument.Create;
+  try
+    LSendPhotoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LSendPhotoArgument.Caption := '👆 This is a ' + #13#10 + 'Telegram Bot';
+    LSendPhotoArgument.Photo := TtgConst.PathToFile.Photos.Bot;
+    LResult := Bot.SendPhoto(LSendPhotoArgument);
+  finally
+    LSendPhotoArgument.Free;
+  end;
+
   FLastID := LResult.Result.Photo.First.FileId;
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
   Assert.AreEqual(TtgMessageType.Photo, LResult.Result.&Type);
@@ -103,10 +110,14 @@ var
   LSendPhotoArgument: TtgSendPhotoArgument;
   LResult: ItgResponse<TtgMessage>;
 begin
-  LSendPhotoArgument := TtgSendPhotoArgument.Default;
-  LSendPhotoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LSendPhotoArgument.Photo := FLastID;
-  LResult := Bot.SendPhoto(LSendPhotoArgument);
+  LSendPhotoArgument := TtgSendPhotoArgument.Create;
+  try
+    LSendPhotoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LSendPhotoArgument.Photo := FLastID;
+    LResult := Bot.SendPhoto(LSendPhotoArgument);
+  finally
+    LSendPhotoArgument.Free;
+  end;
   Assert.AreEqual(True, LResult.Ok, LResult.Description);
   Assert.AreEqual(TtgMessageType.Photo, LResult.Result.&Type);
 end;
@@ -124,11 +135,11 @@ var
   I: Integer;
 begin
   LEntityValueMappings := TDictionary<TtgMessageEntityType, string>.Create;
+  LSendPhotoArgument := TtgSendPhotoArgument.Create;
   try
     LEntityValueMappings.Add(TtgMessageEntityType.Bold, '*bold*');
     LEntityValueMappings.Add(TtgMessageEntityType.Italic, '_italic_');
     LEntityValueMappings.Add(TtgMessageEntityType.TextLink, Format('[inline url to Telegram.org](%s)', [url]));
-    LSendPhotoArgument := TtgSendPhotoArgument.Default;
     LSendPhotoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
     LSendPhotoArgument.Photo := TtgConst.PathToFile.Photos.Logo;
     LSendPhotoArgument.Caption := string.Join(#13#10, LEntityValueMappings.Values.ToArray);
@@ -143,6 +154,7 @@ begin
     end;
   finally
     LEntityValueMappings.Free;
+    LSendPhotoArgument.Free;
   end;
 end;
 

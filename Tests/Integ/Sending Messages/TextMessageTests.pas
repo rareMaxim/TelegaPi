@@ -14,11 +14,11 @@ type
   [TestFixture]
   TTextMessageTests = class(TTestsFixture)
   public
-    // [Test]
+    [Test]
     procedure Should_Get_Me;
     [Test]
     procedure Should_Send_Text_Message;
-    // [Test]
+    [Test]
     procedure Should_Send_Text_Message_To_Channel;
     [Test]
     procedure Should_Forward_Message;

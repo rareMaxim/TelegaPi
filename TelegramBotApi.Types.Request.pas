@@ -205,49 +205,86 @@ type
     property AllowSendingWithoutReply;
   end;
 
+  TtgSendMediaAbstractArgument = class(TtgSendMessageBase)
+  private
+    [caName('caption')]
+    [caDefaultValueStringAttribute('')]
+    fCaption: string;
+    [caName('caption_entities')]
+    [caDefaultValueString('[]')]
+    fCaptionEntities: TArray<TtgMessageEntity>;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Caption, 0-1024 characters after entities parsing</summary>
+    property Caption: string read fCaption write fCaption;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities: TArray<TtgMessageEntity> read fCaptionEntities write fCaptionEntities;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+  end;
+
   [caName('sendPhoto')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.GetOrPost)]
   /// <summary>Use this method to send photos. On success, the sent Message is
   /// returned.</summary>
-  TtgSendPhotoArgument = record
-  public
-    [caName('chat_id')]
+  TtgSendPhotoArgument = class(TtgSendMediaAbstractArgument)
+  private
+    [caName('photo')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)]
+    [caDefaultValueStringAttribute('')]
+    fPhoto: TcaFileToSend;
+    procedure SetReplyToMessageId(const Value: Int64);
+  public
+    constructor Create; override;
+    destructor Destroy; override;
     /// <summary>
     /// Unique identifier for the target chat or username of the target channel (in
     /// the format @channelusername)
     /// </summary>
-    ChatId: TtgUserLink;
-    [caName('photo')]
-    [caIsRequaired]
-    [caDefaultValueStringAttribute('')]
+    property ChatId;
     /// <summary>Photo to send. Pass a file_id as String to send a photo that exists on
     /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
     /// to get a photo from the Internet, or upload a new photo using
     /// multipart/form-data. More info on Sending Files »</summary>
-    Photo: TcaFileToSend;
-    [caName('caption')]
-    [caDefaultValueStringAttribute('')]
+    property Photo: TcaFileToSend read fPhoto write fPhoto;
     /// <summary>Photo caption (may also be used when resending photos by file_id),
     /// 0-1024 characters after entities parsing</summary>
-    Caption: string;
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
+    property Caption;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in the media caption.</summary>
-    ParseMode: TtgParseMode;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
+    property DisableNotification;
     /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendPhotoArgument; static;
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
   end;
 
   [caName('sendAudio')]
@@ -259,45 +296,53 @@ type
   /// of up to 50 MB in size, this limit may be changed in the future.
   ///
   /// For sending voice messages, use the sendVoice method instead.</summary>
-  TtgSendAudioArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
+  TtgSendAudioArgument = class(TtgSendMediaAbstractArgument)
+  private
     [caName('audio')]
     [caIsRequaired]
     [caDefaultValueStringAttribute('')]
+    fAudio: TcaFileToSend;
+    [caName('duration')]
+    [caDefaultValueInt64Attribute(0)]
+    fDuration: Int64;
+    [caName('performer')]
+    [caDefaultValueString('')]
+    fPerformer: string;
+    [caName('title')]
+    [caDefaultValueString('')]
+    fTitle: string;
+    [caName('thumb')]
+    [caDefaultValueStringAttribute('')]
+    fThumb: TcaFileToSend;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target channel (in
+    /// the format @channelusername)
+    /// </summary>
+    property ChatId;
     /// <summary>Audio file to send. Pass a file_id as String to send an audio file
     /// that exists on the Telegram servers (recommended), pass an HTTP URL as a String
     /// for Telegram to get an audio file from the Internet, or upload a new one using
     /// multipart/form-data. More info on Sending Files »</summary>
-    Audio: TcaFileToSend;
-    [caName('caption')]
-    [caDefaultValueStringAttribute('')]
-    /// <summary>Audio caption, 0-1024 characters after entities parsing</summary>
-    Caption: string;
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
+    property Audio: TcaFileToSend read fAudio write fAudio;
+    /// <summary>Audio caption,
+    /// 0-1024 characters after entities parsing</summary>
+    property Caption;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in the media caption.</summary>
-    ParseMode: TtgParseMode;
-    [caName('duration')]
-    [caDefaultValueInt64Attribute(0)]
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities;
     /// <summary>Duration of the audio in seconds</summary>
-    Duration: Int64;
-    [caName('performer')]
-    [caDefaultValueString('')]
+    property Duration: Int64 read fDuration write fDuration;
     /// <summary>Performer</summary>
-    Performer: string;
-    [caName('title')]
-    [caDefaultValueString('')]
+    property Performer: string read fPerformer write fPerformer;
     /// <summary>Track name</summary>
-    Title: string;
-    [caName('thumb')]
-    [caDefaultValueStringAttribute('')]
+    property Title: string read fTitle write fTitle;
     /// <summary>Thumbnail of the file sent; can be ignored if thumbnail generation for
     /// the file is supported server-side. The thumbnail should be in JPEG format and
     /// less than 200 kB in size. A thumbnail‘s width and height should not exceed 320.
@@ -305,17 +350,17 @@ type
     /// be reused and can be only uploaded as a new file, so you can pass “attach:
     /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
     /// under file_attach_name. More info on Sending Files »</summary>
-    Thumb: TcaFileToSend;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
+    property Thumb: TcaFileToSend read fThumb write fThumb;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
+    property DisableNotification;
     /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendAudioArgument; static;
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
   end;
 
   /// <summary>
@@ -1240,30 +1285,21 @@ end;
 
 { TtgSendPhotoArgument }
 
-class function TtgSendPhotoArgument.Default: TtgSendPhotoArgument;
+constructor TtgSendPhotoArgument.Create;
 begin
-  Result.ChatId := 0;
-  Result.Photo := TcaFileToSend.Empty;
-  Result.Caption := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
+  inherited Create();
+  fPhoto := TcaFileToSend.Empty;
 end;
 
-{ TtgSendAudioArgument }
-
-class function TtgSendAudioArgument.Default: TtgSendAudioArgument;
+destructor TtgSendPhotoArgument.Destroy;
 begin
-  Result.ChatId := 0;
-  Result.Audio := TcaFileToSend.Empty;
-  Result.Caption := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.Duration := 0;
-  Result.Performer := '';
-  Result.Title := '';
-  Result.Thumb := TcaFileToSend.Empty;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
+
+  inherited Destroy;
+end;
+
+procedure TtgSendPhotoArgument.SetReplyToMessageId(const Value: Int64);
+begin
+  fReplyToMessageId := Value;
 end;
 
 { TtgSendDocumentArgument }
@@ -1566,6 +1602,39 @@ begin
 end;
 
 destructor TtgMessageAbstract.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+{ TtgSendMediaAbstractArgument }
+
+constructor TtgSendMediaAbstractArgument.Create;
+begin
+  inherited Create;
+  fCaption := '';
+  fCaptionEntities := nil;
+end;
+
+destructor TtgSendMediaAbstractArgument.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+{ TtgSendAudioArgument }
+
+constructor TtgSendAudioArgument.Create;
+begin
+  inherited Create();
+  fAudio := TcaFileToSend.Empty;
+  fDuration := 0;
+  fPerformer := '';
+  fTitle := '';
+  fThumb := TcaFileToSend.Empty;
+end;
+
+destructor TtgSendAudioArgument.Destroy;
 begin
 
   inherited Destroy;

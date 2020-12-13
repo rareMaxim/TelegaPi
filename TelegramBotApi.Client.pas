@@ -224,7 +224,7 @@ end;
 
 function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
 begin
-  Result := InternalExecute<TtgMessageArgument, Int64>(ACopyMessageArgument);
+  Result := InternalExecute<TtgCopyMessageArgument, Int64>(ACopyMessageArgument);
 end;
 
 function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument: TtgEditMessageLiveLocationArgument)
