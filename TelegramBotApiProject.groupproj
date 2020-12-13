@@ -6,6 +6,9 @@
         <Projects Include="CloudAPI\CloudAPI.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="CloudAPI\Tests\CloudApiTest.dproj">
+            <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
+        </Projects>
         <Projects Include="TelegramBotApi.dproj">
             <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
         </Projects>
@@ -29,6 +32,15 @@
     <Target Name="CloudAPI:Make">
         <MSBuild Projects="CloudAPI\CloudAPI.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CloudApiTest" DependsOnTargets="CloudAPI">
+        <MSBuild Projects="CloudAPI\Tests\CloudApiTest.dproj"/>
+    </Target>
+    <Target Name="CloudApiTest:Clean" DependsOnTargets="CloudAPI:Clean">
+        <MSBuild Projects="CloudAPI\Tests\CloudApiTest.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CloudApiTest:Make" DependsOnTargets="CloudAPI:Make">
+        <MSBuild Projects="CloudAPI\Tests\CloudApiTest.dproj" Targets="Make"/>
+    </Target>
     <Target Name="TelegramBotApi" DependsOnTargets="CloudAPI">
         <MSBuild Projects="TelegramBotApi.dproj"/>
     </Target>
@@ -48,13 +60,13 @@
         <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;TelegramBotApi;TelegramBotApiTests"/>
+        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;TelegramBotApi:Make;TelegramBotApiTests:Make"/>
+        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -20,77 +20,189 @@ type
   /// </summary>
   TtgGetMeArgunentNew = class(TtgEmptyArgument);
 
+  TtgMessageAbstract = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    fChatId: TtgUserLink;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_notification')]
+    fDisableNotification: Boolean;
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read fChatId write fChatId;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification: Boolean read fDisableNotification write fDisableNotification;
+  end;
+
+  TtgSendMessageBase = class(TtgMessageAbstract)
+  private
+    [caName('parse_mode')]
+    [caDefaultValueString('')]
+    fParseMode: TtgParseMode;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    fReplyToMessageId: Int64;
+    [caName('allow_sending_without_reply')]
+    [caDefaultValueBoolean(False)]
+    fAllowSendingWithoutReply: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode: TtgParseMode read fParseMode write fParseMode;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId: Int64 read fReplyToMessageId write fReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply: Boolean read fAllowSendingWithoutReply write fAllowSendingWithoutReply;
+    constructor Create; override;
+    destructor Destroy; override;
+  end;
+
   [caName('sendMessage')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to send text messages.
   /// On success, the sent Message is returned.
   /// </summary>
-  TtgMessageArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
+  TtgMessageArgument = class(TtgSendMessageBase)
+  private
     [caName('text')]
     [caIsRequaired]
     [caDefaultValueString('')]
-    /// <summary>Text of the message to be sent, 1-4096 characters after entities
-    /// parsing</summary>
-    Text: string;
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
-    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-    /// fixed-width text or inline URLs in your bot's message.   </summary>
-    ParseMode: TtgParseMode;
-
+    fText: string;
+    [caName('entities')]
+    [caDefaultValueString('[]')]
+    fEntities: TArray<TtgMessageEntity>;
     [caDefaultValueBoolean(False)]
     [caName('disable_web_page_preview')]
+    fDisableWebPagePreview: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Text of the message to be sent, 1-4096 characters after entities
+    /// parsing</summary>
+    property Text: string read fText write fText;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode;
+    /// <summary>
+    /// List of special entities that appear in message text, which can be specified
+    /// instead of parse_mode
+    /// </summary>
+    property Entities: TArray<TtgMessageEntity> read fEntities write fEntities;
     /// <summary>Disables link previews for links in this message</summary>
-    DisableWebPagePreview: Boolean;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
+    property DisableWebPagePreview: Boolean read fDisableWebPagePreview write fDisableWebPagePreview;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
+    property DisableNotification;
     /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgMessageArgument; static;
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+    constructor Create; override;
+    destructor Destroy; override;
   end;
 
   [caName('forwardMessage')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to forward messages of any kind. On success, the sent
   /// Message is returned.</summary>
-  TtgForwardMessageArgument = record
-  public
-
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
+  TtgForwardMessageArgument = class(TtgMessageAbstract)
+  private
     [caName('from_chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the chat where the original message was sent (or
-    /// channel username in the format @channelusername)</summary>
-    FromChatId: TtgUserLink;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.</summary>
-    DisableNotification: Boolean;
-    /// <summary>Message identifier in the chat specified in from_chat_id</summary>
+    fFromChatId: TtgUserLink;
     [caName('message_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    MessageId: Int64;
-    class function Default: TtgForwardMessageArgument; static;
+    fMessageId: Int64;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Unique identifier for the chat where the original message was sent (or
+    /// channel username in the format @channelusername)</summary>
+    property FromChatId: TtgUserLink read fFromChatId write fFromChatId;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>Message identifier in the chat specified in from_chat_id</summary>
+    property MessageId: Int64 read fMessageId write fMessageId;
+    constructor Create; override;
+    destructor Destroy; override;
+  end;
+
+  [caName('copyMessage')]
+  [caParameterType(TcaParameterType.QueryString)]
+  /// <summary>Use this method to send text messages.
+  /// On success, the sent Message is returned.
+  /// </summary>
+  TtgCopyMessageArgument = class(TtgSendMessageBase)
+  private
+    [caName('from_chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    fFromChatId: TtgUserLink;
+    [caName('message_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    fMessageId: Int64;
+    [caName('caption')]
+    [caDefaultValueStringAttribute('')]
+    fCaption: string;
+    [caName('caption_entities')]
+    [caDefaultValueString('[]')]
+    fCaptionEntities: TArray<TtgMessageEntity>;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property FromChatId: TtgUserLink read fFromChatId write fFromChatId;
+    /// <summary>Message identifier in the chat specified in from_chat_id</summary>
+    property MessageId: Int64 read fMessageId write fMessageId;
+    /// <summary>New caption for media, 0-1024 characters after entities parsing. If
+    /// not specified, the original caption is kept
+    /// </summary>
+    property Caption: string read fCaption write fCaption;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities: TArray<TtgMessageEntity> read fCaptionEntities write fCaptionEntities;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
   end;
 
   [caName('sendPhoto')]
@@ -1109,27 +1221,21 @@ type
 
 implementation
 
-{ TtgMessageArgument }
-
-class function TtgMessageArgument.Default: TtgMessageArgument;
-begin
-  Result.ChatId := TtgUserLink.Empty;
-  Result.Text := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.DisableWebPagePreview := False;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
-  Result.ChatId := 0;
-end;
-
 { TtgForwardMessageArgument }
 
-class function TtgForwardMessageArgument.Default: TtgForwardMessageArgument;
+constructor TtgForwardMessageArgument.Create;
 begin
-  Result.ChatId := TtgUserLink.Empty;
-  Result.FromChatId := TtgUserLink.Empty;
-  Result.DisableNotification := False;
-  Result.MessageId := 0;
+  inherited Create;
+  fChatId := TtgUserLink.Empty;
+  fFromChatId := TtgUserLink.Empty;
+  fDisableNotification := False;
+  fMessageId := 0;
+end;
+
+destructor TtgForwardMessageArgument.Destroy;
+begin
+
+  inherited;
 end;
 
 { TtgSendPhotoArgument }
@@ -1399,6 +1505,70 @@ end;
 class function TtgExportChatInviteLinkArgument.Default: TtgExportChatInviteLinkArgument;
 begin
   Result.ChatId := TtgUserLink.Empty;
+end;
+
+{ TtgMessageArgument }
+
+constructor TtgMessageArgument.Create;
+begin
+  inherited Create();
+  fText := '';
+  fEntities := nil;
+  fDisableWebPagePreview := False;
+end;
+
+destructor TtgMessageArgument.Destroy;
+begin
+
+  inherited;
+end;
+
+{ TtgSendMessageBase }
+
+constructor TtgSendMessageBase.Create;
+begin
+  inherited Create;
+  fParseMode := TtgParseMode.Default;
+  fReplyToMessageId := 0;
+  fAllowSendingWithoutReply := False;
+end;
+
+destructor TtgSendMessageBase.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+{ TtgCopyMessageArgument }
+
+constructor TtgCopyMessageArgument.Create;
+begin
+  inherited Create();
+  fFromChatId := TtgUserLink.Empty;
+  fMessageId := 0;
+  fCaption := '';
+  fCaptionEntities := nil;
+end;
+
+destructor TtgCopyMessageArgument.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+{ TtgMessageAbstract }
+
+constructor TtgMessageAbstract.Create;
+begin
+  inherited Create();
+  fChatId := TtgUserLink.Empty;
+  fDisableNotification := False;
+end;
+
+destructor TtgMessageAbstract.Destroy;
+begin
+
+  inherited Destroy;
 end;
 
 end.

@@ -8,11 +8,11 @@
 uses
   FastMM5,
   System.SysUtils,
-{$IFDEF TESTINSIGHT}
+  {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-{$ELSE}
+  {$ELSE}
   DUnitX.Loggers.Console,
-{$ENDIF }
+  {$ENDIF }
   DUnitX.TestFramework,
   TelegramBotApi.Client in '..\TelegramBotApi.Client.pas',
   TelegramBotApi.CloudAPI.Authenticator in '..\TelegramBotApi.CloudAPI.Authenticator.pas',
@@ -20,8 +20,8 @@ uses
   Test.Data in 'Integ\Framework\Test.Data.pas',
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
-  AnonymousPollTests in 'Integ\Pools\AnonymousPollTests.pas',
-  Test.Config in 'Integ\Framework\Test.Config.pas';
+  Test.Config in 'Integ\Framework\Test.Config.pas',
+  TextMessageTests in 'Integ\Sending Messages\TextMessageTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

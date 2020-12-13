@@ -16,6 +16,7 @@ type
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
+    FAutoFreeRequestArgument: Boolean;
     function GetBotToken: string;
     procedure SetBotToken(const Value: string);
   protected
@@ -175,6 +176,7 @@ type
     destructor Destroy; override;
     property BotToken: string read GetBotToken write SetBotToken;
     property CloudApi: TCloudApiClient read FCloudApi write FCloudApi;
+    property AutoFreeRequestArgument: Boolean read FAutoFreeRequestArgument write FAutoFreeRequestArgument;
   end;
 
 implementation
@@ -195,6 +197,7 @@ begin
   FCloudApi.HttpClient.SecureProtocols := [THTTPSecureProtocol.TLS12];
   TtgConverters.TelegramConverter;
   FCloudApi.BaseUrl := 'https://api.telegram.org/bot{token}';
+  FAutoFreeRequestArgument := False;
 end;
 
 constructor TTelegramBotApi.Create(const AToken: string);
@@ -285,7 +288,7 @@ function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgumen
 var
   LReq: IcaRequest;
 begin
-  LReq := TcaRequestArgument.ObjToRequest<TArgument>(AArgument);
+  LReq := TcaRequestArgument.Current.ObjToRequest<TArgument>(AArgument);
   Result := InternalExecute<TResult>(LReq);
 end;
 
@@ -302,7 +305,7 @@ function TTelegramBotApi.InternalExecuteCustom<TArgument, TResult>(AArgument: TA
 var
   LReq: IcaRequest;
 begin
-  LReq := TcaRequestArgument.ObjToRequest<TArgument>(AArgument);
+  LReq := TcaRequestArgument.Current.ObjToRequest<TArgument>(AArgument);
   Result := InternalExecuteCustom<TResult>(LReq);
 end;
 
@@ -355,7 +358,7 @@ var
   LRequest: IcaRequest;
   LMedia: TtgInputMedia;
 begin
-  LRequest := TcaRequestArgument.ObjToRequest<TtgSendMediaGroupArgument>(ASendMediaGroupArgument);
+  LRequest := TcaRequestArgument.Current.ObjToRequest<TtgSendMediaGroupArgument>(ASendMediaGroupArgument);
   for LMedia in ASendMediaGroupArgument.Media do
   begin
     case LMedia.GetFileToSend.&Type of

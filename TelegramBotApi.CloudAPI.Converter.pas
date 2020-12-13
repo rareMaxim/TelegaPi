@@ -30,7 +30,7 @@ uses
 
 class procedure TtgConverters.TtgAllowedUpdates;
 begin
-  TcaRequestArgument.RegisterConverter<TAllowedUpdates>(
+  TcaRequestArgument.Current.RegisterConverter<TAllowedUpdates>(
     function(AValue: TValue): string
     begin
       Result := AValue.AsType<TAllowedUpdates>.ToString;
@@ -39,7 +39,7 @@ end;
 
 class procedure TtgConverters.TArrayTcaFileToSend;
 begin
-  TcaRequestArgument.RegisterConverter < TArray < TcaFileToSend >> (
+  TcaRequestArgument.Current.RegisterConverter < TArray < TcaFileToSend >> (
     function(AValue: TValue): string
     var
       LArray: TArray<TcaFileToSend>;
@@ -57,7 +57,7 @@ end;
 
 class procedure TtgConverters.TArrayTtgInputMedia;
 begin
-  TcaRequestArgument.RegisterConverter < TArray < TtgInputMedia >> (
+  TcaRequestArgument.Current.RegisterConverter < TArray < TtgInputMedia >> (
     function(AValue: TValue): string
     var
       LArray: TArray<TtgInputMedia>;
@@ -84,10 +84,13 @@ end;
 
 class procedure TtgConverters.TtgParseModeConverter;
 begin
-  TcaRequestArgument.RegisterConverter<TtgParseMode>(
+  TcaRequestArgument.Current.RegisterConverter<TtgParseMode>(
     function(AValue: TValue): string
+    var
+      lVal: TtgParseMode;
     begin
-      case AValue.AsType<TtgParseMode> of
+      lVal := AValue.AsType<TtgParseMode>;
+      case lVal of
         TtgParseMode.Default:
           Result := '';
         TtgParseMode.Markdown:
@@ -98,7 +101,7 @@ begin
           Result := 'HTML';
       else
         begin
-          raise Exception.Create('Error Message');
+          raise Exception.Create(TRttiEnumerationType.GetName(lVal));
         end;
       end;
     end);
@@ -106,7 +109,7 @@ end;
 
 class procedure TtgConverters.TtgUserLinkConverter;
 begin
-  TcaRequestArgument.RegisterConverter<TtgUserLink>(
+  TcaRequestArgument.Current.RegisterConverter<TtgUserLink>(
     function(AValue: TValue): string
     begin
       Result := AValue.AsType<TtgUserLink>.ToString;
