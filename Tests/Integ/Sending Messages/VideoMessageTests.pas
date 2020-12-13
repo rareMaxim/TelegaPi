@@ -44,30 +44,34 @@ var
   LResult: ItgResponse<TtgMessage>;
   LMessage: TtgMessage;
 begin
-  LVideoArgument := TtgSendVideoArgument.Default;
-  LVideoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LVideoArgument.Video := TtgConst.PathToFile.Videos.MoonLanding;
-  LVideoArgument.Duration := 104;
-  LVideoArgument.Width := 320;
-  LVideoArgument.Height := 240;
-  LVideoArgument.Caption := 'Moon Landing';
-  LResult := Bot.SendVideo(LVideoArgument);
-  Assert.AreEqual(True, LResult.Ok, LResult.Description);
-  LMessage := LResult.Result;
-  Assert.AreEqual(TtgMessageType.Video, LMessage.&Type);
-  Assert.AreEqual(LVideoArgument.Caption, LMessage.Caption);
-  Assert.IsNotEmpty(LMessage.Video.FileId);
-  Assert.IsNotEmpty(LMessage.Video.FileUniqueId);
-  Assert.AreEqual(LVideoArgument.Duration, LMessage.Video.Duration);
-  Assert.AreEqual(LVideoArgument.Width, LMessage.Video.Width);
-  Assert.AreEqual(LVideoArgument.Height, LMessage.Video.Height);
-  Assert.AreEqual('video/mp4', LMessage.Video.MimeType);
-  Assert.IsNotEmpty(LMessage.Video.Thumb.FileId);
-  Assert.IsNotEmpty(LMessage.Video.Thumb.FileUniqueId);
-  Assert.IsTrue(LMessage.Video.Thumb.FileSize > 200);
-  Assert.AreEqual(LVideoArgument.Width, LMessage.Video.Thumb.Width);
-  Assert.AreEqual(LVideoArgument.Height, LMessage.Video.Thumb.Height);
-  TgAssert.InRange(LMessage.Video.Thumb.FileSize, 600, 900);
+  LVideoArgument := TtgSendVideoArgument.Create;
+  try
+    LVideoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LVideoArgument.Video := TtgConst.PathToFile.Videos.MoonLanding;
+    LVideoArgument.Duration := 104;
+    LVideoArgument.Width := 320;
+    LVideoArgument.Height := 240;
+    LVideoArgument.Caption := 'Moon Landing';
+    LResult := Bot.SendVideo(LVideoArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(TtgMessageType.Video, LMessage.&Type);
+    Assert.AreEqual(LVideoArgument.Caption, LMessage.Caption);
+    Assert.IsNotEmpty(LMessage.Video.FileId);
+    Assert.IsNotEmpty(LMessage.Video.FileUniqueId);
+    Assert.AreEqual(LVideoArgument.Duration, LMessage.Video.Duration);
+    Assert.AreEqual(LVideoArgument.Width, LMessage.Video.Width);
+    Assert.AreEqual(LVideoArgument.Height, LMessage.Video.Height);
+    Assert.AreEqual('video/mp4', LMessage.Video.MimeType);
+    Assert.IsNotEmpty(LMessage.Video.Thumb.FileId);
+    Assert.IsNotEmpty(LMessage.Video.Thumb.FileUniqueId);
+    Assert.IsTrue(LMessage.Video.Thumb.FileSize > 200);
+    Assert.AreEqual(LVideoArgument.Width, LMessage.Video.Thumb.Width);
+    Assert.AreEqual(LVideoArgument.Height, LMessage.Video.Thumb.Height);
+    TgAssert.InRange(LMessage.Video.Thumb.FileSize, 600, 900);
+  finally
+    LVideoArgument.free;
+  end;
 end;
 
 procedure TSendingVideoMessageTests.Should_Send_Video_Note;
@@ -123,19 +127,23 @@ var
   LResult: ItgResponse<TtgMessage>;
   LMessage: TtgMessage;
 begin
-  LVideoArgument := TtgSendVideoArgument.Default;
-  LVideoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
-  LVideoArgument.Video := TtgConst.PathToFile.Videos.MoonLanding;
-  LVideoArgument.Thumb := TtgConst.PathToFile.Thumbnail.TheAbilityToBreak;
-  LResult := Bot.SendVideo(LVideoArgument);
-  Assert.AreEqual(True, LResult.Ok, LResult.Description);
-  LMessage := LResult.Result;
-  Assert.IsNotNull(LMessage.Video.Thumb);
-  Assert.IsNotEmpty(LMessage.Video.Thumb.FileId);
-  Assert.IsNotEmpty(LMessage.Video.Thumb.FileUniqueId);
-  Assert.AreEqual(Int64(320), LMessage.Video.Thumb.Width);
-  Assert.AreEqual(Int64(240), LMessage.Video.Thumb.Height);
-  TgAssert.InRange(LMessage.Video.Thumb.FileSize, 600, 900);
+  LVideoArgument := TtgSendVideoArgument.Create;
+  try
+    LVideoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LVideoArgument.Video := TtgConst.PathToFile.Videos.MoonLanding;
+    LVideoArgument.Thumb := TtgConst.PathToFile.Thumbnail.TheAbilityToBreak;
+    LResult := Bot.SendVideo(LVideoArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.IsNotNull(LMessage.Video.Thumb);
+    Assert.IsNotEmpty(LMessage.Video.Thumb.FileId);
+    Assert.IsNotEmpty(LMessage.Video.Thumb.FileUniqueId);
+    Assert.AreEqual(Int64(320), LMessage.Video.Thumb.Width);
+    Assert.AreEqual(Int64(240), LMessage.Video.Thumb.Height);
+    TgAssert.InRange(LMessage.Video.Thumb.FileSize, 600, 900);
+  finally
+    LVideoArgument.free;
+  end;
 end;
 
 end.

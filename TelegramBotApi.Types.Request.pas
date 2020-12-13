@@ -287,6 +287,24 @@ type
     property AllowSendingWithoutReply;
   end;
 
+  TtgSendMediaWithThumbAbstractArgument = class(TtgSendMediaAbstractArgument)
+  private
+    [caName('thumb')]
+    [caDefaultValueStringAttribute('')]
+    fThumb: TcaFileToSend;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>Thumbnail of the file sent; can be ignored if thumbnail generation for
+    /// the file is supported server-side. The thumbnail should be in JPEG format and
+    /// less than 200 kB in size. A thumbnail‘s width and height should not exceed 320.
+    /// Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t
+    /// be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
+    /// under file_attach_name. More info on Sending Files »</summary>
+    property Thumb: TcaFileToSend read fThumb write fThumb;
+  end;
+
   [caName('sendAudio')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.QueryString)]
@@ -296,7 +314,7 @@ type
   /// of up to 50 MB in size, this limit may be changed in the future.
   ///
   /// For sending voice messages, use the sendVoice method instead.</summary>
-  TtgSendAudioArgument = class(TtgSendMediaAbstractArgument)
+  TtgSendAudioArgument = class(TtgSendMediaWithThumbAbstractArgument)
   private
     [caName('audio')]
     [caIsRequaired]
@@ -311,9 +329,6 @@ type
     [caName('title')]
     [caDefaultValueString('')]
     fTitle: string;
-    [caName('thumb')]
-    [caDefaultValueStringAttribute('')]
-    fThumb: TcaFileToSend;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -350,7 +365,7 @@ type
     /// be reused and can be only uploaded as a new file, so you can pass “attach:
     /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
     /// under file_attach_name. More info on Sending Files »</summary>
-    property Thumb: TcaFileToSend read fThumb write fThumb;
+    property Thumb;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
@@ -371,15 +386,12 @@ type
   [caName('sendDocument')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.QueryString)]
-  TtgSendDocumentArgument = class(TtgSendMediaAbstractArgument)
+  TtgSendDocumentArgument = class(TtgSendMediaWithThumbAbstractArgument)
   private
     [caName('document')]
     [caIsRequaired]
     [caDefaultValueString('')]
     fDocument: TcaFileToSend;
-    [caName('thumb')]
-    [caDefaultValueString('')]
-    fThumb: TcaFileToSend;
     [caName('disable_content_type_detection')]
     [caDefaultValueBoolean(False)]
     FDisableContentTypeDetection: Boolean;
@@ -403,7 +415,7 @@ type
     /// be reused and can be only uploaded as a new file, so you can pass “attach:
     /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
     /// under file_attach_name. More info on Sending Files »</summary>
-    property Thumb: TcaFileToSend read fThumb write fThumb;
+    property Thumb;
     /// <summary>Document caption (may also be used when resending documents by file_id)
     /// , 0-1024 characters after entities parsing</summary>
     property Caption;
@@ -440,36 +452,41 @@ type
   [caName('sendVideo')]
   [caMethod(TcaMethod.POST)]
   [caParameterType(TcaParameterType.GetOrPost)]
-  TtgSendVideoArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
+  TtgSendVideoArgument = class(TtgSendMediaWithThumbAbstractArgument)
+  private
     [caName('video')]
     [caIsRequaired]
     [caDefaultValueString('')]
+    fVideo: TcaFileToSend;
+    [caName('duration')]
+    [caDefaultValueInt64(0)]
+    fDuration: Int64;
+    [caName('width')]
+    [caDefaultValueInt64(0)]
+    fWidth: Int64;
+    [caName('height')]
+    [caDefaultValueInt64(0)]
+    fHeight: Int64;
+    [caName('supports_streaming')]
+    [caDefaultValueBoolean(False)]
+    fSupportsStreaming: Boolean;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
     /// <summary>Audio file to send. Pass a file_id as String to send an audio file
     /// that exists on the Telegram servers (recommended), pass an HTTP URL as a String
     /// for Telegram to get an audio file from the Internet, or upload a new one using
     /// multipart/form-data. More info on Sending Files »</summary>
-    Video: TcaFileToSend;
-    [caName('duration')]
-    [caDefaultValueInt64(0)]
+    property Video: TcaFileToSend read fVideo write fVideo;
     /// <summary>Duration of sent video in seconds</summary>
-    Duration: Int64;
-    [caName('width')]
-    [caDefaultValueInt64(0)]
+    property Duration: Int64 read fDuration write fDuration;
     /// <summary>Video width</summary>
-    Width: Int64;
-    [caName('height')]
-    [caDefaultValueInt64(0)]
+    property Width: Int64 read fWidth write fWidth;
     /// <summary>Video height</summary>
-    Height: Int64;
-    [caName('thumb')]
-    [caDefaultValueString('')]
+    property Height: Int64 read fHeight write fHeight;
     /// <summary>Thumbnail of the file sent; can be ignored if thumbnail generation for
     /// the file is supported server-side. The thumbnail should be in JPEG format and
     /// less than 200 kB in size. A thumbnail‘s width and height should not exceed 320.
@@ -477,31 +494,29 @@ type
     /// be reused and can be only uploaded as a new file, so you can pass “attach:
     /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
     /// under file_attach_name. More info on Sending Files »</summary>
-    Thumb: TcaFileToSend;
-    [caName('caption')]
-    [caDefaultValueString('')]
-    /// <summary> Video caption (may also be used when resending videos by file_id),
-    /// 0-1024 characters after entities parsing</summary>
-    Caption: string;
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
+    property Thumb;
+    /// <summary>Document caption (may also be used when resending documents by file_id)
+    /// , 0-1024 characters after entities parsing</summary>
+    property Caption;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in the media caption.</summary>
-    ParseMode: TtgParseMode;
-    [caName('supports_streaming')]
-    [caDefaultValueBoolean(False)]
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities;
     /// <summary>Pass True, if the uploaded video is suitable for streaming</summary>
-    SupportsStreaming: Boolean;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
+    property SupportsStreaming: Boolean read fSupportsStreaming write fSupportsStreaming;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
+    property DisableNotification;
     /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendVideoArgument; static;
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
   end;
 
   /// <summary>
@@ -1327,23 +1342,6 @@ begin
   inherited;
 end;
 
-{ TtgSendVideoArgument }
-
-class function TtgSendVideoArgument.Default: TtgSendVideoArgument;
-begin
-  Result.ChatId := 0;
-  Result.Video := TcaFileToSend.Empty;
-  Result.Duration := 0;
-  Result.Width := 0;
-  Result.Height := 0;
-  Result.Thumb := TcaFileToSend.Empty;
-  Result.Caption := '';
-  Result.ParseMode := TtgParseMode.Default;
-  Result.SupportsStreaming := False;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
-end;
-
 { TtgSendAnimationArgument }
 
 class function TtgSendAnimationArgument.Default: TtgSendAnimationArgument;
@@ -1643,13 +1641,46 @@ begin
   fDuration := 0;
   fPerformer := '';
   fTitle := '';
-  fThumb := TcaFileToSend.Empty;
+
 end;
 
 destructor TtgSendAudioArgument.Destroy;
 begin
 
   inherited Destroy;
+end;
+
+{ TtgSendVideoArgument }
+
+constructor TtgSendVideoArgument.Create;
+begin
+  inherited Create();
+  fVideo := TcaFileToSend.Empty;
+  fDuration := 0;
+  fWidth := 0;
+  fHeight := 0;
+  fCaption := '';
+  fSupportsStreaming := False;
+end;
+
+destructor TtgSendVideoArgument.Destroy;
+begin
+
+  inherited;
+end;
+
+{ TtgSendMediaWithThumbAbstractArgument }
+
+constructor TtgSendMediaWithThumbAbstractArgument.Create;
+begin
+  inherited Create();
+  fThumb := TcaFileToSend.Empty;
+end;
+
+destructor TtgSendMediaWithThumbAbstractArgument.Destroy;
+begin
+
+  inherited;
 end;
 
 end.
