@@ -341,12 +341,6 @@ type
     [caName('duration')]
     [caDefaultValueInt64Attribute(0)]
     fDuration: Int64;
-    [caName('performer')]
-    [caDefaultValueString('')]
-    fPerformer: string;
-    [caName('title')]
-    [caDefaultValueString('')]
-    fTitle: string;
   public
     constructor Create; override;
     destructor Destroy; override;

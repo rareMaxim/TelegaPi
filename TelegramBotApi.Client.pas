@@ -48,6 +48,14 @@ type
     /// </summary>
     function LogOut: ItgResponse<Boolean>;
     /// <summary>
+    /// Use this method to close the bot instance before moving it from one local
+    /// server to another. You need to delete the webhook before calling this method to
+    /// ensure that the bot isn't launched again after server restart. The method will
+    /// return error 429 in the first 10 minutes after the bot is launched. Returns
+    /// True on success. Requires no parameters.
+    /// </summary>
+    function Close: ItgResponse<Boolean>;
+    /// <summary>
     /// Use this method to send text messages. On success, the sent Message is returned.
     /// </summary>
     function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
@@ -229,6 +237,18 @@ destructor TTelegramBotApi.Destroy;
 begin
   FCloudApi.Free;
   inherited Destroy;
+end;
+
+function TTelegramBotApi.Close: ItgResponse<Boolean>;
+var
+  lClose: TtgCloseArgunent;
+begin
+  lClose := TtgCloseArgunent.Create;
+  try
+    Result := InternalExecute<TtgCloseArgunent, Boolean>(lClose);
+  finally
+    lClose.Free;
+  end;
 end;
 
 function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
