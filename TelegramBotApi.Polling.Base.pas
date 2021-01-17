@@ -23,7 +23,7 @@ type
     procedure Go(const AToken: string);
   public
     constructor Create;
-    procedure Start;
+    procedure Start; virtual;
     procedure Stop;
     destructor Destroy; override;
     property Bot: TTelegramBotApi read FBot write FBot;
@@ -92,10 +92,16 @@ begin
     Exit;
   FTask := TTask.Run(
     procedure
+    var
+      lWaitResult: TWaitResult;
     begin
-      while FEvent.WaitFor(FPollingInterval) = wrTimeout do
+      while True do
       begin
-        Go(FBot.BotToken);
+        lWaitResult := FEvent.WaitFor(FPollingInterval);
+        if lWaitResult = wrTimeout then
+          Go(FBot.BotToken)
+        else
+          Break;
       end;
     end)
 end;
