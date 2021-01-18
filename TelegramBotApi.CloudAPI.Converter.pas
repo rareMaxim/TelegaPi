@@ -10,6 +10,7 @@ type
     class procedure TtgAllowedUpdates;
     class procedure TArrayTcaFileToSend;
     class procedure TArrayTtgInputMedia;
+    class procedure TtgChatAction_;
   public
     class procedure TelegramConverter;
   end;
@@ -34,6 +35,15 @@ begin
     function(AValue: TValue): string
     begin
       Result := AValue.AsType<TAllowedUpdates>.ToString;
+    end);
+end;
+
+class procedure TtgConverters.TtgChatAction_;
+begin
+  TcaRequestArgument.Current.RegisterConverter<TtgChatAction>(
+    function(AValue: TValue): string
+    begin
+      Result := AValue.AsType<TtgChatAction>.ToString;
     end);
 end;
 
@@ -80,6 +90,7 @@ begin
   TtgAllowedUpdates;
   TArrayTcaFileToSend;
   TArrayTtgInputMedia;
+  TtgChatAction_;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;
