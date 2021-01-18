@@ -3,8 +3,8 @@ unit TelegramBotApi.Polling.Base;
 interface
 
 uses
+  System.Classes,
   System.SyncObjs,
-  System.Threading,
   TelegramBotApi.Client,
   TelegramBotApi.UpdateParser,
   TelegramBotApi.Types.Enums;
@@ -13,7 +13,7 @@ type
   TtgPollingBase = class(TTgBotUpdateParser)
   private
     FEvent: TEvent;
-    FTask: ITask;
+    fWorker: TThread;
     FBot: TTelegramBotApi;
     FMessageOffset: Int64;
     FAllowedUpdates: TAllowedUpdates;
@@ -36,7 +36,6 @@ type
 implementation
 
 uses
-  System.Classes,
   System.SysUtils,
   TelegramBotApi.Types,
   TelegramBotApi.Types.Request;
@@ -88,9 +87,9 @@ end;
 
 procedure TtgPollingBase.Start;
 begin
-  if FTask <> nil then
+  if Assigned(fWorker) then
     Exit;
-  FTask := TTask.Run(
+  fWorker := TThread.CreateAnonymousThread(
     procedure
     var
       lWaitResult: TWaitResult;
@@ -103,15 +102,17 @@ begin
         else
           Break;
       end;
-    end)
+    end);
+  fWorker.FreeOnTerminate := False;
+  fWorker.Start;
 end;
 
 procedure TtgPollingBase.Stop;
 begin
   FEvent.SetEvent;
-  if Assigned(FTask) then
-    TTask.WaitForAny([FTask]);
-  FTask := nil;
+  if Assigned(fWorker) then
+    fWorker.WaitFor;
+  FreeAndNil(fWorker);
 end;
 
 end.
