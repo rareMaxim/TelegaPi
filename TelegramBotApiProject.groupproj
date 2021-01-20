@@ -18,6 +18,9 @@
         <Projects Include="Demos\Echo\EchoDemo.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Demos\Pooling\Pooling.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -71,14 +74,23 @@
     <Target Name="EchoDemo:Make">
         <MSBuild Projects="Demos\Echo\EchoDemo.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Pooling">
+        <MSBuild Projects="Demos\Pooling\Pooling.dproj"/>
+    </Target>
+    <Target Name="Pooling:Clean">
+        <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Pooling:Make">
+        <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo"/>
+        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo;Pooling"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean;Pooling:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make"/>
+        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make;Pooling:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

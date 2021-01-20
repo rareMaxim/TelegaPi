@@ -6,7 +6,8 @@ uses
   CloudAPI.Attributes,
   CloudAPI.Types,
   TelegramBotApi.Types,
-  TelegramBotApi.Types.Enums;
+  TelegramBotApi.Types.Enums,
+  TelegramBotApi.Types.Keyboards;
 
 type
   TtgEmptyArgument = class(TInterfacedObject);
@@ -48,15 +49,19 @@ type
     [caDefaultValueBoolean(False)]
     [caName('disable_notification')]
     fDisableNotification: Boolean;
+    [caName('reply_markup')]
+    fReplyMarkup: ItgReplyMarkup;
   public
     constructor Create; virtual;
     destructor Destroy; override;
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId: TtgUserLink read fChatId write fChatId;
+
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification: Boolean read fDisableNotification write fDisableNotification;
+    property ReplyMarkup: ItgReplyMarkup read fReplyMarkup write fReplyMarkup;
   end;
 
   TtgSendMessageBase = class(TtgMessageAbstract)
@@ -1243,24 +1248,27 @@ type
   /// We only recommend using this method when a response from the bot will take a
   /// noticeable amount of time to arrive.
   /// </remarks>
-  TtgSendChatActionArgument = record
-  public
+  TtgSendChatActionArgument = class
+  private
     [caName('chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
+    fChatId: TtgUserLink;
+    [caName('action')]
+    [caDefaultValueString('')]
+    [caIsRequaired]
+    fAction: TtgChatAction;
+  public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
-    /// <summary> ype of action to broadcast. Choose one, depending on what the user is
+    property ChatId: TtgUserLink read fChatId write fChatId;
+    /// <summary> Type of action to broadcast. Choose one, depending on what the user is
     /// about to receive: typing for text messages, upload_photo for photos,
     /// record_video or upload_video for videos, record_audio or upload_audio for audio
     /// files, upload_document for general files, find_location for location data,
     /// record_video_note or upload_video_note for video notes.</summary>
-    [caName('action')]
-    [caDefaultValueString('')]
-    [caIsRequaired]
-    Action: TtgChatAction;
-    class function Default: TtgSendChatActionArgument; static;
+    property Action: TtgChatAction read fAction write fAction;
+    constructor Create(AChatId: TtgUserLink; AAction: TtgChatAction = TtgChatAction.Typing);
   end;
 
 implementation
@@ -1496,10 +1504,10 @@ end;
 
 { TtgSendChatActionArgument }
 
-class function TtgSendChatActionArgument.Default: TtgSendChatActionArgument;
+constructor TtgSendChatActionArgument.Create(AChatId: TtgUserLink; AAction: TtgChatAction = TtgChatAction.Typing);
 begin
-  Result.ChatId := TtgUserLink.Empty;
-  Result.Action := TtgChatAction.Typing;
+  fChatId := AChatId;
+  fAction := AAction;
 end;
 
 { TtgExportChatInviteLinkArgument }
@@ -1565,6 +1573,7 @@ begin
   inherited Create();
   fChatId := TtgUserLink.Empty;
   fDisableNotification := False;
+  fReplyMarkup := nil;
 end;
 
 destructor TtgMessageAbstract.Destroy;

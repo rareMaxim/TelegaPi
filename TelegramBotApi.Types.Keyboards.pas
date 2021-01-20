@@ -47,6 +47,7 @@ type
     FRequestLocation: Boolean;
     [JsonName('request_poll')]
     FRequestPoll: TtgKeyboardButtonPollType;
+    constructor Create;
   public
     /// <summary>
     /// Text of the button. If none of the optional fields are used, it will be sent as
@@ -70,11 +71,15 @@ type
     property RequestPoll: TtgKeyboardButtonPollType read FRequestPoll write FRequestPoll;
   end;
 
+  ItgReplyMarkup = interface
+    ['{D1ED8610-587B-4A46-933B-113DDFECC7B9}']
+  end;
+
   /// <summary>
   /// This object represents a custom keyboard with reply options (see Introduction
   /// to bots for details and examples).
   /// </summary>
-  TtgReplyKeyboardMarkup = class
+  TtgReplyKeyboardMarkup = class(TInterfacedObject, ItgReplyMarkup)
   private
     [JsonName('keyboard')]
     FKeyboard: TArray<TArray<TtgKeyboardButton>>;
@@ -328,5 +333,14 @@ type
   end;
 
 implementation
+
+{ TtgKeyboardButton }
+
+constructor TtgKeyboardButton.Create;
+begin
+  FText := '';
+  FRequestContact := False;
+  FRequestLocation := False;
+end;
 
 end.

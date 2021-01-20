@@ -7,10 +7,11 @@ type
   private
     class procedure TtgUserLinkConverter;
     class procedure TtgParseModeConverter;
-    class procedure TtgAllowedUpdates;
-    class procedure TArrayTcaFileToSend;
-    class procedure TArrayTtgInputMedia;
-    class procedure TtgChatAction_;
+    class procedure TtgAllowedUpdatesConverter;
+    class procedure TArrayTcaFileToSendConverter;
+    class procedure TArrayTtgInputMediaConverter;
+    class procedure TtgChatActionConverter;
+    class procedure ItgReplyMarkupConverter;
   public
     class procedure TelegramConverter;
   end;
@@ -26,10 +27,10 @@ uses
   System.Rtti,
   TelegramBotApi.Types,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Helpers;
+  TelegramBotApi.Types.Helpers, TelegramBotApi.Types.Keyboards;
 { TtgConverters }
 
-class procedure TtgConverters.TtgAllowedUpdates;
+class procedure TtgConverters.TtgAllowedUpdatesConverter;
 begin
   TcaRequestArgument.Current.RegisterConverter<TAllowedUpdates>(
     function(AValue: TValue): string
@@ -38,7 +39,7 @@ begin
     end);
 end;
 
-class procedure TtgConverters.TtgChatAction_;
+class procedure TtgConverters.TtgChatActionConverter;
 begin
   TcaRequestArgument.Current.RegisterConverter<TtgChatAction>(
     function(AValue: TValue): string
@@ -47,7 +48,26 @@ begin
     end);
 end;
 
-class procedure TtgConverters.TArrayTcaFileToSend;
+class procedure TtgConverters.ItgReplyMarkupConverter;
+begin
+  TcaRequestArgument.Current.RegisterConverter<ItgReplyMarkup>(
+    function(AValue: TValue): string
+    var
+      lValue: TInterfacedObject;
+      lCA: TCloudApiClientBase;
+    begin
+
+      lValue := TInterfacedObject(AValue.AsInterface);
+      lCA := TCloudApiClientBase.Create;
+      try
+        Result := lCA.Serializer.Serialize<TObject>(lValue);
+      finally
+        lCA.Free;
+      end;
+    end);
+end;
+
+class procedure TtgConverters.TArrayTcaFileToSendConverter;
 begin
   TcaRequestArgument.Current.RegisterConverter < TArray < TcaFileToSend >> (
     function(AValue: TValue): string
@@ -65,7 +85,7 @@ begin
     end);
 end;
 
-class procedure TtgConverters.TArrayTtgInputMedia;
+class procedure TtgConverters.TArrayTtgInputMediaConverter;
 begin
   TcaRequestArgument.Current.RegisterConverter < TArray < TtgInputMedia >> (
     function(AValue: TValue): string
@@ -87,10 +107,11 @@ class procedure TtgConverters.TelegramConverter;
 begin
   TtgUserLinkConverter;
   TtgParseModeConverter;
-  TtgAllowedUpdates;
-  TArrayTcaFileToSend;
-  TArrayTtgInputMedia;
-  TtgChatAction_;
+  TtgAllowedUpdatesConverter;
+  TArrayTcaFileToSendConverter;
+  TArrayTtgInputMediaConverter;
+  TtgChatActionConverter;
+  ItgReplyMarkupConverter;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;

@@ -11,7 +11,7 @@ uses
   TelegramBotApi.Polling.Console,
   System.SysUtils,
   System.Rtti,
-  Winapi.Windows;
+  Winapi.Windows, TelegramBotApi.Types.Keyboards;
 
 type
   TDemoPooling = class
@@ -25,6 +25,7 @@ type
     procedure SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
     procedure DoReadMessage(AMsg: TtgMessage);
     procedure SendFile(AMsg: TtgMessage);
+    procedure SendReplyKeyboard(AMsg: TtgMessage);
   public
     procedure Main;
     constructor Create;
@@ -59,9 +60,13 @@ begin
   if lAction = '/photo' then
   begin
     SendFile(AMsg);
-  end;
-
-  SendTextMessage(AMsg.Chat.ID, AMsg.Text);
+  end
+  else if lAction = '/keyboard' then
+  begin
+    SendReplyKeyboard(AMsg);
+  end
+  else
+    SendTextMessage(AMsg.Chat.ID, AMsg.Text);
 end;
 
 procedure TDemoPooling.Main;
@@ -95,6 +100,28 @@ begin
     fBot.SendPhoto(lSendPhotoArg);
   finally
     lSendPhotoArg.Free;
+  end;
+end;
+
+procedure TDemoPooling.SendReplyKeyboard(AMsg: TtgMessage);
+var
+  lKB: TtgReplyKeyboardMarkup;
+  lBtn: TtgKeyboardButton;
+  lMsg: TtgMessageArgument;
+begin
+  lMsg := TtgMessageArgument.Create;
+  lKB := TtgReplyKeyboardMarkup.Create;
+  lBtn := TtgKeyboardButton.Create;
+  try
+    lBtn.Text := 'Sample button';
+    lKB.Keyboard := [[lBtn]];
+    lMsg.ChatId := AMsg.Chat.ID;
+    lMsg.Text := 'Choose';
+    lMsg.ReplyMarkup := lKB;
+    fBot.SendMessage(lMsg);
+  finally
+    lMsg.Free;
+    lKB.Free;
   end;
 end;
 
