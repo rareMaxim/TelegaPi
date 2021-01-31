@@ -337,7 +337,8 @@ var
 begin
   LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (ARequest);
   Result := LCloudResponse.Data;
-  Result.CloudResponse := LCloudResponse;
+  if Assigned(Result) then
+    Result.CloudResponse := LCloudResponse;
 end;
 
 function TTelegramBotApi.InternalExecuteCustom<TArgument, TResult>(AArgument: TArgument): TResult;
