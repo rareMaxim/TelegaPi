@@ -1037,6 +1037,13 @@ type
     [caName('certificate')]
     [caDefaultValueString('')]
     Certificate: TcaFileToSend;
+    /// <summary>
+    /// The fixed IP address which will be used to send webhook requests instead of the
+    /// IP address resolved through DNS
+    /// </summary>
+    [caName('ip_address')]
+    [caDefaultValueString('')]
+    IpAddress: string;
     /// <summary> Maximum allowed number of simultaneous HTTPS connections to the
     /// webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit
     /// the load on your bot's server, and higher values to increase your bot's
