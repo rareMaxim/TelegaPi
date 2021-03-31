@@ -29,7 +29,7 @@ type
     function GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>; overload;
     class function GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>; overload;
     function SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
-    function DeleteWebhook(): Boolean;
+    function DeleteWebhook(ADeleteWebhook: TtgDeleteWebhookArgument): Boolean;
     function GetWebhookInfo(): ItgResponse<TtgWebhookInfo>; overload;
 {$ENDREGION}
 {$REGION 'Available methods'}
@@ -228,9 +228,9 @@ begin
   BotToken := AToken;
 end;
 
-function TTelegramBotApi.DeleteWebhook: Boolean;
+function TTelegramBotApi.DeleteWebhook(ADeleteWebhook: TtgDeleteWebhookArgument): Boolean;
 begin
-  Result := InternalExecuteCustom<TtgDeleteWebhookArgument, Boolean>(TtgDeleteWebhookArgument.Default);
+  Result := InternalExecuteCustom<TtgDeleteWebhookArgument, Boolean>(ADeleteWebhook);
 end;
 
 destructor TTelegramBotApi.Destroy;

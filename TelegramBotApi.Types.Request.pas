@@ -1064,16 +1064,28 @@ type
     /// to the getUpdates, so unwanted updates may be received for a short period of
     /// time.</summary>
     AllowedUpdates: TAllowedUpdates;
+    /// <summary>
+    /// Pass True to drop all pending updates
+    /// </summary>
+    [caName('drop_pending_updates')]
+    [caDefaultValueBoolean(False)]
+    DropPendingUpdates: Boolean;
     class function Default: TtgSetWebhookArgument; static;
   end;
 
-  /// <summary> Use this method to remove webhook integration if you decide to switch
-  /// back to getUpdates. Returns True on success. Requires no parameters.
-  /// </summary>
+  /// <summary>Use this method to remove webhook integration if you decide to switch
+  /// back to getUpdates. Returns True on success.
+  /// <summary>
   [caName('deleteWebhook')]
   [caParameterType(TcaParameterType.QueryString)]
   TtgDeleteWebhookArgument = record
   public
+    /// <summary>
+    /// Pass True to drop all pending updates
+    /// </summary>
+    [caName('drop_pending_updates')]
+    [caDefaultValueBoolean(False)]
+    DropPendingUpdates: Boolean;
     class function Default: TtgDeleteWebhookArgument; static;
   end;
 
@@ -1433,15 +1445,17 @@ class function TtgSetWebhookArgument.Default: TtgSetWebhookArgument;
 begin
   Result.Url := '';
   Result.Certificate := TcaFileToSend.Empty;
+  Result.IpAddress := '';
   Result.MaxConnections := 40;
   Result.AllowedUpdates := UPDATES_ALLOWED_ALL;
+  Result.DropPendingUpdates := False;
 end;
 
 { TtgDeleteWebhookArgument }
 
 class function TtgDeleteWebhookArgument.Default: TtgDeleteWebhookArgument;
 begin
-
+  Result.DropPendingUpdates := False;
 end;
 
 { TtgGetWebhookInfoArgument }
