@@ -1380,6 +1380,8 @@ type
     FMaxConnections: Integer;
     [JsonName('allowed_updates')]
     FAllowedUpdates: TAllowedUpdates;
+    [JsonName('ip_address')]
+    FIpAddress: string;
   public
     /// <summary>
     /// Webhook URL, may be empty if webhook is not set up
@@ -1393,6 +1395,10 @@ type
     /// Number of updates awaiting delivery
     /// </summary>
     property PendingUpdateCount: Integer read FPendingUpdateCount write FPendingUpdateCount;
+    /// <summary>
+    /// Optional. Currently used webhook IP address
+    /// </summary>
+    property IpAddress: string read FIpAddress write FIpAddress;
     /// <summary>
     /// Optional. Unix time for the most recent error that happened when trying to
     /// deliver an update via webhook
