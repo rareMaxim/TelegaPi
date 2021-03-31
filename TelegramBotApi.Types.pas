@@ -1150,6 +1150,8 @@ type
   private
     [JsonName('thumb')]
     FThumb: TcaFileToSend;
+    [JsonName('disable_content_type_detection')]
+    FDisableContentTypeDetection: Boolean;
   public
     constructor Create(AMedia: TcaFileToSend; const ACaption: string = ''); override;
     /// <summary>
@@ -1183,6 +1185,12 @@ type
     /// options for more details.
     /// </summary>
     property ParseMode;
+    /// <summary>
+    /// Optional. Disables automatic server-side content type detection for files
+    /// uploaded using multipart/form-data. Always true, if the document is sent as
+    /// part of an album.
+    /// </summary>
+    property DisableContentTypeDetection: Boolean read FDisableContentTypeDetection write FDisableContentTypeDetection;
   end;
 
   /// <summary>
