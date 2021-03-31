@@ -92,6 +92,7 @@ type
     [JsonName('file_path')]
     FFilePath: string;
   public
+    function GetFileUrl(const AToken: string): string;
     /// <summary>
     /// Identifier for this file, which can be used to download or reuse the file
     /// </summary>
@@ -2820,6 +2821,13 @@ begin
   for I := Low(FOptions) to High(FOptions) do
     FOptions[I].Free;
   inherited;
+end;
+
+{ TtgFile }
+
+function TtgFile.GetFileUrl(const AToken: string): string;
+begin
+  Result := 'https://api.telegram.org/file/bot' + AToken + '/' + FilePath;
 end;
 
 end.
