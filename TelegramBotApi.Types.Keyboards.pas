@@ -3,7 +3,8 @@
 interface
 
 uses
-  System.JSON.Serializers;
+  System.JSON.Serializers,
+  TelegramBotApi.JSON.Converter;
 
 type
 {$REGION 'Standard keyboards'}
@@ -25,7 +26,15 @@ type
     property &Type: string read FType write FType;
   end;
 
-  /// <summary> This object represents one button of the reply keyboard. For simple
+  ItgKeyboardButton = interface
+    ['{0F806B29-6CC4-47E2-BB89-5B636886E16E}']
+    function GetText: string;
+    procedure SetText(const Value: string);
+    // public
+    property Text: string read GetText write SetText;
+  end;
+
+/// <summary> This object represents one button of the reply keyboard. For simple
   /// text buttons String can be used instead of this object to specify text of the
   /// button. Optional fields request_contact, request_location, and request_poll are
   /// mutually exclusive
@@ -37,7 +46,7 @@ type
   /// Note: request_poll option will only work in Telegram versions released after 23
   /// January, 2020. Older clients will display unsupported message.
   /// </remarks>
-  TtgKeyboardButton = class
+  TtgKeyboardButton = class(TInterfacedObject, ItgKeyboardButton)
   private
     [JsonName('text')]
     FText: string;
@@ -45,15 +54,16 @@ type
     FRequestContact: Boolean;
     [JsonName('request_location')]
     FRequestLocation: Boolean;
-    [JsonName('request_poll')]
-    FRequestPoll: TtgKeyboardButtonPollType;
+
     constructor Create;
+    function GetText: string;
+    procedure SetText(const Value: string);
   public
     /// <summary>
     /// Text of the button. If none of the optional fields are used, it will be sent as
     /// a message when the button is pressed
     /// </summary>
-    property Text: string read FText write FText;
+    property Text: string read GetText write SetText;
     /// <summary>
     /// Optional. If True, the user's phone number will be sent as a contact when the
     /// button is pressed. Available in private chats only
@@ -64,6 +74,13 @@ type
     /// pressed. Available in private chats only
     /// </summary>
     property RequestLocation: Boolean read FRequestLocation write FRequestLocation;
+  end;
+
+  TtgKeyboardButtonPoll = class(TtgKeyboardButton)
+  private
+    [JsonName('request_poll')]
+    FRequestPoll: TtgKeyboardButtonPollType;
+  public
     /// <summary>
     /// Optional. If specified, the user will be asked to create a poll and send it to
     /// the bot when the button is pressed. Available in private chats only
@@ -156,7 +173,7 @@ type
 {$ENDREGION}
 {$REGION 'Inline keyboards'}
 
-  /// <summary>
+/// <summary>
   /// This object represents a parameter of the inline keyboard button used to
   /// automatically authorize a user. Serves as a great replacement for the Telegram
   /// Login Widget when the user is coming from Telegram. All the user needs to do is
@@ -305,7 +322,7 @@ type
   end;
 {$ENDREGION}
 
-  /// <summary>
+/// <summary>
   /// Upon receiving a message with this object, Telegram clients will display a
   /// reply interface to the user (act as if the user has selected the bot's message
   /// and tapped 'Reply'). This can be extremely useful if you want to create
@@ -341,6 +358,16 @@ begin
   FText := '';
   FRequestContact := False;
   FRequestLocation := False;
+end;
+
+function TtgKeyboardButton.GetText: string;
+begin
+  Result := FText;
+end;
+
+procedure TtgKeyboardButton.SetText(const Value: string);
+begin
+  FText := Value;
 end;
 
 end.

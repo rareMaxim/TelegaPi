@@ -96,7 +96,6 @@ begin
     lSendPhotoArg.Photo := 'https://telegram.org/img/t_logo.png?1';
     lSendPhotoArg.Caption := 'Nice Picture';
     lSendPhotoArg.ChatId := AMsg.Chat.ID;
-
     fBot.SendPhoto(lSendPhotoArg);
   finally
     lSendPhotoArg.Free;
@@ -114,14 +113,14 @@ begin
   lBtn := TtgKeyboardButton.Create;
   try
     lBtn.Text := 'Sample button';
-    lKB.Keyboard := [[lBtn]];
+    lKB.Keyboard := [[lBtn, lBtn], [lBtn, lBtn, lBtn]];
     lMsg.ChatId := AMsg.Chat.ID;
     lMsg.Text := 'Choose';
     lMsg.ReplyMarkup := lKB;
     fBot.SendMessage(lMsg);
   finally
     lMsg.Free;
-    lKB.Free;
+  // lKB.Free;     <-- Autofree in TelegaPi core
   end;
 end;
 

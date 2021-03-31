@@ -19,7 +19,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="Demos\Pooling\Pooling.dproj">
-            <Dependencies/>
+            <Dependencies>TelegramBotApi.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -74,13 +74,13 @@
     <Target Name="EchoDemo:Make">
         <MSBuild Projects="Demos\Echo\EchoDemo.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Pooling">
+    <Target Name="Pooling" DependsOnTargets="TelegramBotApi">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj"/>
     </Target>
-    <Target Name="Pooling:Clean">
+    <Target Name="Pooling:Clean" DependsOnTargets="TelegramBotApi:Clean">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="Pooling:Make">
+    <Target Name="Pooling:Make" DependsOnTargets="TelegramBotApi:Make">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
