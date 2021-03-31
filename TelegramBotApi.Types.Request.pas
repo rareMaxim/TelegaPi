@@ -1290,6 +1290,42 @@ type
     constructor Create(AChatId: TtgUserLink; AAction: TtgChatAction = TtgChatAction.Typing);
   end;
 
+  /// <summary> Use this method to unban a previously kicked user in a supergroup or
+  /// channel. The user will not return to the group or channel automatically, but
+  /// will be able to join via link, etc. The bot must be an administrator for this
+  /// to work. By default, this method guarantees that after the call the user is not
+  /// a member of the chat, but will be able to join it. So if the user is a member
+  /// of the chat they will also be removed from the chat. If you don't want this,
+  /// use the parameter only_if_banned. Returns True on success.</summary>
+  [caName('unbanChatMember')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgUnbanChatMemberArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    fChatId: TtgUserLink;
+    [caName('user_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FUserID: Int64;
+    [caName('only_if_banned')]
+    [caDefaultValueBoolean(False)]
+    FOnlyIfBanned: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read fChatId write fChatId;
+   /// <summary> Unique identifier of the target user.</summary>
+    property UserId: Int64 read FUserID write FUserID;
+    /// <summary>
+    /// Do nothing if the user is not banned
+    /// </summary>
+    property OnlyIfBanned: Boolean read FOnlyIfBanned write FOnlyIfBanned;
+    constructor Create(AChatId: TtgUserLink; const AUserId: Int64; const AOnlyIfBanned: Boolean = True);
+  end;
+
 implementation
 
 { TtgForwardMessageArgument }
@@ -1681,6 +1717,16 @@ destructor TtgSendAnimationArgument.Destroy;
 begin
 
   inherited;
+end;
+
+{ TtgUnbanChatMemberArgument }
+
+constructor TtgUnbanChatMemberArgument.Create(AChatId: TtgUserLink; const AUserId: Int64;
+  const AOnlyIfBanned: Boolean = True);
+begin
+  fChatId := AChatId;
+  FUserID := AUserId;
+  FOnlyIfBanned := AOnlyIfBanned;
 end;
 
 end.

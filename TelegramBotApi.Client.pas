@@ -192,6 +192,8 @@ type
     /// </returns>
     function ExportChatInviteLink(AChatID: TtgExportChatInviteLinkArgument): ItgResponse<string>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
+    function UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
+
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -481,6 +483,11 @@ function TTelegramBotApi.StopMessageLiveLocation(AEditMessageLiveLocationArgumen
   : ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgStopMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument);
+end;
+
+function TTelegramBotApi.UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgUnbanChatMemberArgument, Boolean>(AUnbanChatMember);
 end;
 
 end.
