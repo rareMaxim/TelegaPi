@@ -256,7 +256,7 @@ type
     /// </summary>
     property Title: string read FTitle write FTitle;
     /// <summary>
-    /// Optional. Original animation filename as defined by sender
+    /// Optional. Original filename as defined by sender
     /// </summary>
     property Filename: string read FFilename write FFilename;
     /// <summary>
@@ -314,7 +314,7 @@ type
     /// </summary>
     property Thumb: TtgPhotosize read FThumb write FThumb;
     /// <summary>
-    /// Optional. Original animation filename as defined by sender
+    /// Optional. Original filename as defined by sender
     /// </summary>
     property Filename: string read FFilename write FFilename;
     /// <summary>
