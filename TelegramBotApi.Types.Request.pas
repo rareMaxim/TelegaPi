@@ -1349,6 +1349,34 @@ type
     constructor Create(AChatId: TtgUserLink; const AUserId: Int64; const AOnlyIfBanned: Boolean = True);
   end;
 
+  /// <summary>Use this method to remove a message from the list of pinned messages
+  /// in a chat. If the chat is not a private chat, the bot must be an administrator
+  /// in the chat for this to work and must have the 'can_pin_messages' admin right
+  /// in a supergroup or 'can_edit_messages' admin right in a channel. Returns True
+  /// on success.
+  /// </summary>
+  [caName('unpinChatMessage')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgUnpinChatMessageArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    fChatId: TtgUserLink;
+    [caName('message_id')]
+    [caDefaultValueInt64(0)]
+    fMessageId: Int64;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read fChatId write fChatId;
+    /// <summary>Identifier of a message to unpin. If not specified, the most recent
+    /// pinned message (by sending date) will be unpinned.</summary>
+    property MessageId: Int64 read fMessageId write fMessageId;
+    constructor Create(AChatId: TtgUserLink; const AMessageId: Int64 = 0);
+  end;
+
 implementation
 
 { TtgForwardMessageArgument }
@@ -1757,6 +1785,13 @@ end;
 constructor TtgGetFileArgument.Create(const AFileID: string);
 begin
   FFileId := AFileID;
+end;
+
+constructor TtgUnpinChatMessageArgument.Create(AChatId: TtgUserLink; const AMessageId: Int64 = 0);
+begin
+  inherited Create();
+  fChatId := AChatId;
+  fMessageId := AMessageId;
 end;
 
 end.

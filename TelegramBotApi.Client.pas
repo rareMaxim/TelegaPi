@@ -193,6 +193,14 @@ type
     function ExportChatInviteLink(AChatID: TtgExportChatInviteLinkArgument): ItgResponse<string>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
     function UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to remove a message from the list of pinned messages in a chat.
+    /// If the chat is not a private chat, the bot must be an administrator in the chat
+    /// for this to work and must have the 'can_pin_messages' admin right in a
+    /// supergroup or 'can_edit_messages' admin right in a channel. Returns True on
+    /// success.
+    /// </summary>
+    function UnpinChatMessage(AUnpinChatMessage: TtgUnpinChatMessageArgument): ItgResponse<Boolean>;
 
     /// <summary>
     /// Use this method to get basic info about a file and prepare it for downloading.
@@ -502,6 +510,11 @@ end;
 function TTelegramBotApi.UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
 begin
   Result := InternalExecute<TtgUnbanChatMemberArgument, Boolean>(AUnbanChatMember);
+end;
+
+function TTelegramBotApi.UnpinChatMessage(AUnpinChatMessage: TtgUnpinChatMessageArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgUnpinChatMessageArgument, Boolean>(AUnpinChatMessage);
 end;
 
 end.
