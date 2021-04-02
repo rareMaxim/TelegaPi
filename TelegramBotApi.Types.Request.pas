@@ -1377,6 +1377,28 @@ type
     constructor Create(AChatId: TtgUserLink; const AMessageId: Int64 = 0);
   end;
 
+/// <summary>Use this method to remove a message from the list of pinned messages
+  /// in a chat. If the chat is not a private chat, the bot must be an administrator
+  /// in the chat for this to work and must have the 'can_pin_messages' admin right
+  /// in a supergroup or 'can_edit_messages' admin right in a channel. Returns True
+  /// on success.
+  /// </summary>
+  [caName('unpinAllChatMessages')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgUnpinAllChatMessagesArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    fChatId: TtgUserLink;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read fChatId write fChatId;
+    constructor Create(AChatId: TtgUserLink);
+  end;
+
 implementation
 
 { TtgForwardMessageArgument }
@@ -1792,6 +1814,12 @@ begin
   inherited Create();
   fChatId := AChatId;
   fMessageId := AMessageId;
+end;
+
+constructor TtgUnpinAllChatMessagesArgument.Create(AChatId: TtgUserLink);
+begin
+  inherited Create();
+  fChatId := AChatId;
 end;
 
 end.
