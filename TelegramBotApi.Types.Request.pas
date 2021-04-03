@@ -45,53 +45,53 @@ type
     [caName('chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fChatId: TtgUserLink;
+    FChatId: TtgUserLink;
     [caDefaultValueBoolean(False)]
     [caName('disable_notification')]
-    fDisableNotification: Boolean;
+    FDisableNotification: Boolean;
     [caName('reply_markup')]
-    fReplyMarkup: ItgReplyMarkup;
+    FReplyMarkup: ItgReplyMarkup;
   public
     constructor Create; virtual;
     destructor Destroy; override;
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read fChatId write fChatId;
+    property ChatId: TtgUserLink read FChatId write FChatId;
 
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
-    property DisableNotification: Boolean read fDisableNotification write fDisableNotification;
-    property ReplyMarkup: ItgReplyMarkup read fReplyMarkup write fReplyMarkup;
+    property DisableNotification: Boolean read FDisableNotification write FDisableNotification;
+    property ReplyMarkup: ItgReplyMarkup read FReplyMarkup write FReplyMarkup;
   end;
 
   TtgSendMessageBase = class(TtgMessageAbstract)
   private
     [caName('parse_mode')]
     [caDefaultValueString('')]
-    fParseMode: TtgParseMode;
+    FParseMode: TtgParseMode;
     [caName('reply_to_message_id')]
     [caDefaultValueInt64(0)]
-    fReplyToMessageId: Int64;
+    FReplyToMessageId: Int64;
     [caName('allow_sending_without_reply')]
     [caDefaultValueBoolean(False)]
-    fAllowSendingWithoutReply: Boolean;
+    FAllowSendingWithoutReply: Boolean;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in your bot's message.   </summary>
-    property ParseMode: TtgParseMode read fParseMode write fParseMode;
+    property ParseMode: TtgParseMode read FParseMode write FParseMode;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
     /// <summary>If the message is a reply, ID of the original message</summary>
-    property ReplyToMessageId: Int64 read fReplyToMessageId write fReplyToMessageId;
+    property ReplyToMessageId: Int64 read FReplyToMessageId write FReplyToMessageId;
     /// <summary>
     /// Pass True, if the message should be sent even if the specified replied-to
     /// message is not found
     /// </summary>
-    property AllowSendingWithoutReply: Boolean read fAllowSendingWithoutReply write fAllowSendingWithoutReply;
+    property AllowSendingWithoutReply: Boolean read FAllowSendingWithoutReply write FAllowSendingWithoutReply;
     constructor Create; override;
     destructor Destroy; override;
   end;
@@ -106,20 +106,20 @@ type
     [caName('text')]
     [caIsRequaired]
     [caDefaultValueString('')]
-    fText: string;
+    FText: string;
     [caName('entities')]
     [caDefaultValueString('[]')]
-    fEntities: TArray<TtgMessageEntity>;
+    FEntities: TArray<TtgMessageEntity>;
     [caDefaultValueBoolean(False)]
     [caName('disable_web_page_preview')]
-    fDisableWebPagePreview: Boolean;
+    FDisableWebPagePreview: Boolean;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId;
     /// <summary>Text of the message to be sent, 1-4096 characters after entities
     /// parsing</summary>
-    property Text: string read fText write fText;
+    property Text: string read FText write FText;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in your bot's message.   </summary>
     property ParseMode;
@@ -127,9 +127,9 @@ type
     /// List of special entities that appear in message text, which can be specified
     /// instead of parse_mode
     /// </summary>
-    property Entities: TArray<TtgMessageEntity> read fEntities write fEntities;
+    property Entities: TArray<TtgMessageEntity> read FEntities write FEntities;
     /// <summary>Disables link previews for links in this message</summary>
-    property DisableWebPagePreview: Boolean read fDisableWebPagePreview write fDisableWebPagePreview;
+    property DisableWebPagePreview: Boolean read FDisableWebPagePreview write FDisableWebPagePreview;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
@@ -153,23 +153,23 @@ type
     [caName('from_chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fFromChatId: TtgUserLink;
+    FFromChatId: TtgUserLink;
     [caName('message_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fMessageId: Int64;
+    FMessageId: Int64;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId;
     /// <summary>Unique identifier for the chat where the original message was sent (or
     /// channel username in the format @channelusername)</summary>
-    property FromChatId: TtgUserLink read fFromChatId write fFromChatId;
+    property FromChatId: TtgUserLink read FFromChatId write FFromChatId;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
     /// <summary>Message identifier in the chat specified in from_chat_id</summary>
-    property MessageId: Int64 read fMessageId write fMessageId;
+    property MessageId: Int64 read FMessageId write FMessageId;
     constructor Create; override;
     destructor Destroy; override;
   end;
@@ -184,17 +184,17 @@ type
     [caName('from_chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fFromChatId: TtgUserLink;
+    FFromChatId: TtgUserLink;
     [caName('message_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fMessageId: Int64;
+    FMessageId: Int64;
     [caName('caption')]
     [caDefaultValueStringAttribute('')]
-    fCaption: string;
+    FCaption: string;
     [caName('caption_entities')]
     [caDefaultValueString('[]')]
-    fCaptionEntities: TArray<TtgMessageEntity>;
+    FCaptionEntities: TArray<TtgMessageEntity>;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -203,20 +203,20 @@ type
     property ChatId;
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property FromChatId: TtgUserLink read fFromChatId write fFromChatId;
+    property FromChatId: TtgUserLink read FFromChatId write FFromChatId;
     /// <summary>Message identifier in the chat specified in from_chat_id</summary>
-    property MessageId: Int64 read fMessageId write fMessageId;
+    property MessageId: Int64 read FMessageId write FMessageId;
     /// <summary>New caption for media, 0-1024 characters after entities parsing. If
     /// not specified, the original caption is kept
     /// </summary>
-    property Caption: string read fCaption write fCaption;
+    property Caption: string read FCaption write FCaption;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in your bot's message.   </summary>
     property ParseMode;
     /// <summary> List of special entities that appear in the new caption, which can be
     /// specified instead of parse_mode
     /// </summary>
-    property CaptionEntities: TArray<TtgMessageEntity> read fCaptionEntities write fCaptionEntities;
+    property CaptionEntities: TArray<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
@@ -233,10 +233,10 @@ type
   private
     [caName('caption')]
     [caDefaultValueStringAttribute('')]
-    fCaption: string;
+    FCaption: string;
     [caName('caption_entities')]
     [caDefaultValueString('[]')]
-    fCaptionEntities: TArray<TtgMessageEntity>;
+    FCaptionEntities: TArray<TtgMessageEntity>;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -244,14 +244,14 @@ type
     /// channel (in the format @channelusername)</summary>
     property ChatId;
     /// <summary>Caption, 0-1024 characters after entities parsing</summary>
-    property Caption: string read fCaption write fCaption;
+    property Caption: string read FCaption write FCaption;
     /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
     /// fixed-width text or inline URLs in your bot's message.   </summary>
     property ParseMode;
     /// <summary> List of special entities that appear in the new caption, which can be
     /// specified instead of parse_mode
     /// </summary>
-    property CaptionEntities: TArray<TtgMessageEntity> read fCaptionEntities write fCaptionEntities;
+    property CaptionEntities: TArray<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
@@ -1295,7 +1295,7 @@ type
     [caName('chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fChatId: TtgUserLink;
+    FChatId: TtgUserLink;
     [caName('action')]
     [caDefaultValueString('')]
     [caIsRequaired]
@@ -1303,7 +1303,7 @@ type
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read fChatId write fChatId;
+    property ChatId: TtgUserLink read FChatId write FChatId;
     /// <summary> Type of action to broadcast. Choose one, depending on what the user is
     /// about to receive: typing for text messages, upload_photo for photos,
     /// record_video or upload_video for videos, record_audio or upload_audio for audio
@@ -1328,7 +1328,7 @@ type
     [caName('chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fChatId: TtgUserLink;
+    FChatId: TtgUserLink;
     [caName('user_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
@@ -1339,7 +1339,7 @@ type
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read fChatId write fChatId;
+    property ChatId: TtgUserLink read FChatId write FChatId;
    /// <summary> Unique identifier of the target user.</summary>
     property UserId: Int64 read FUserID write FUserID;
     /// <summary>
@@ -1363,21 +1363,21 @@ type
     [caName('chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fChatId: TtgUserLink;
+    FChatId: TtgUserLink;
     [caName('message_id')]
     [caDefaultValueInt64(0)]
-    fMessageId: Int64;
+    FMessageId: Int64;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read fChatId write fChatId;
+    property ChatId: TtgUserLink read FChatId write FChatId;
     /// <summary>Identifier of a message to unpin. If not specified, the most recent
     /// pinned message (by sending date) will be unpinned.</summary>
-    property MessageId: Int64 read fMessageId write fMessageId;
+    property MessageId: Int64 read FMessageId write FMessageId;
     constructor Create(AChatId: TtgUserLink; const AMessageId: Int64 = 0);
   end;
 
-/// <summary>Use this method to remove a message from the list of pinned messages
+  /// <summary>Use this method to remove a message from the list of pinned messages
   /// in a chat. If the chat is not a private chat, the bot must be an administrator
   /// in the chat for this to work and must have the 'can_pin_messages' admin right
   /// in a supergroup or 'can_edit_messages' admin right in a channel. Returns True
@@ -1391,12 +1391,47 @@ type
     [caName('chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    fChatId: TtgUserLink;
+    FChatId: TtgUserLink;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read fChatId write fChatId;
+    property ChatId: TtgUserLink read FChatId write FChatId;
     constructor Create(AChatId: TtgUserLink);
+  end;
+
+  /// <summary>
+  /// Use this method to create an additional invite link for a chat. The bot must be
+  /// an administrator in the chat for this to work and must have the appropriate
+  /// admin rights. The link can be revoked using the method revokeChatInviteLink.
+  /// Returns the new invite link as ChatInviteLink object.
+  /// </summary>
+  [caName('createChatInviteLink')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgCreateChatInviteLinkArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('expire_date')]
+    FExpireDate: TDateTime;
+    [caName('member_limit')]
+    FMemberLimit: Integer;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// Point in time (Unix timestamp) when the link will expire
+    /// </summary>
+    property ExpireDate: TDateTime read FExpireDate write FExpireDate;
+    /// <summary>
+    /// Maximum number of users that can be members of the chat simultaneously after
+    /// joining the chat via this invite link; 1-99999
+    /// </summary>
+    property MemberLimit: Integer read FMemberLimit write FMemberLimit;
+    constructor Create(AChatId: TtgUserLink; const AExpireDate: TDateTime; const AMemberLimit: Integer);
   end;
 
 implementation
@@ -1406,10 +1441,10 @@ implementation
 constructor TtgForwardMessageArgument.Create;
 begin
   inherited Create;
-  fChatId := TtgUserLink.Empty;
-  fFromChatId := TtgUserLink.Empty;
-  fDisableNotification := False;
-  fMessageId := 0;
+  FChatId := TtgUserLink.Empty;
+  FFromChatId := TtgUserLink.Empty;
+  FDisableNotification := False;
+  FMessageId := 0;
 end;
 
 destructor TtgForwardMessageArgument.Destroy;
@@ -1636,7 +1671,7 @@ end;
 
 constructor TtgSendChatActionArgument.Create(AChatId: TtgUserLink; AAction: TtgChatAction = TtgChatAction.Typing);
 begin
-  fChatId := AChatId;
+  FChatId := AChatId;
   fAction := AAction;
 end;
 
@@ -1652,9 +1687,9 @@ end;
 constructor TtgMessageArgument.Create;
 begin
   inherited Create();
-  fText := '';
-  fEntities := nil;
-  fDisableWebPagePreview := False;
+  FText := '';
+  FEntities := nil;
+  FDisableWebPagePreview := False;
 end;
 
 destructor TtgMessageArgument.Destroy;
@@ -1668,9 +1703,9 @@ end;
 constructor TtgSendMessageBase.Create;
 begin
   inherited Create;
-  fParseMode := TtgParseMode.Default;
-  fReplyToMessageId := 0;
-  fAllowSendingWithoutReply := False;
+  FParseMode := TtgParseMode.Default;
+  FReplyToMessageId := 0;
+  FAllowSendingWithoutReply := False;
 end;
 
 destructor TtgSendMessageBase.Destroy;
@@ -1684,10 +1719,10 @@ end;
 constructor TtgCopyMessageArgument.Create;
 begin
   inherited Create();
-  fFromChatId := TtgUserLink.Empty;
-  fMessageId := 0;
-  fCaption := '';
-  fCaptionEntities := nil;
+  FFromChatId := TtgUserLink.Empty;
+  FMessageId := 0;
+  FCaption := '';
+  FCaptionEntities := nil;
 end;
 
 destructor TtgCopyMessageArgument.Destroy;
@@ -1701,9 +1736,9 @@ end;
 constructor TtgMessageAbstract.Create;
 begin
   inherited Create();
-  fChatId := TtgUserLink.Empty;
-  fDisableNotification := False;
-  fReplyMarkup := nil;
+  FChatId := TtgUserLink.Empty;
+  FDisableNotification := False;
+  FReplyMarkup := nil;
 end;
 
 destructor TtgMessageAbstract.Destroy;
@@ -1717,8 +1752,8 @@ end;
 constructor TtgSendMediaAbstractArgument.Create;
 begin
   inherited Create;
-  fCaption := '';
-  fCaptionEntities := nil;
+  FCaption := '';
+  FCaptionEntities := nil;
 end;
 
 destructor TtgSendMediaAbstractArgument.Destroy;
@@ -1754,7 +1789,7 @@ begin
   fDuration := 0;
   fWidth := 0;
   fHeight := 0;
-  fCaption := '';
+  FCaption := '';
   fSupportsStreaming := False;
 end;
 
@@ -1797,7 +1832,7 @@ end;
 constructor TtgUnbanChatMemberArgument.Create(AChatId: TtgUserLink; const AUserId: Int64;
   const AOnlyIfBanned: Boolean = True);
 begin
-  fChatId := AChatId;
+  FChatId := AChatId;
   FUserID := AUserId;
   FOnlyIfBanned := AOnlyIfBanned;
 end;
@@ -1812,14 +1847,24 @@ end;
 constructor TtgUnpinChatMessageArgument.Create(AChatId: TtgUserLink; const AMessageId: Int64 = 0);
 begin
   inherited Create();
-  fChatId := AChatId;
-  fMessageId := AMessageId;
+  FChatId := AChatId;
+  FMessageId := AMessageId;
 end;
 
 constructor TtgUnpinAllChatMessagesArgument.Create(AChatId: TtgUserLink);
 begin
   inherited Create();
-  fChatId := AChatId;
+  FChatId := AChatId;
+end;
+
+{ TtgCreateChatInviteLinkArgument }
+
+constructor TtgCreateChatInviteLinkArgument.Create(AChatId: TtgUserLink; const AExpireDate: TDateTime;
+  const AMemberLimit: Integer);
+begin
+  FChatId := AChatId;
+  FExpireDate := AExpireDate;
+  FMemberLimit := AMemberLimit;
 end;
 
 end.

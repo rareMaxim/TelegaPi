@@ -218,6 +218,15 @@ type
     /// When the link expires, a new one can be requested by calling getFile again.
     /// </summary>
     function GetFile(AGetFile: TtgGetFileArgument): ItgResponse<TtgFile>;
+    /// <summary>
+    /// Use this method to create an additional invite link for a chat. The bot must be
+    /// an administrator in the chat for this to work and must have the appropriate
+    /// admin rights. The link can be revoked using the method revokeChatInviteLink.
+    /// Returns the new invite link as ChatInviteLink object.
+    /// </summary>
+    function CreateChatInviteLink(ACreateChatInviteLink: TtgCreateChatInviteLinkArgument)
+      : ItgResponse<TtgChatInviteLink>;
+
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -252,6 +261,12 @@ constructor TTelegramBotApi.Create(const AToken: string);
 begin
   Self.Create;
   BotToken := AToken;
+end;
+
+function TTelegramBotApi.CreateChatInviteLink(ACreateChatInviteLink: TtgCreateChatInviteLinkArgument)
+  : ItgResponse<TtgChatInviteLink>;
+begin
+  Result := InternalExecute<TtgCreateChatInviteLinkArgument, TtgChatInviteLink>(ACreateChatInviteLink);
 end;
 
 function TTelegramBotApi.DeleteWebhook(ADeleteWebhook: TtgDeleteWebhookArgument): Boolean;
