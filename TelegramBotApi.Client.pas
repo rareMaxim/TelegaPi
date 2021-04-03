@@ -233,6 +233,14 @@ type
     /// object.
     /// </summary>
     function EditChatInviteLink(AEditChatInviteLink: TtgEditChatInviteLinkArgument): ItgResponse<TtgChatInviteLink>;
+    /// <summary>
+    /// Use this method to revoke an invite link created by the bot. If the primary
+    /// link is revoked, a new link is automatically generated. The bot must be an
+    /// administrator in the chat for this to work and must have the appropriate admin
+    /// rights. Returns the revoked invite link as ChatInviteLink object.
+    /// </summary>
+    function RevokeChatInviteLink(ARevokeChatInviteLink: TtgRevokeChatInviteLinkArgument)
+      : ItgResponse<TtgChatInviteLink>;
 
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
@@ -426,6 +434,12 @@ begin
   finally
     lLogOut.Free;
   end;
+end;
+
+function TTelegramBotApi.RevokeChatInviteLink(ARevokeChatInviteLink: TtgRevokeChatInviteLinkArgument)
+  : ItgResponse<TtgChatInviteLink>;
+begin
+  Result := InternalExecute<TtgRevokeChatInviteLinkArgument, TtgChatInviteLink>(ARevokeChatInviteLink);
 end;
 
 function TTelegramBotApi.SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;

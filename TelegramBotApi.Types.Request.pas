@@ -1449,6 +1449,49 @@ type
     [caDefaultValueString('')]
     FInviteLink: string;
   public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>
+    /// The invite link to edit
+    /// </summary>
+    property InviteLink: string read FInviteLink write FInviteLink;
+    /// <summary>
+    /// Point in time (Unix timestamp) when the link will expire
+    /// </summary>
+    property ExpireDate;
+    /// <summary>
+    /// Maximum number of users that can be members of the chat simultaneously after
+    /// joining the chat via this invite link; 1-99999
+    /// </summary>
+    property MemberLimit;
+  end;
+
+  /// <summary> Use this method to revoke an invite link created by the bot. If the
+  /// primary link is revoked, a new link is automatically generated. The bot must be
+  /// an administrator in the chat for this to work and must have the appropriate
+  /// admin rights. Returns the revoked invite link as ChatInviteLink object.
+  /// </summary>
+  [caName('revokeChatInviteLink')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgRevokeChatInviteLinkArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('invite_link')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FInviteLink: string;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// The invite link to revoke
+    /// </summary>
     property InviteLink: string read FInviteLink write FInviteLink;
   end;
 
