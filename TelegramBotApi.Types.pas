@@ -1086,8 +1086,8 @@ type
     property Username: string read FUsername write FUsername;
   public
     class function Empty: TtgUserLink; static;
-    class operator Implicit(AID: Int64): TtgUserLink;
-    class operator Implicit(AUsername: string): TtgUserLink;
+    class operator Implicit(const AID: Int64): TtgUserLink;
+    class operator Implicit(const AUsername: string): TtgUserLink;
   end;
 
   /// <summary>
@@ -2335,6 +2335,53 @@ type
     property Description: string read FDescription write FDescription;
   end;
 
+  /// <summary>
+  /// Represents an invite link for a chat.
+  /// </summary>
+  TtgChatInviteLink = class
+  private
+    [JsonName('invite_link')]
+    FInviteLink: string;
+    [JsonName('creator')]
+    FCreator: TtgUser;
+    [JsonName('is_primary')]
+    FIsPrimary: Boolean;
+    [JsonName('is_revoked')]
+    FIsRevoked: Boolean;
+    [JsonName('expire_date')]
+    FExpireDate: TDateTime;
+    [JsonName('member_limit')]
+    FMemberLimit: Integer;
+  public
+    /// <summary>
+    /// The invite link. If the link was created by another chat administrator, then
+    /// the second part of the link will be replaced with “…”.
+    /// </summary>
+    property InviteLink: string read FInviteLink write FInviteLink;
+    /// <summary>
+    /// Creator of the link
+    /// </summary>
+    property Creator: TtgUser read FCreator write FCreator;
+    /// <summary>
+    /// True, if the link is primary
+    /// </summary>
+    property IsPrimary: Boolean read FIsPrimary write FIsPrimary;
+    /// <summary>
+    /// True, if the link is revoked
+    /// </summary>
+    property IsRevoked: Boolean read FIsRevoked write FIsRevoked;
+    /// <summary>
+    /// Optional. Point in time (Unix timestamp) when the link will expire or has been
+    /// expired
+    /// </summary>
+    property ExpireDate: TDateTime read FExpireDate write FExpireDate;
+    /// <summary>
+    /// Optional. Maximum number of users that can be members of the chat
+    /// simultaneously after joining the chat via this invite link; 1-99999
+    /// </summary>
+    property MemberLimit: Integer read FMemberLimit write FMemberLimit;
+  end;
+
 implementation
 
 uses
@@ -2450,7 +2497,7 @@ begin
     Result := '@' + Username;
 end;
 
-class operator TtgUserLink.Implicit(AUsername: string): TtgUserLink;
+class operator TtgUserLink.Implicit(const AUsername: string): TtgUserLink;
 begin
   Result := TtgUserLink.FromUserName(AUsername);
 end;
@@ -2480,7 +2527,7 @@ begin
     Result := string.Empty;
 end;
 
-class operator TtgUserLink.Implicit(AID: Int64): TtgUserLink;
+class operator TtgUserLink.Implicit(const AID: Int64): TtgUserLink;
 begin
   Result := TtgUserLink.FromID(AID);
 end;
