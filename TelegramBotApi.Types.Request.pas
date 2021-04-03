@@ -1431,7 +1431,25 @@ type
     /// joining the chat via this invite link; 1-99999
     /// </summary>
     property MemberLimit: Integer read FMemberLimit write FMemberLimit;
-    constructor Create(AChatId: TtgUserLink; const AExpireDate: TDateTime; const AMemberLimit: Integer);
+  end;
+
+  /// <summary>
+  /// Use this method to edit a non-primary invite link created by the bot. The bot
+  /// must be an administrator in the chat for this to work and must have the
+  /// appropriate admin rights. Returns the edited invite link as a ChatInviteLink
+  /// object.
+  /// </summary>
+  [caName('editChatInviteLink')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgEditChatInviteLinkArgument = class(TtgCreateChatInviteLinkArgument)
+  private
+    [caName('invite_link')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FInviteLink: string;
+  public
+    property InviteLink: string read FInviteLink write FInviteLink;
   end;
 
 implementation
@@ -1855,16 +1873,6 @@ constructor TtgUnpinAllChatMessagesArgument.Create(AChatId: TtgUserLink);
 begin
   inherited Create();
   FChatId := AChatId;
-end;
-
-{ TtgCreateChatInviteLinkArgument }
-
-constructor TtgCreateChatInviteLinkArgument.Create(AChatId: TtgUserLink; const AExpireDate: TDateTime;
-  const AMemberLimit: Integer);
-begin
-  FChatId := AChatId;
-  FExpireDate := AExpireDate;
-  FMemberLimit := AMemberLimit;
 end;
 
 end.

@@ -226,6 +226,13 @@ type
     /// </summary>
     function CreateChatInviteLink(ACreateChatInviteLink: TtgCreateChatInviteLinkArgument)
       : ItgResponse<TtgChatInviteLink>;
+    /// <summary>
+    /// Use this method to edit a non-primary invite link created by the bot. The bot
+    /// must be an administrator in the chat for this to work and must have the
+    /// appropriate admin rights. Returns the edited invite link as a ChatInviteLink
+    /// object.
+    /// </summary>
+    function EditChatInviteLink(AEditChatInviteLink: TtgEditChatInviteLinkArgument): ItgResponse<TtgChatInviteLink>;
 
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
@@ -295,6 +302,12 @@ end;
 function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
 begin
   Result := InternalExecute<TtgCopyMessageArgument, Int64>(ACopyMessageArgument);
+end;
+
+function TTelegramBotApi.EditChatInviteLink(AEditChatInviteLink: TtgEditChatInviteLinkArgument)
+  : ItgResponse<TtgChatInviteLink>;
+begin
+  Result := InternalExecute<TtgEditChatInviteLinkArgument, TtgChatInviteLink>(AEditChatInviteLink);
 end;
 
 function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument: TtgEditMessageLiveLocationArgument)
