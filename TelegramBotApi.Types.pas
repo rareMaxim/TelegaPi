@@ -2300,6 +2300,8 @@ type
     FUntilDate: TDateTime;
     [JsonName('can_manage_voice_chats')]
     FCanManageVoiceChats: Boolean;
+    [JsonName('can_manage_chat')]
+    FCanManageChat: Boolean;
   public
     /// <summary>
     /// Information about the user
@@ -2329,6 +2331,13 @@ type
     /// channel; channels only
     /// </summary>
     property CanPostMessages: Boolean read FCanPostMessages write FCanPostMessages;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can access the chat
+    /// event log, chat statistics, message statistics in channels, see channel members,
+    /// see anonymous administrators in supergroups and ignore slow mode. Implied by
+    /// any other administrator privilege
+    /// </summary>
+    property CanManageChat: Boolean read FCanManageChat write FCanManageChat;
     /// <summary>
     /// Optional. Administrators only. True, if the administrator can edit messages of
     /// other users and can pin messages; channels only
