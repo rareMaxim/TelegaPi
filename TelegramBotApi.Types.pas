@@ -1718,7 +1718,18 @@ type
 
   end;
 
-/// <summary>
+  /// <summary> This object represents a service message about a voice chat ended in
+  /// the chat.
+  /// </summary>
+  TtgVoiceChatEnded = class
+  private
+    [JsonName('duration')]
+    FDuration: Integer;
+  public
+    property Duration: Integer read FDuration write FDuration;
+  end;
+
+  /// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -1834,6 +1845,8 @@ type
     FReplyMarkup: TtgInlineKeyboardMarkup;
     [JsonName('voice_chat_started')]
     FVoiceChatStarted: TtgVoiceChatStarted;
+    [JsonName('voice_chat_ended')]
+    FVoiceChatEnded: TtgVoiceChatEnded;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2076,6 +2089,10 @@ type
     /// Optional. Service message: voice chat started
     /// </summary>
     property VoiceChatStarted: TtgVoiceChatStarted read FVoiceChatStarted write FVoiceChatStarted;
+    /// <summary>
+    /// Optional. Service message: voice chat ended
+    /// </summary>
+    property VoiceChatEnded: TtgVoiceChatEnded read FVoiceChatEnded write FVoiceChatEnded;
     /// <summary>
     /// Optional. Inline keyboard attached to the message. login_url buttons are
     /// represented as ordinary url buttons.
