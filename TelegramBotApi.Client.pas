@@ -241,7 +241,13 @@ type
     /// </summary>
     function RevokeChatInviteLink(ARevokeChatInviteLink: TtgRevokeChatInviteLinkArgument)
       : ItgResponse<TtgChatInviteLink>;
-
+    /// <summary>
+    /// Use this method to promote or demote a user in a supergroup or a channel. The
+    /// bot must be an administrator in the chat for this to work and must have the
+    /// appropriate admin rights. Pass False for all boolean parameters to demote a
+    /// user. Returns True on success.
+    /// </summary>
+    function PromoteChatMember(PromoteChatMember: TtgPromoteChatMemberArgument): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -434,6 +440,11 @@ begin
   finally
     lLogOut.Free;
   end;
+end;
+
+function TTelegramBotApi.PromoteChatMember(PromoteChatMember: TtgPromoteChatMemberArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgPromoteChatMemberArgument, Boolean>(PromoteChatMember);
 end;
 
 function TTelegramBotApi.RevokeChatInviteLink(ARevokeChatInviteLink: TtgRevokeChatInviteLinkArgument)

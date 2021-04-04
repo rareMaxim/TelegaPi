@@ -2265,6 +2265,8 @@ type
     [JsonName('until_date')]
     [JsonConverter(TJsonUnixTimeConverter)]
     FUntilDate: TDateTime;
+    [JsonName('can_manage_voice_chats')]
+    FCanManageVoiceChats: Boolean;
   public
     /// <summary>
     /// Information about the user
@@ -2304,6 +2306,10 @@ type
     /// of other users
     /// </summary>
     property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
+    /// <summary>
+    /// Optional. Administrators only. True, if the administrator can manage voice chats
+    /// </summary>
+    property CanManageVoiceChats: Boolean read FCanManageVoiceChats write FCanManageVoiceChats;
     /// <summary>
     /// Optional. Administrators only. True, if the administrator can restrict, ban or
     /// unban chat members

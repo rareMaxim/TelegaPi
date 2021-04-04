@@ -1495,6 +1495,91 @@ type
     property InviteLink: string read FInviteLink write FInviteLink;
   end;
 
+  /// <summary> Use this method to promote or demote a user in a supergroup or a
+  /// channel. The bot must be an administrator in the chat for this to work and must
+  /// have the appropriate admin rights. Pass False for all boolean parameters to
+  /// demote a user. Returns True on success.
+  /// </summary>
+  TtgPromoteChatMemberArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('user_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FUserID: Int64;
+    [caName('is_anonymous')]
+    [caDefaultValueBoolean(False)]
+    FIsAnonymous: Boolean;
+    [caName('can_manage_chat')]
+    FCanManageChat: Boolean;
+    [caName('can_post_messages')]
+    FCanPostMessages: Boolean;
+    [caName('can_edit_messages')]
+    FCanEditMessages: Boolean;
+    [caName('can_delete_messages')]
+    FCanDeleteMessages: Boolean;
+    [caName('can_manage_voice_chats')]
+    FCanManageVoiceChats: Boolean;
+    [caName('can_restrict_members')]
+    FCanRestrictMembers: Boolean;
+    [caName('can_promote_members')]
+    FCanPromoteMembers: Boolean;
+    [caName('can_change_info')]
+    FCanChangeInfo: Boolean;
+    [caName('can_invite_users')]
+    FCanInviteUsers: Boolean;
+    [caName('can_pin_messages')]
+    FCanPinMessages: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// Unique identifier of the target user
+    /// </summary>
+    property UserId: Int64 read FUserID write FUserID;
+    /// <summary> Pass True, if the administrator's presence in the chat is
+    /// hidden</summary>
+    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
+    /// <summary> Pass True, if the administrator can access the chat event log, chat
+    /// statistics, message statistics in channels, see channel members, see anonymous
+    /// administrators in supergroups and ignore slow mode. Implied by any other
+    /// administrator privilege
+    /// </summary>
+    property CanManageChat: Boolean read FCanManageChat write FCanManageChat;
+    /// <summary> Pass True, if the administrator can create channel posts, channels
+    /// only </summary>
+    property CanPostMessages: Boolean read FCanPostMessages write FCanPostMessages;
+    /// <summary> Pass True, if the administrator can edit messages of other users and
+    /// can pin messages, channels only</summary>
+    property CanEditMessages: Boolean read FCanEditMessages write FCanEditMessages;
+    /// <summary>Pass True, if the administrator can delete messages of other
+    /// users</summary>
+    property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
+    /// <summary>Pass True, if the administrator can manage voice chats</summary>
+    property CanManageVoiceChats: Boolean read FCanManageVoiceChats write FCanManageVoiceChats;
+    /// <summary> Pass True, if the administrator can restrict, ban or unban chat
+    /// members</summary>
+    property CanRestrictMembers: Boolean read FCanRestrictMembers write FCanRestrictMembers;
+    /// <summary>Pass True, if the administrator can add new administrators with a
+    /// subset of their own privileges or demote administrators that he has promoted,
+    /// directly or indirectly (promoted by administrators that were appointed by him)
+    /// </summary>
+    property CanPromoteMembers: Boolean read FCanPromoteMembers write FCanPromoteMembers;
+    /// <summary> Pass True, if the administrator can change chat title, photo and
+    /// other settings</summary>
+    property CanChangeInfo: Boolean read FCanChangeInfo write FCanChangeInfo;
+    /// <summary> Pass True, if the administrator can invite new users to the
+    /// chat</summary>
+    property CanInviteUsers: Boolean read FCanInviteUsers write FCanInviteUsers;
+    /// <summary> Pass True, if the administrator can pin messages, supergroups
+    /// only</summary>
+    property CanPinMessages: Boolean read FCanPinMessages write FCanPinMessages;
+  end;
+
 implementation
 
 { TtgForwardMessageArgument }
