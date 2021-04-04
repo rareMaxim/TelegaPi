@@ -1745,6 +1745,21 @@ type
   end;
 
   /// <summary>
+  /// This object represents a service message about a change in auto-delete timer
+  /// settings.
+  /// </summary>
+  TtgMessageAutoDeleteTimerChanged = class
+  private
+    [JsonName('message_auto_delete_time')]
+    FMessageAutoDeleteTime: Integer;
+  public
+    /// <summary>
+    /// New auto-delete time for messages in the chat
+    /// </summary>
+    property MessageAutoDeleteTime: Integer read FMessageAutoDeleteTime write FMessageAutoDeleteTime;
+  end;
+
+/// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -1862,7 +1877,12 @@ type
     FVoiceChatStarted: TtgVoiceChatStarted;
     [JsonName('voice_chat_ended')]
     FVoiceChatEnded: TtgVoiceChatEnded;
+    [JsonName('voice_chat_participants_invited ')]
     FVoiceChatParticipantsInvited: TtgVoiceChatParticipantsInvited;
+    [JsonName('migrate_to_chat_id')]
+    FMigrateToChatId: Int64;
+    [JsonName('message_auto_delete_timer_changed ')]
+    FMessageAutoDeleteTimerChanged: TtgMessageAutoDeleteTimerChanged;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2062,6 +2082,19 @@ type
     /// someone replies to a very first message in a channel.
     /// </summary>
     property ChannelChatCreated: Boolean read FChannelChatCreated write FChannelChatCreated;
+    /// <summary>
+    /// Optional. Service message: auto-delete timer settings changed in the chat
+    /// </summary>
+    property MessageAutoDeleteTimerChanged: TtgMessageAutoDeleteTimerChanged read FMessageAutoDeleteTimerChanged
+      write FMessageAutoDeleteTimerChanged;
+    /// <summary>
+    /// Optional. The group has been migrated to a supergroup with the specified
+    /// identifier. This number may have more than 32 significant bits and some
+    /// programming languages may have difficulty/silent defects in interpreting it.
+    /// But it has at most 52 significant bits, so a signed 64-bit integer or
+    /// double-precision float type are safe for storing this identifier.
+    /// </summary>
+    property MigrateToChatId: Int64 read FMigrateToChatId write FMigrateToChatId;
     /// <summary>
     /// Optional. The supergroup has been migrated from a group with the specified
     /// identifier. This number may be greater than 32 bits and some programming
