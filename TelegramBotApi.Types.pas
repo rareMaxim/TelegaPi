@@ -1730,6 +1730,21 @@ type
   end;
 
   /// <summary>
+  /// This object represents a service message about new members invited to a voice
+  /// chat.
+  /// </summary>
+  TtgVoiceChatParticipantsInvited = class
+  private
+    [JsonName('users')]
+    FUsers: TArray<TtgUser>;
+  public
+    /// <summary>
+    /// Optional. New members that were invited to the voice chat
+    /// </summary>
+    property Users: TArray<TtgUser> read FUsers write FUsers;
+  end;
+
+  /// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -1847,6 +1862,7 @@ type
     FVoiceChatStarted: TtgVoiceChatStarted;
     [JsonName('voice_chat_ended')]
     FVoiceChatEnded: TtgVoiceChatEnded;
+    FVoiceChatParticipantsInvited: TtgVoiceChatParticipantsInvited;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2093,6 +2109,12 @@ type
     /// Optional. Service message: voice chat ended
     /// </summary>
     property VoiceChatEnded: TtgVoiceChatEnded read FVoiceChatEnded write FVoiceChatEnded;
+    /// <summary>
+    /// Optional. Service message: new participants invited to a voice chat
+    /// </summary>
+    property VoiceChatParticipantsInvited: TtgVoiceChatParticipantsInvited read FVoiceChatParticipantsInvited
+      write FVoiceChatParticipantsInvited;
+
     /// <summary>
     /// Optional. Inline keyboard attached to the message. login_url buttons are
     /// represented as ordinary url buttons.
