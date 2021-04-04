@@ -1711,6 +1711,14 @@ type
   end;
 
   /// <summary>
+  /// This object represents a service message about a voice chat started in the chat.
+  /// Currently holds no information.
+  /// </summary>
+  TtgVoiceChatStarted = class
+
+  end;
+
+/// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -1824,6 +1832,8 @@ type
     FProximityAlertTriggered: TtgProximityAlertTriggered;
     [JsonName('reply_markup')]
     FReplyMarkup: TtgInlineKeyboardMarkup;
+    [JsonName('voice_chat_started')]
+    FVoiceChatStarted: TtgVoiceChatStarted;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2062,6 +2072,10 @@ type
     /// </summary>
     property ProximityAlertTriggered: TtgProximityAlertTriggered read FProximityAlertTriggered
       write FProximityAlertTriggered;
+    /// <summary>
+    /// Optional. Service message: voice chat started
+    /// </summary>
+    property VoiceChatStarted: TtgVoiceChatStarted read FVoiceChatStarted write FVoiceChatStarted;
     /// <summary>
     /// Optional. Inline keyboard attached to the message. login_url buttons are
     /// represented as ordinary url buttons.
