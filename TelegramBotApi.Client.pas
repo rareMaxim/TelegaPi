@@ -192,6 +192,14 @@ type
     /// </returns>
     function ExportChatInviteLink(AChatID: TtgExportChatInviteLinkArgument): ItgResponse<string>;
     function getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
+    /// <summary>
+    /// Use this method to kick a user from a group, a supergroup or a channel. In the
+    /// case of supergroups and channels, the user will not be able to return to the
+    /// chat on their own using invite links, etc., unless unbanned first. The bot must
+    /// be an administrator in the chat for this to work and must have the appropriate
+    /// admin rights. Returns True on success.
+    /// </summary>
+    function KickChatMember(AKickChatMember: TtgKickChatMemberArgument): ItgResponse<Boolean>;
     function UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
     /// <summary>
     /// Use this method to remove a message from the list of pinned messages in a chat.
@@ -428,6 +436,11 @@ var
 begin
   LCloudResponse := FCloudApi.Execute<TResult>(ARequest);
   Result := LCloudResponse.Data;
+end;
+
+function TTelegramBotApi.KickChatMember(AKickChatMember: TtgKickChatMemberArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgKickChatMemberArgument, Boolean>(AKickChatMember);
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;

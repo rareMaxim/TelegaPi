@@ -1514,24 +1514,34 @@ type
     [caDefaultValueBoolean(False)]
     FIsAnonymous: Boolean;
     [caName('can_manage_chat')]
+    [caDefaultValueBoolean(False)]
     FCanManageChat: Boolean;
     [caName('can_post_messages')]
+    [caDefaultValueBoolean(False)]
     FCanPostMessages: Boolean;
     [caName('can_edit_messages')]
+    [caDefaultValueBoolean(False)]
     FCanEditMessages: Boolean;
     [caName('can_delete_messages')]
+    [caDefaultValueBoolean(False)]
     FCanDeleteMessages: Boolean;
     [caName('can_manage_voice_chats')]
+    [caDefaultValueBoolean(False)]
     FCanManageVoiceChats: Boolean;
     [caName('can_restrict_members')]
+    [caDefaultValueBoolean(False)]
     FCanRestrictMembers: Boolean;
     [caName('can_promote_members')]
+    [caDefaultValueBoolean(False)]
     FCanPromoteMembers: Boolean;
     [caName('can_change_info')]
+    [caDefaultValueBoolean(False)]
     FCanChangeInfo: Boolean;
     [caName('can_invite_users')]
+    [caDefaultValueBoolean(False)]
     FCanInviteUsers: Boolean;
     [caName('can_pin_messages')]
+    [caDefaultValueBoolean(False)]
     FCanPinMessages: Boolean;
   public
     /// <summary>Unique identifier for the target chat or username of the target
@@ -1578,6 +1588,51 @@ type
     /// <summary> Pass True, if the administrator can pin messages, supergroups
     /// only</summary>
     property CanPinMessages: Boolean read FCanPinMessages write FCanPinMessages;
+  end;
+
+  /// <summary> Use this method to kick a user from a group, a supergroup or a
+  /// channel. In the case of supergroups and channels, the user will not be able to
+  /// return to the chat on their own using invite links, etc., unless unbanned first.
+  /// The bot must be an administrator in the chat for this to work and must have the
+  /// appropriate admin rights. Returns True on success.</summary>
+  [caName('kickChatMember')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgKickChatMemberArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('user_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FUserID: Int64;
+    [caName('until_date')]
+    [caDefaultValueSingle(0)]
+    FUntilDate: TDateTime;
+    [caName('revoke_messages')]
+    [caDefaultValueBoolean(False)]
+    FRevokeMessages: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+   /// <summary> Unique identifier of the target user.</summary>
+    property UserId: Int64 read FUserID write FUserID;
+    /// <summary>
+    /// Date when the user will be unbanned, unix time. If user is banned for more than
+    /// 366 days or less than 30 seconds from the current time they are considered to
+    /// be banned forever. Applied for supergroups and channels only.
+    /// </summary>
+    property UntilDate: TDateTime read FUntilDate write FUntilDate;
+    /// <summary>
+    /// Pass True to delete all messages from the chat for the user that is being
+    /// removed. If False, the user will be able to see messages in the group that were
+    /// sent before the user was removed. Always True for supergroups and channels.
+    /// </summary>
+    property RevokeMessages: Boolean read FRevokeMessages write FRevokeMessages;
+    constructor Create;
   end;
 
 implementation
@@ -2001,6 +2056,16 @@ constructor TtgUnpinAllChatMessagesArgument.Create(AChatId: TtgUserLink);
 begin
   inherited Create();
   FChatId := AChatId;
+end;
+
+{ TtgKickChatMemberArgument }
+
+constructor TtgKickChatMemberArgument.Create;
+begin
+  FChatId := TtgUserLink.Empty;
+  FUserID := 0;
+  FUntilDate := 0;
+  FRevokeMessages := False;
 end;
 
 end.
