@@ -874,8 +874,47 @@ type
     property Address: string read FAddress write FAddress;
   end;
 
+  /// <summary>
+  /// This object represents an incoming inline query. When the user sends an empty
+  /// query, your bot could return some default or trending results.
+  /// </summary>
   TtgInlineQuery = class
-
+  private
+    [JsonName('chat_type')]
+    FChatType: string;
+    [JsonName('offset')]
+    FOffset: string;
+    [JsonName('query')]
+    FQuery: string;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('id')]
+    FID: string;
+  public
+    /// <summary>
+    /// Unique identifier for this query
+    /// </summary>
+    property ID: string read FID write FID;
+    /// <summary>
+    /// Sender
+    /// </summary>
+    property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Text of the query (up to 256 characters)
+    /// </summary>
+    property Query: string read FQuery write FQuery;
+    /// <summary>
+    /// Offset of the results to be returned, can be controlled by the bot
+    /// </summary>
+    property Offset: string read FOffset write FOffset;
+    /// <summary>
+    /// Optional. Type of the chat, from which the inline query was sent. Can be either
+    /// “sender” for a private chat with the inline query sender, “private”, “group”,
+    /// “supergroup”, or “channel”. The chat type should be always known for requests
+    /// sent from official clients and most third-party clients, unless the request was
+    /// sent from a secret chat
+    /// </summary>
+    property ChatType: string read FChatType write FChatType;
   end;
 
   TtgAnswerInlineQuery = class
@@ -2150,8 +2189,7 @@ type
     /// <summary>
     /// Optional. Service message: voice chat scheduled
     /// </summary>
-    property VoiceChatScheduled: TtgVoiceChatScheduled read FVoiceChatScheduled
-        write FVoiceChatScheduled;
+    property VoiceChatScheduled: TtgVoiceChatScheduled read FVoiceChatScheduled write FVoiceChatScheduled;
     /// <summary>
     /// Optional. Service message. A user in the chat triggered another user's
     /// proximity alert while sharing Live Location.
