@@ -12,7 +12,7 @@ uses
 type
   TTelegramBotApi = class
   public const
-    LIB_VERSION = '4.6.0.alpha';
+    LIB_VERSION = '5.1.0';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;

@@ -2545,6 +2545,29 @@ type
     property MemberLimit: Integer read FMemberLimit write FMemberLimit;
   end;
 
+  /// <summary>
+  /// This object represents a portion of the price for goods or services.
+  /// </summary>
+  TtgLabeledPrice = class
+  private
+    [JsonName('label')]
+    FLabel: string;
+    [JsonName('amount')]
+    FAmount: Integer;
+  public
+    /// <summary>
+    /// Portion label
+    /// </summary>
+    property &Label: string read FLabel write FLabel;
+    /// <summary>
+    /// Price of the product in the smallest units of the currency (integer, not
+    /// float/double). For example, for a price of US$ 1.45 pass amount = 145. See the
+    /// exp parameter in currencies.json, it shows the number of digits past the
+    /// decimal point for each currency (2 for the majority of currencies).
+    /// </summary>
+    property Amount: Integer read FAmount write FAmount;
+  end;
+
 implementation
 
 uses

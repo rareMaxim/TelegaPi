@@ -1640,6 +1640,96 @@ type
     constructor Create;
   end;
 
+  /// <summary>
+  /// Use this method to send invoices. On success, the sent Message is returned.
+  /// </summary>
+  TtgSendInvoice = class
+  private
+    [caName('start_parameter')]
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('title')]
+    [caIsRequaired]
+    fTitle: string;
+    [caName('description')]
+    [caIsRequaired]
+    FDescription: string;
+    [caName('payload')]
+    [caIsRequaired]
+    FPayload: string;
+    [caName('provider_token')]
+    [caIsRequaired]
+    FProviderToken: string;
+    [caName('currency')]
+    [caIsRequaired]
+    FCurrency: string;
+    [caName('prices')]
+    [caIsRequaired]
+    FPrices: TArray<TtgLabeledPrice>;
+    [caName('max_tip_amount')]
+    FMaxTipAmount: Integer;
+    [caName('suggested_tip_amounts')]
+    FSuggestedTipAmounts: TArray<Integer>;
+    [caName('start_parameter')]
+    FStartParameter: string;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// Product name, 1-32 characters
+    /// </summary>
+    property Title: string read fTitle write fTitle;
+    /// <summary>
+    /// Product description, 1-255 characters
+    /// </summary>
+    property Description: string read FDescription write FDescription;
+    /// <summary>
+    /// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the
+    /// user, use for your internal processes.
+    /// </summary>
+    property Payload: string read FPayload write FPayload;
+    /// <summary>
+    /// Payments provider token, obtained via Botfather
+    /// </summary>
+    property ProviderToken: string read FProviderToken write FProviderToken;
+    /// <summary>
+    /// Three-letter ISO 4217 currency code, see more on currencies
+    /// </summary>
+    property Currency: string read FCurrency write FCurrency;
+    /// <summary>
+    /// Price breakdown, a JSON-serialized list of components (e.g. product price, tax,
+    /// discount, delivery cost, delivery tax, bonus, etc.)
+    /// </summary>
+    property Prices: TArray<TtgLabeledPrice> read FPrices write FPrices;
+    /// <summary>
+    /// The maximum accepted amount for tips in the smallest units of the currency (
+    /// integer, not float/double). For example, for a maximum tip of US$ 1.45 pass
+    /// max_tip_amount = 145. See the exp parameter in currencies.json, it shows the
+    /// number of digits past the decimal point for each currency (2 for the majority
+    /// of currencies). Defaults to 0
+    /// </summary>
+    property MaxTipAmount: Integer read FMaxTipAmount write FMaxTipAmount;
+    /// <summary>
+    /// A JSON-serialized array of suggested amounts of tips in the smallest units of
+    /// the currency (integer, not float/double). At most 4 suggested tip amounts can
+    /// be specified. The suggested tip amounts must be positive, passed in a strictly
+    /// increased order and must not exceed max_tip_amount.
+    /// </summary>
+    property SuggestedTipAmounts: TArray<Integer> read FSuggestedTipAmounts write FSuggestedTipAmounts;
+    /// <summary>
+    /// Unique deep-linking parameter. If left empty, forwarded copies of the sent
+    /// message will have a Pay button, allowing multiple users to pay directly from
+    /// the forwarded message, using the same invoice. If non-empty, forwarded copies
+    /// of the sent message will have a URL button with a deep link to the bot (instead
+    /// of a Pay button), with the value used as the start parameter
+    /// </summary>
+    property StartParameter: string read FStartParameter write FStartParameter;
+
+  end;
+
 implementation
 
 { TtgForwardMessageArgument }
