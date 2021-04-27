@@ -153,9 +153,9 @@ begin
       Result := 'record_video';
     TtgChatAction.UploadVideo:
       Result := 'upload_video';
-    TtgChatAction.RecordAudio:
+    TtgChatAction.RecordVoice:
       Result := 'record_voice';
-    TtgChatAction.UploadAudio:
+    TtgChatAction.UploadVoice:
       Result := 'upload_voice';
     TtgChatAction.UploadDocument:
       Result := 'upload_document';

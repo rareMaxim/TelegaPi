@@ -160,11 +160,11 @@ type
     /// <summary>
     /// Recording an <see cref="Audio"/>
     /// </summary>
-    RecordAudio,
+    RecordVoice,
     /// <summary>
     /// Uploading an <see cref="Audio"/>
     /// </summary>
-    UploadAudio,
+    UploadVoice,
     /// <summary>
     /// Uploading <see cref="Document"/>
     /// </summary>
