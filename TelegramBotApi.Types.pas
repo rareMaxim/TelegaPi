@@ -1759,7 +1759,24 @@ type
     property MessageAutoDeleteTime: Integer read FMessageAutoDeleteTime write FMessageAutoDeleteTime;
   end;
 
-/// <summary>
+  /// <summary>
+  /// This object represents a service message about a voice chat scheduled in the
+  /// chat.
+  /// </summary>
+  TtgVoiceChatScheduled = class
+  private
+    [JsonConverter(TJsonUnixTimeConverter)]
+    [JsonName('start_date')]
+    FStartDate: TDateTime;
+  public
+    /// <summary>
+    /// Point in time (Unix timestamp) when the voice chat is supposed to be started by
+    /// a chat administrator
+    /// </summary>
+    property StartDate: TDateTime read FStartDate write FStartDate;
+  end;
+
+  /// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -1883,6 +1900,8 @@ type
     FMigrateToChatId: Int64;
     [JsonName('message_auto_delete_timer_changed ')]
     FMessageAutoDeleteTimerChanged: TtgMessageAutoDeleteTimerChanged;
+    [JsonName('voice_chat_scheduled ')]
+    FVoiceChatScheduled: TtgVoiceChatScheduled;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2128,6 +2147,11 @@ type
     /// Optional. Telegram Passport data
     /// </summary>
     property PassportData: TtgPassportData read FPassportData write FPassportData;
+    /// <summary>
+    /// Optional. Service message: voice chat scheduled
+    /// </summary>
+    property VoiceChatScheduled: TtgVoiceChatScheduled read FVoiceChatScheduled
+        write FVoiceChatScheduled;
     /// <summary>
     /// Optional. Service message. A user in the chat triggered another user's
     /// proximity alert while sharing Live Location.
