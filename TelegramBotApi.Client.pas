@@ -256,6 +256,12 @@ type
     /// user. Returns True on success.
     /// </summary>
     function PromoteChatMember(PromoteChatMember: TtgPromoteChatMemberArgument): ItgResponse<Boolean>;
+{$REGION 'Payments'}
+    /// <summary>
+    /// Use this method to send invoices. On success, the sent Message is returned.
+    /// </summary>
+    function SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
+{$ENDREGION}
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -310,6 +316,7 @@ begin
 end;
 
 function TTelegramBotApi.Close: ItgResponse<Boolean>;
+
 var
   lClose: TtgCloseArgunent;
 begin
@@ -371,6 +378,7 @@ begin
 end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;
+
 var
   lGetMe: TtgGetMeArgunent;
 begin
@@ -388,6 +396,7 @@ begin
 end;
 
 class function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
+
 var
   lCA: TCloudApiClient;
 begin
@@ -405,6 +414,7 @@ begin
 end;
 
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;
+
 var
   LReq: IcaRequest;
 begin
@@ -413,6 +423,7 @@ begin
 end;
 
 function TTelegramBotApi.InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>;
+
 var
   LCloudResponse: IcaResponse<TtgResponse<TResult>>;
 begin
@@ -423,6 +434,7 @@ begin
 end;
 
 function TTelegramBotApi.InternalExecuteCustom<TArgument, TResult>(AArgument: TArgument): TResult;
+
 var
   LReq: IcaRequest;
 begin
@@ -431,6 +443,7 @@ begin
 end;
 
 function TTelegramBotApi.InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult;
+
 var
   LCloudResponse: IcaResponse<TResult>;
 begin
@@ -444,6 +457,7 @@ begin
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;
+
 var
   lLogOut: TtgLogOutArgunent;
 begin
@@ -496,6 +510,11 @@ begin
   Result := InternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument);
 end;
 
+function TTelegramBotApi.SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
+begin
+  Result := InternalExecute<TtgSendInvoiceArgument, TtgMessage>(ASendInvoiceArgument);
+end;
+
 function TTelegramBotApi.SendLocation(ASendLocationArgument: TtgSendLocationArgument): ItgResponse<TtgMessage>;
 begin
   Result := InternalExecute<TtgSendLocationArgument, TtgMessage>(ASendLocationArgument);
@@ -503,6 +522,7 @@ end;
 
 function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
   : ItgResponse<TArray<TtgMessage>>;
+
 var
   LRequest: IcaRequest;
   LMedia: TtgInputMedia;

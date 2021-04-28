@@ -61,14 +61,14 @@ type
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification: Boolean read FDisableNotification write FDisableNotification;
+    /// <summary>
+    /// A JSON-serialized object for an keyboard
+    /// </summary>
     property ReplyMarkup: ItgReplyMarkup read FReplyMarkup write FReplyMarkup;
   end;
 
   TtgSendMessageBase = class(TtgMessageAbstract)
   private
-    [caName('parse_mode')]
-    [caDefaultValueString('')]
-    FParseMode: TtgParseMode;
     [caName('reply_to_message_id')]
     [caDefaultValueInt64(0)]
     FReplyToMessageId: Int64;
@@ -79,9 +79,6 @@ type
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId;
-    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-    /// fixed-width text or inline URLs in your bot's message.   </summary>
-    property ParseMode: TtgParseMode read FParseMode write FParseMode;
     /// <summary>Sends the message silently. Users will receive a notification with no
     /// sound.</summary>
     property DisableNotification;
@@ -96,12 +93,38 @@ type
     destructor Destroy; override;
   end;
 
+  TtgSendMessageBaseWithParseMode = class(TtgSendMessageBase)
+  private
+    [caName('parse_mode')]
+    [caDefaultValueString('')]
+    FParseMode: TtgParseMode;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode: TtgParseMode read FParseMode write FParseMode;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+    constructor Create; override;
+    destructor Destroy; override;
+  end;
+
   [caName('sendMessage')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to send text messages.
   /// On success, the sent Message is returned.
   /// </summary>
-  TtgMessageArgument = class(TtgSendMessageBase)
+  TtgMessageArgument = class(TtgSendMessageBaseWithParseMode)
   private
     [caName('text')]
     [caIsRequaired]
@@ -179,7 +202,7 @@ type
   /// <summary>Use this method to send text messages.
   /// On success, the sent Message is returned.
   /// </summary>
-  TtgCopyMessageArgument = class(TtgSendMessageBase)
+  TtgCopyMessageArgument = class(TtgSendMessageBaseWithParseMode)
   private
     [caName('from_chat_id')]
     [caIsRequaired]
@@ -229,7 +252,7 @@ type
     property AllowSendingWithoutReply;
   end;
 
-  TtgSendMediaAbstractArgument = class(TtgSendMessageBase)
+  TtgSendMediaAbstractArgument = class(TtgSendMessageBaseWithParseMode)
   private
     [caName('caption')]
     [caDefaultValueStringAttribute('')]
@@ -1643,41 +1666,81 @@ type
   /// <summary>
   /// Use this method to send invoices. On success, the sent Message is returned.
   /// </summary>
-  TtgSendInvoice = class
+  TtgSendInvoiceArgument = class(TtgSendMessageBase)
   private
-    [caName('start_parameter')]
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    FChatId: TtgUserLink;
     [caName('title')]
     [caIsRequaired]
+    [caDefaultValueString('')]
     fTitle: string;
     [caName('description')]
     [caIsRequaired]
+    [caDefaultValueString('')]
     FDescription: string;
     [caName('payload')]
     [caIsRequaired]
+    [caDefaultValueString('')]
     FPayload: string;
     [caName('provider_token')]
     [caIsRequaired]
+    [caDefaultValueString('')]
     FProviderToken: string;
     [caName('currency')]
     [caIsRequaired]
+    [caDefaultValueString('')]
     FCurrency: string;
     [caName('prices')]
     [caIsRequaired]
+    [caDefaultValueString('[]')]
     FPrices: TArray<TtgLabeledPrice>;
     [caName('max_tip_amount')]
+    [caDefaultValueInt(0)]
     FMaxTipAmount: Integer;
     [caName('suggested_tip_amounts')]
+    [caDefaultValueString('[]')]
     FSuggestedTipAmounts: TArray<Integer>;
     [caName('start_parameter')]
+    [caDefaultValueString('')]
     FStartParameter: string;
+    [caName('provider_data')]
+    [caDefaultValueString('')]
+    FProviderData: string;
+    [caName('photo_url')]
+    [caDefaultValueString('')]
+    FPhotoUrl: string;
+    [caName('photo_size')]
+    [caDefaultValueInt(0)]
+    FPhotoSize: Integer;
+    [caName('photo_width')]
+    [caDefaultValueInt(0)]
+    FPhotoWidth: Integer;
+    [caName('photo_height')]
+    [caDefaultValueInt(0)]
+    FPhotoHeight: Integer;
+    [caName('need_name')]
+    [caDefaultValueBoolean(False)]
+    FNeedName: Boolean;
+    [caName('need_phone_number')]
+    [caDefaultValueBoolean(False)]
+    FNeedPhoneNumber: Boolean;
+    [caName('need_email')]
+    [caDefaultValueBoolean(False)]
+    FNeedEmail: Boolean;
+    [caName('need_shipping_address')]
+    [caDefaultValueBoolean(False)]
+    FNeedShippingAddress: Boolean;
+    [caName('send_phone_number_to_provider')]
+    [caDefaultValueBoolean(False)]
+    FSendPhoneNumberToProvider: Boolean;
+    [caName('send_email_to_provider')]
+    [caDefaultValueBoolean(False)]
+    FSendEmailToProvider: Boolean;
+    [caName('is_flexible')]
+    [caDefaultValueBoolean(False)]
+    FIsFlexible: Boolean;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read FChatId write FChatId;
+    property ChatId;
     /// <summary>
     /// Product name, 1-32 characters
     /// </summary>
@@ -1727,7 +1790,76 @@ type
     /// of a Pay button), with the value used as the start parameter
     /// </summary>
     property StartParameter: string read FStartParameter write FStartParameter;
+    /// <summary>
+    /// A JSON-serialized data about the invoice, which will be shared with the payment
+    /// provider. A detailed description of required fields should be provided by the
+    /// payment provider.
+    /// </summary>
+    property ProviderData: string read FProviderData write FProviderData;
+    /// <summary>
+    /// URL of the product photo for the invoice. Can be a photo of the goods or a
+    /// marketing image for a service. People like it better when they see what they
+    /// are paying for.
+    /// </summary>
+    property PhotoUrl: string read FPhotoUrl write FPhotoUrl;
+    /// <summary>
+    /// Photo size
+    /// </summary>
+    property PhotoSize: Integer read FPhotoSize write FPhotoSize;
+    /// <summary>
+    /// Photo width
+    /// </summary>
+    property PhotoWidth: Integer read FPhotoWidth write FPhotoWidth;
+    /// <summary>
+    /// Photo height
+    /// </summary>
+    property PhotoHeight: Integer read FPhotoHeight write FPhotoHeight;
+    /// <summary>
+    /// Pass True, if you require the user's full name to complete the order
+    /// </summary>
+    property NeedName: Boolean read FNeedName write FNeedName;
+    /// <summary>
+    /// Pass True, if you require the user's phone number to complete the order
+    /// </summary>
+    property NeedPhoneNumber: Boolean read FNeedPhoneNumber write FNeedPhoneNumber;
+    /// <summary>
+    /// Pass True, if you require the user's email address to complete the order
+    /// </summary>
+    property NeedEmail: Boolean read FNeedEmail write FNeedEmail;
+    /// <summary>
+    /// Pass True, if you require the user's shipping address to complete the order
+    /// </summary>
+    property NeedShippingAddress: Boolean read FNeedShippingAddress write FNeedShippingAddress;
+    /// <summary>
+    /// Pass True, if user's phone number should be sent to provider
+    /// </summary>
+    property SendPhoneNumberToProvider: Boolean read FSendPhoneNumberToProvider write FSendPhoneNumberToProvider;
+    /// <summary>
+    /// Pass True, if user's email address should be sent to provider
+    /// </summary>
+    property SendEmailToProvider: Boolean read FSendEmailToProvider write FSendEmailToProvider;
 
+    /// <summary>
+    /// Pass True, if the final price depends on the shipping method
+    /// </summary>
+    property IsFlexible: Boolean read FIsFlexible write FIsFlexible;
+
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>
+    /// If the message is a reply, ID of the original message
+    /// </summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+    /// <summary>
+    /// A JSON-serialized object for an keyboard
+    /// </summary>
+    property ReplyMarkup;
   end;
 
 implementation
@@ -1996,10 +2128,23 @@ end;
 
 { TtgSendMessageBase }
 
-constructor TtgSendMessageBase.Create;
+constructor TtgSendMessageBaseWithParseMode.Create;
 begin
   inherited Create;
   FParseMode := TtgParseMode.Default;
+end;
+
+destructor TtgSendMessageBaseWithParseMode.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+{ TtgSendMessageBase }
+
+constructor TtgSendMessageBase.Create;
+begin
+  inherited Create;
   FReplyToMessageId := 0;
   FAllowSendingWithoutReply := False;
 end;
@@ -2007,7 +2152,7 @@ end;
 destructor TtgSendMessageBase.Destroy;
 begin
 
-  inherited Destroy;
+  inherited;
 end;
 
 { TtgCopyMessageArgument }
