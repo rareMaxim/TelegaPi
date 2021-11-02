@@ -56,17 +56,22 @@ var
 begin
   lMsgType := TRttiEnumerationType.GetName<TtgMessageType>(AMsg.&Type);
   Writeln('Receive message type: ' + lMsgType);
-  lAction := AMsg.Text.Split([' '])[0];
-  if lAction = '/photo' then
+  if AMsg.&Type = TtgMessageType.Text then
   begin
-    SendFile(AMsg);
-  end
-  else if lAction = '/keyboard' then
-  begin
-    SendReplyKeyboard(AMsg);
+    lAction := AMsg.Text.Split([' '])[0];
+    if lAction = '/photo' then
+    begin
+      SendFile(AMsg);
+    end
+    else if lAction = '/keyboard' then
+    begin
+      SendReplyKeyboard(AMsg);
+    end
+    else
+      SendTextMessage(AMsg.Chat.ID, AMsg.Text);
   end
   else
-    SendTextMessage(AMsg.Chat.ID, AMsg.Text);
+    SendTextMessage(AMsg.Chat.ID, lMsgType + ': ' + AMsg.Text);
 end;
 
 procedure TDemoPooling.Main;
@@ -120,7 +125,7 @@ begin
     fBot.SendMessage(lMsg);
   finally
     lMsg.Free;
-  // lKB.Free;     <-- Autofree in TelegaPi core
+    // lKB.Free;     <-- Autofree in TelegaPi core
   end;
 end;
 
