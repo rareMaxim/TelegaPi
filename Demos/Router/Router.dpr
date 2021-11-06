@@ -72,16 +72,8 @@ begin
   if AMsg.&Type = TtgMessageType.Text then
   begin
     lAction := AMsg.Text.Split([' '])[0];
-    if lAction = '/photo' then
-    begin
-      SendFile(AMsg);
-    end
-    else if lAction = '/keyboard' then
-    begin
 
-    end
-    else
-      SendTextMessage(AMsg.Chat.ID, AMsg.Text);
+    SendTextMessage(AMsg.Chat.ID, AMsg.Text);
   end
   else
     SendTextMessage(AMsg.Chat.ID, lMsgType + ': ' + AMsg.Text);
@@ -159,20 +151,58 @@ end;
 procedure TDemoPooling.SetupRoutes;
 var
   lStart: TtgRoute;
-  lKB: TtgRoute;
+  lAge: TtgRoute;
+  lName: TtgRoute;
 begin
   lStart := TtgRoute.Create('/start');
   lStart.OnMessageCallback := procedure(AMsg: TtgMessage)
     begin
       SendTextMessage(AMsg.Chat.ID, AMsg.Text);
     end;
-  lKB := TtgRoute.Create('/keyboard');
-  lKB.OnMessageCallback := procedure(AMsg: TtgMessage)
+  lAge := TtgRoute.Create('/age');
+  lAge.OnStartCallback := procedure(AMsg: TtgMessage)
+    const
+      C_MSG = 'Сколько лет?';
     begin
-      SendReplyKeyboard(AMsg);
+      SendTextMessage(AMsg.Chat.ID, C_MSG);
+    end;
+  lAge.OnMessageCallback := procedure(AMsg: TtgMessage)
+    var
+      lAge_Value: Integer;
+    const
+      C_MSG = 'Не верю. Давай еще раз';
+    begin
+      if Integer.TryParse(AMsg.Text, lAge_Value) then
+      begin
+        FRouteManager.MoveTo(AMsg.Chat.ID, lName.Name);
+      end
+      else
+      begin
+        SendTextMessage(AMsg.Chat.ID, C_MSG);
+      end;
+    end;
+  lAge.OnStopCallback := procedure(AMsg: TtgMessage)
+    const
+      C_MSG = 'Принято. Переходим к следующему шагу';
+    begin
+      SendTextMessage(AMsg.Chat.ID, C_MSG);
+    end;
+  lName := TtgRoute.Create('/name');
+  lName.OnStartCallback := procedure(AMsg: TtgMessage)
+    const
+      C_MSG = 'Как зовут?';
+    begin
+
+      SendTextMessage(AMsg.Chat.ID, C_MSG);
+    end;
+  lName.OnMessageCallback := procedure(AMsg: TtgMessage)
+    const
+      C_MSG = 'Приветики';
+    begin
+      SendTextMessage(AMsg.Chat.ID, C_MSG);
     end;
   //
-  FRouteManager.RegisterRoutes([lStart, lKB]);
+  FRouteManager.RegisterRoutes([lStart, lAge, lName]);
 end;
 
 procedure TDemoPooling.UpdateConsoleTitle(ABot: TTelegramBotApi);

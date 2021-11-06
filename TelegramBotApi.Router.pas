@@ -78,13 +78,14 @@ type
     procedure DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
   public
     constructor Create;
+    destructor Destroy; override;
+    procedure MoveTo(const AUserID: Int64; const ARouteName: string);
     // регистрируем точку
     procedure RegisterRoute(ARoute: TtgRoute);
     // регистрируем точки
     procedure RegisterRoutes(ARoutes: TArray<TtgRoute>);
     // Уведомляем маршрутизатор о новом сообщении
     procedure SendMessage(AMessage: TtgMessage);
-    destructor Destroy; override;
     // property Routes: TDictionary<string, TtgRoute> read FRoutes write FRoutes;
     // Доступ к состояниям пользователей
     property RouteUserState: TtgRouteUserStateManagerAbstract read FRouteUserState write FRouteUserState;
@@ -193,6 +194,11 @@ begin
     FOnRouteNotFound(AId, ARouteName)
   else
     raise Exception.CreateFmt('Route "%s" for UserID "%d" not found', [ARouteName, AId]);
+end;
+
+procedure TtgRouteManager.MoveTo(const AUserID: Int64; const ARouteName: string);
+begin
+  FRouteUserState.UserState[AUserID] := ARouteName;
 end;
 
 procedure TtgRouteManager.RegisterRoute(ARoute: TtgRoute);
