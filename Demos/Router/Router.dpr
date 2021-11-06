@@ -9,9 +9,11 @@ uses
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Request,
   TelegramBotApi.Polling.Console,
+  TelegramBotApi.Router,
   System.SysUtils,
   System.Rtti,
-  Winapi.Windows, TelegramBotApi.Types.Keyboards;
+  Winapi.Windows,
+  TelegramBotApi.Types.Keyboards;
 
 type
   TDemoPooling = class
@@ -20,12 +22,15 @@ type
   private
     fBot: TTelegramBotApi;
     fPooling: TtgPollingConsole;
+    FRouteManager: TtgRouteManager;
+    FUserStates: TtgRouteUserStateManagerRAM;
   protected
     procedure UpdateConsoleTitle(ABot: TTelegramBotApi);
     procedure SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
     procedure DoReadMessage(AMsg: TtgMessage);
     procedure SendFile(AMsg: TtgMessage);
     procedure SendReplyKeyboard(AMsg: TtgMessage);
+    procedure SetupRoutes;
   public
     procedure Main;
     constructor Create;
@@ -40,12 +45,19 @@ begin
   fBot := TTelegramBotApi.Create(BOT_TOKEN);
   fPooling := TtgPollingConsole.Create;
   fPooling.Bot := fBot;
+  FUserStates := TtgRouteUserStateManagerRAM.Create;
+  FRouteManager := TtgRouteManager.Create;
+  FRouteManager.RouteUserState := FUserStates;
+  SetupRoutes;
 end;
 
 destructor TDemoPooling.Destroy;
 begin
+  FRouteManager.Free;
+  FUserStates.Free;
   fBot.Free;
   fPooling.Free;
+
   inherited;
 end;
 
@@ -56,6 +68,7 @@ var
 begin
   lMsgType := TRttiEnumerationType.GetName<TtgMessageType>(AMsg.&Type);
   Writeln('Receive message type: ' + lMsgType);
+  FRouteManager.SendMessage(AMsg);
   if AMsg.&Type = TtgMessageType.Text then
   begin
     lAction := AMsg.Text.Split([' '])[0];
@@ -65,7 +78,7 @@ begin
     end
     else if lAction = '/keyboard' then
     begin
-      SendReplyKeyboard(AMsg);
+
     end
     else
       SendTextMessage(AMsg.Chat.ID, AMsg.Text);
@@ -141,6 +154,25 @@ begin
   finally
     lMsg.Free;
   end;
+end;
+
+procedure TDemoPooling.SetupRoutes;
+var
+  lStart: TtgRoute;
+  lKB: TtgRoute;
+begin
+  lStart := TtgRoute.Create('/start');
+  lStart.OnMessageCallback := procedure(AMsg: TtgMessage)
+    begin
+      SendTextMessage(AMsg.Chat.ID, AMsg.Text);
+    end;
+  lKB := TtgRoute.Create('/keyboard');
+  lKB.OnMessageCallback := procedure(AMsg: TtgMessage)
+    begin
+      SendReplyKeyboard(AMsg);
+    end;
+  //
+  FRouteManager.RegisterRoutes([lStart, lKB]);
 end;
 
 procedure TDemoPooling.UpdateConsoleTitle(ABot: TTelegramBotApi);
