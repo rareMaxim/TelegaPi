@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{69AD998B-1BE1-4B4D-9C3B-1C5165359DB2}</ProjectGuid>
+        <ProjectGuid>{AE34D09E-A9CE-4BF2-8C69-0483D7FACC80}</ProjectGuid>
         <ProjectVersion>19.2</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <MainSource>Pooling.dpr</MainSource>
