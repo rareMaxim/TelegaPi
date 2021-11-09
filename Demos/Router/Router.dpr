@@ -64,19 +64,9 @@ end;
 procedure TDemoPooling.DoReadMessage(AMsg: TtgMessage);
 var
   lMsgType: string;
-  lAction: string;
 begin
   lMsgType := TRttiEnumerationType.GetName<TtgMessageType>(AMsg.&Type);
-  Writeln('Receive message type: ' + lMsgType);
   FRouteManager.SendMessage(AMsg);
-  if AMsg.&Type = TtgMessageType.Text then
-  begin
-    lAction := AMsg.Text.Split([' '])[0];
-
-    SendTextMessage(AMsg.Chat.ID, AMsg.Text);
-  end
-  else
-    SendTextMessage(AMsg.Chat.ID, lMsgType + ': ' + AMsg.Text);
 end;
 
 procedure TDemoPooling.Main;
@@ -155,16 +145,27 @@ var
   lName: TtgRoute;
 begin
   lStart := TtgRoute.Create('/start');
+  lStart.OnStartCallback := procedure(AUserID: Int64)
+    begin
+      Writeln(TimeToStr(NOW) + ':"' + lStart.Name + '" start');
+    end;
   lStart.OnMessageCallback := procedure(AMsg: TtgMessage)
     begin
-      SendTextMessage(AMsg.Chat.ID, AMsg.Text);
+      Writeln(TimeToStr(NOW) + ':"' + lStart.Name + '" Message');
+      if AMsg.Text = lStart.Name then
+        FRouteManager.MoveTo(AMsg.Chat.ID, lAge);
+    end;
+  lStart.OnStopCallback := procedure(AUserID: Int64)
+    begin
+      Writeln(TimeToStr(NOW) + ':"' + lStart.Name + '" stop');
     end;
   lAge := TtgRoute.Create('/age');
-  lAge.OnStartCallback := procedure(AMsg: TtgMessage)
+  lAge.OnStartCallback := procedure(AUserID: Int64)
     const
-      C_MSG = 'Сколько лет?';
+      C_MSG = 'Сколько тебе лет?';
     begin
-      SendTextMessage(AMsg.Chat.ID, C_MSG);
+      Writeln(TimeToStr(NOW) + ':"' + lAge.Name + '" start');
+      SendTextMessage(AUserID, C_MSG);
     end;
   lAge.OnMessageCallback := procedure(AMsg: TtgMessage)
     var
@@ -172,34 +173,34 @@ begin
     const
       C_MSG = 'Не верю. Давай еще раз';
     begin
+      Writeln(TimeToStr(NOW) + ':"' + lAge.Name + '" Message');
       if Integer.TryParse(AMsg.Text, lAge_Value) then
       begin
-        FRouteManager.MoveTo(AMsg.Chat.ID, lName.Name);
+        FRouteManager.MoveTo(AMsg.Chat.ID, lName);
       end
       else
       begin
         SendTextMessage(AMsg.Chat.ID, C_MSG);
       end;
     end;
-  lAge.OnStopCallback := procedure(AMsg: TtgMessage)
-    const
-      C_MSG = 'Принято. Переходим к следующему шагу';
+  lAge.OnStopCallback := procedure(AUserID: Int64)
     begin
-      SendTextMessage(AMsg.Chat.ID, C_MSG);
+      Writeln(TimeToStr(NOW) + ':"' + lAge.Name + '" stop');
     end;
   lName := TtgRoute.Create('/name');
-  lName.OnStartCallback := procedure(AMsg: TtgMessage)
-    const
-      C_MSG = 'Как зовут?';
+  lName.OnStartCallback := procedure(AUserID: Int64)
     begin
-
-      SendTextMessage(AMsg.Chat.ID, C_MSG);
+      Writeln(TimeToStr(NOW) + ':"' + lName.Name + '" start');
     end;
   lName.OnMessageCallback := procedure(AMsg: TtgMessage)
     const
       C_MSG = 'Приветики';
     begin
       SendTextMessage(AMsg.Chat.ID, C_MSG);
+    end;
+  lName.OnStopCallback := procedure(AUserID: Int64)
+    begin
+      Writeln(TimeToStr(NOW) + ':"' + lName.Name + '" stop');
     end;
   //
   FRouteManager.RegisterRoutes([lStart, lAge, lName]);

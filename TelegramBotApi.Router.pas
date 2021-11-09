@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.Rtti,
   System.Generics.Collections,
   System.SysUtils,
   TelegramBotApi.Types;
@@ -47,24 +48,31 @@ type
   TtgRoute = record
   private
     FName: string;
-    FOnStartCallback: TProc<TtgMessage>;
+    FOnStartCallback: TProc<Int64>;
     FOnMessageCallback: TProc<TtgMessage>;
-    FOnStopCallback: TProc<TtgMessage>;
+    FTagString: string;
+    FTagInteger: Integer;
+    FTagValue: TValue;
+    FOnStopCallback: TProc<Int64>;
     // protected
-    procedure RouteStart(AMessage: TtgMessage);
-    procedure RouteStop(AMessage: TtgMessage);
+    procedure RouteStart(const AUserID: Int64);
+    procedure RouteStop(const AUserID: Int64);
     procedure SendMessage(AMessage: TtgMessage);
   public
     class function Create(const AName: string): TtgRoute; static;
+    class function Empty: TtgRoute; static;
+    function IsEmpty: Boolean;
+    property TagString: string read FTagString write FTagString;
+    property TagInteger: Integer read FTagInteger write FTagInteger;
     // Имя точки.
     // Возможно, по имени точки будет происходить переход на нужныый маршрут
     property Name: string read FName write FName;
     // Отправляем побуждение к действию
-    property OnStartCallback: TProc<TtgMessage> read FOnStartCallback write FOnStartCallback;
+    property OnStartCallback: TProc<Int64> read FOnStartCallback write FOnStartCallback;
     // Обрабатывапем ответ от пользователя
     property OnMessageCallback: TProc<TtgMessage> read FOnMessageCallback write FOnMessageCallback;
     // вызывается при перемещении на следующую точку маршрута. Возможно, лишний колбек.
-    property OnStopCallback: TProc<TtgMessage> read FOnStopCallback write FOnStopCallback;
+    property OnStopCallback: TProc<Int64> read FOnStopCallback write FOnStopCallback;
   end;
 
   // Управление маршрутами
@@ -73,13 +81,14 @@ type
     FRouteUserState: TtgRouteUserStateManagerAbstract;
     FRoutes: TDictionary<string, TtgRoute>;
     FOnRouteNotFound: TProc<Int64, string>;
+    FCurrentRoute: TtgRoute;
   protected
     procedure DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
     procedure DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
   public
     constructor Create;
     destructor Destroy; override;
-    procedure MoveTo(const AUserID: Int64; const ARouteName: string);
+    procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
     // регистрируем точку
     procedure RegisterRoute(ARoute: TtgRoute);
     // регистрируем точки
@@ -151,16 +160,26 @@ begin
   Result.Name := AName;
 end;
 
-procedure TtgRoute.RouteStart(AMessage: TtgMessage);
+class function TtgRoute.Empty: TtgRoute;
 begin
-  if Assigned(OnStartCallback) then
-    OnStartCallback(AMessage);
+  Result := TtgRoute.Create(string.Empty);
 end;
 
-procedure TtgRoute.RouteStop(AMessage: TtgMessage);
+function TtgRoute.IsEmpty: Boolean;
+begin
+  Result := FName.IsEmpty;
+end;
+
+procedure TtgRoute.RouteStart(const AUserID: Int64);
+begin
+  if Assigned(OnStartCallback) then
+    OnStartCallback(AUserID);
+end;
+
+procedure TtgRoute.RouteStop(const AUserID: Int64);
 begin
   if Assigned(OnStopCallback) then
-    OnStopCallback(AMessage);
+    OnStopCallback(AUserID);
 end;
 
 procedure TtgRoute.SendMessage(AMessage: TtgMessage);
@@ -174,6 +193,7 @@ end;
 constructor TtgRouteManager.Create;
 begin
   FRoutes := TDictionary<string, TtgRoute>.Create;
+  FCurrentRoute := TtgRoute.Empty;
 end;
 
 destructor TtgRouteManager.Destroy;
@@ -196,9 +216,17 @@ begin
     raise Exception.CreateFmt('Route "%s" for UserID "%d" not found', [ARouteName, AId]);
 end;
 
-procedure TtgRouteManager.MoveTo(const AUserID: Int64; const ARouteName: string);
+procedure TtgRouteManager.MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
+var
+  LCurrentRoute: TtgRoute;
 begin
-  FRouteUserState.UserState[AUserID] := ARouteName;
+  if FRouteUserState.UserState[AUserID] <> ARoute.Name then
+  begin
+    if FRoutes.TryGetValue(FRouteUserState.UserState[AUserID], LCurrentRoute) then
+      LCurrentRoute.RouteStop(AUserID);
+  end;
+  FRouteUserState.UserState[AUserID] := ARoute.Name;
+  ARoute.RouteStart(AUserID);
 end;
 
 procedure TtgRouteManager.RegisterRoute(ARoute: TtgRoute);
@@ -225,7 +253,15 @@ begin
   DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
   if FRoutes.TryGetValue(LCurrentState, LRoute) then
   begin
-    LRoute.SendMessage(AMessage);
+    // if LRoute.Name <> FCurrentRoute.Name then
+    // begin
+    // FCurrentRoute := LRoute;
+    // FCurrentRoute.RouteStart(AMessage)
+    // end
+    // else if LRoute.Name = FCurrentRoute.Name then
+    LRoute.SendMessage(AMessage)
+    // else
+    // raise Exception.Create('TtgRouteManager.SendMessage');
   end;
 
 end;
