@@ -34,7 +34,7 @@ type
     property Text: string read GetText write SetText;
   end;
 
-/// <summary> This object represents one button of the reply keyboard. For simple
+  /// <summary> This object represents one button of the reply keyboard. For simple
   /// text buttons String can be used instead of this object to specify text of the
   /// button. Optional fields request_contact, request_location, and request_poll are
   /// mutually exclusive
@@ -89,6 +89,21 @@ type
 
   ItgReplyMarkup = interface
     ['{D1ED8610-587B-4A46-933B-113DDFECC7B9}']
+
+  end;
+
+  ItgKeyboardKeyboardRow = interface
+    ['{5908E788-B410-4C97-B563-6AD0B5A97179}']
+    function AddButton(ABtn: TtgKeyboardButton): ItgKeyboardKeyboardRow;
+  end;
+
+  TtgKeyboardKeyboardRow = class(TInterfacedObject, ItgKeyboardKeyboardRow)
+  private
+    FRow: TArray<TtgKeyboardButton>;
+  public
+    function Count: Integer;
+    constructor Create(ARow: TArray<TtgKeyboardButton>);
+    function AddButton(ABtn: TtgKeyboardButton): ItgKeyboardKeyboardRow;
   end;
 
   /// <summary>
@@ -106,6 +121,9 @@ type
     [JsonName('selective')]
     FSelective: Boolean;
   public
+    constructor Create;
+    function RowCount: Byte;
+    function AddRow(AButtons: TArray < TtgKeyboardButton >= []): ItgKeyboardKeyboardRow;
     /// <summary>
     /// Array of button rows, each represented by an Array of KeyboardButton objects
     /// </summary>
@@ -172,7 +190,7 @@ type
 {$ENDREGION}
 {$REGION 'Inline keyboards'}
 
-/// <summary>
+  /// <summary>
   /// This object represents a parameter of the inline keyboard button used to
   /// automatically authorize a user. Serves as a great replacement for the Telegram
   /// Login Widget when the user is coming from Telegram. All the user needs to do is
@@ -321,7 +339,7 @@ type
   end;
 {$ENDREGION}
 
-/// <summary>
+  /// <summary>
   /// Upon receiving a message with this object, Telegram clients will display a
   /// reply interface to the user (act as if the user has selected the bot's message
   /// and tapped 'Reply'). This can be extremely useful if you want to create
@@ -367,6 +385,51 @@ end;
 procedure TtgKeyboardButton.SetText(const Value: string);
 begin
   FText := Value;
+end;
+
+{ TtgReplyKeyboardMarkup }
+
+function TtgReplyKeyboardMarkup.AddRow(AButtons: TArray<TtgKeyboardButton> = []): ItgKeyboardKeyboardRow;
+var
+  lNewPosition: Integer;
+begin
+  lNewPosition := RowCount;
+  SetLength(FKeyboard, lNewPosition + 1);
+  FKeyboard[lNewPosition] := AButtons;
+  Result := TtgKeyboardKeyboardRow.Create(FKeyboard[lNewPosition]);
+end;
+
+constructor TtgReplyKeyboardMarkup.Create;
+begin
+  FResizeKeyboard := True;
+end;
+
+function TtgReplyKeyboardMarkup.RowCount: Byte;
+begin
+  Result := Length(FKeyboard);
+end;
+
+{ TtgKeyboardKeyboardRow }
+
+function TtgKeyboardKeyboardRow.AddButton(ABtn: TtgKeyboardButton): ItgKeyboardKeyboardRow;
+var
+  lNewPosition: Integer;
+begin
+  lNewPosition := Count;
+  SetLength(FRow, lNewPosition + 1);
+  FRow[lNewPosition] := ABtn;
+  Result := Self;
+
+end;
+
+function TtgKeyboardKeyboardRow.Count: Integer;
+begin
+  Result := Length(FRow);
+end;
+
+constructor TtgKeyboardKeyboardRow.Create(ARow: TArray<TtgKeyboardButton>);
+begin
+  FRow := ARow;
 end;
 
 end.
