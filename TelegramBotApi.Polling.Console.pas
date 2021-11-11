@@ -131,9 +131,7 @@ end;
 
 procedure TtgPollingConsole.Start;
 begin
-
   inherited Start;
-  Readln;
 end;
 
 end.

@@ -76,17 +76,19 @@ type
   end;
 
   // Управление маршрутами
-  TtgRouteManager = class
+  TtgRouter = class
   private
     FRouteUserState: TtgRouteUserStateManagerAbstract;
     FRoutes: TDictionary<string, TtgRoute>;
     FOnRouteNotFound: TProc<Int64, string>;
     FCurrentRoute: TtgRoute;
+    fOnRouteMove: TProc<Int64, TtgRoute, TtgRoute>;
   protected
     procedure DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
     procedure DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
+    procedure DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRoute);
   public
-    constructor Create;
+    constructor Create(ARouteUserState: TtgRouteUserStateManagerAbstract);
     destructor Destroy; override;
     procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
     // регистрируем точку
@@ -100,6 +102,8 @@ type
     property RouteUserState: TtgRouteUserStateManagerAbstract read FRouteUserState write FRouteUserState;
     // Колбек перехода на несуществующий маршрут
     property OnRouteNotFound: TProc<Int64, string> read FOnRouteNotFound write FOnRouteNotFound;
+    // при перемещении точки  UserID, From, To
+    property OnRouteMove: TProc<Int64, TtgRoute, TtgRoute> read fOnRouteMove write fOnRouteMove;
   end;
 
 implementation
@@ -190,25 +194,26 @@ end;
 
 { TtgRouteManager }
 
-constructor TtgRouteManager.Create;
+constructor TtgRouter.Create(ARouteUserState: TtgRouteUserStateManagerAbstract);
 begin
   FRoutes := TDictionary<string, TtgRoute>.Create;
+  FRouteUserState := ARouteUserState;
   FCurrentRoute := TtgRoute.Empty;
 end;
 
-destructor TtgRouteManager.Destroy;
+destructor TtgRouter.Destroy;
 begin
   FRoutes.Free;
   inherited;
 end;
 
-procedure TtgRouteManager.DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
+procedure TtgRouter.DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
 begin
   if not FRoutes.ContainsKey(ARouteName) then
     DoNotifyRouteNotFound(AId, ARouteName);
 end;
 
-procedure TtgRouteManager.DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
+procedure TtgRouter.DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
 begin
   if Assigned(FOnRouteNotFound) then
     FOnRouteNotFound(AId, ARouteName)
@@ -216,7 +221,13 @@ begin
     raise Exception.CreateFmt('Route "%s" for UserID "%d" not found', [ARouteName, AId]);
 end;
 
-procedure TtgRouteManager.MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
+procedure TtgRouter.DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRoute);
+begin
+  if Assigned(OnRouteMove) then
+    OnRouteMove(AUserID, AFrom, ATo);
+end;
+
+procedure TtgRouter.MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
 var
   LCurrentRoute: TtgRoute;
 begin
@@ -227,14 +238,15 @@ begin
   end;
   FRouteUserState.UserState[AUserID] := ARoute.Name;
   ARoute.RouteStart(AUserID);
+  DoOnRouteMove(AUserID, LCurrentRoute, ARoute);
 end;
 
-procedure TtgRouteManager.RegisterRoute(ARoute: TtgRoute);
+procedure TtgRouter.RegisterRoute(ARoute: TtgRoute);
 begin
   FRoutes.AddOrSetValue(ARoute.Name, ARoute);
 end;
 
-procedure TtgRouteManager.RegisterRoutes(ARoutes: TArray<TtgRoute>);
+procedure TtgRouter.RegisterRoutes(ARoutes: TArray<TtgRoute>);
 var
   I: Integer;
 begin
@@ -242,13 +254,13 @@ begin
     RegisterRoute(ARoutes[I]);
 end;
 
-procedure TtgRouteManager.SendMessage(AMessage: TtgMessage);
+procedure TtgRouter.SendMessage(AMessage: TtgMessage);
 var
   LRoute: TtgRoute;
   lCurrentUserID: Int64;
   LCurrentState: string;
 begin
-  lCurrentUserID := AMessage.Chat.ID;
+  lCurrentUserID := AMessage.From.ID;
   LCurrentState := FRouteUserState.UserState[lCurrentUserID];
   DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
   if FRoutes.TryGetValue(LCurrentState, LRoute) then
