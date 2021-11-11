@@ -2740,6 +2740,8 @@ begin
     Exit(TtgMessageType.Contact)
   else if Assigned(Poll) then
     Exit(TtgMessageType.Poll)
+  else if Assigned(Location) then
+    Exit(TtgMessageType.Location)
   else
   begin
     Result := TtgMessageType.Unknown;
