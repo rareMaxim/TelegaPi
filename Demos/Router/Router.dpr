@@ -22,7 +22,7 @@ type
   private
     fBot: TTelegramBotApi;
     fPooling: TtgPollingConsole;
-    FRouteManager: TtgRouteManager;
+    FRouteManager: TtgRouter;
     FUserStates: TtgRouteUserStateManagerRAM;
   protected
     procedure UpdateConsoleTitle(ABot: TTelegramBotApi);
@@ -46,8 +46,7 @@ begin
   fPooling := TtgPollingConsole.Create;
   fPooling.Bot := fBot;
   FUserStates := TtgRouteUserStateManagerRAM.Create;
-  FRouteManager := TtgRouteManager.Create;
-  FRouteManager.RouteUserState := FUserStates;
+  FRouteManager := TtgRouter.Create(FUserStates);
   SetupRoutes;
 end;
 

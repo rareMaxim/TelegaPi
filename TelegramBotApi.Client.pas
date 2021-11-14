@@ -420,7 +420,6 @@ begin
 end;
 
 function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;
-
 var
   LReq: IcaRequest;
 begin

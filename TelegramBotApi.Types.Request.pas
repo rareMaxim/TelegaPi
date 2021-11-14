@@ -637,7 +637,6 @@ type
     fAnimation: TcaFileToSend;
   public
     constructor Create; override;
-    destructor Destroy; override;
     /// <summary>
     /// Animation to send. Pass a file_id as String to send an animation that exists on
     /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
@@ -1905,6 +1904,7 @@ type
     [caDefaultValueString('')]
     FLanguageCode: string;
   public
+    destructor Destroy; override;
     /// <summary>
     /// A JSON-serialized list of bot commands to be set as the list of the bot's
     /// commands. At most 100 commands can be specified.
@@ -1921,6 +1921,8 @@ type
 
 implementation
 
+uses
+  System.SysUtils;
 { TtgForwardMessageArgument }
 
 constructor TtgForwardMessageArgument.Create;
@@ -2319,12 +2321,6 @@ begin
   fAnimation := TcaFileToSend.Empty;
 end;
 
-destructor TtgSendAnimationArgument.Destroy;
-begin
-
-  inherited;
-end;
-
 { TtgUnbanChatMemberArgument }
 
 constructor TtgUnbanChatMemberArgument.Create(AChatId: TtgUserLink; const AUserId: Int64;
@@ -2363,6 +2359,13 @@ begin
   FUserID := 0;
   FUntilDate := 0;
   FRevokeMessages := False;
+end;
+
+destructor TtgSetMyCommandsArgument.Destroy;
+begin
+  if Assigned(FScope) then
+    FreeAndNil(FScope);
+  inherited;
 end;
 
 end.

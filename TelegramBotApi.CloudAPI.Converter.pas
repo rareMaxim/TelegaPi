@@ -8,8 +8,6 @@ uses
 
 type
   TtgConverters = class
-  private
-    class procedure RegisterToJson<T>;
   protected
     class procedure TtgUserLinkConverter;
     class procedure TtgParseModeConverter;
@@ -68,35 +66,24 @@ begin
     end);
 end;
 
-class procedure TtgConverters.RegisterToJson<T>;
-begin
-  TcaRequestArgument.Current.RegisterConverter<T>(
-    function(AValue: TValue): string
-    var
-      lData: T;
-      lCA: TCloudApiClientBase;
-    begin
-      lData := AValue.AsType<T>;
-      lCA := TCloudApiClientBase.Create;
-      try
-        Result := lCA.Serializer.Serialize<T>(lData);
-      finally
-        lCA.Free;
-      end;
-    end);
-end;
-
 class procedure TtgConverters.TelegramConverter;
 begin
   TtgUserLinkConverter;
   TtgParseModeConverter;
   TtgAllowedUpdatesConverter;
-  RegisterToJson<TArray<TcaFileToSend>>;
-  RegisterToJson<TArray<TtgInputMedia>>;
   TtgChatActionConverter;
   ItgReplyMarkupConverter;
-  RegisterToJson<TtgBotCommandScopeDefault>;
-  RegisterToJson<TArray<TtgBotCommand>>;;
+
+  TcaRequestArgument.Current.RegisterToJson<TArray<TtgBotCommand>>;
+  TcaRequestArgument.Current.RegisterToJson<TArray<TcaFileToSend>>;
+  TcaRequestArgument.Current.RegisterToJson<TArray<TtgInputMedia>>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeDefault>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeAllPrivateChats>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeAllGroupChats>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeAllChatAdministrators>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChat>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatAdministrators>;
+  TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatMember>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;

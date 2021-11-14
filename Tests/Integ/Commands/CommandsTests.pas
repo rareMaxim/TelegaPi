@@ -40,19 +40,25 @@ begin
   finally
     LGetMyCommands.Free;
   end;
-
 end;
 
 procedure TMyCommandsTests.Should_SetMyCommands;
 var
   LSetMyCommands: TtgSetMyCommandsArgument;
+  LGetMyCommandsRes: ItgResponse<TArray<TtgBotCommand>>;
   LResult: ItgResponse<Boolean>;
 begin
   LSetMyCommands := TtgSetMyCommandsArgument.Create;
   try
-    LSetMyCommands.Commands := [TtgBotCommand.Create('new', 'новій')];
+    LSetMyCommands.Commands := [ //
+      TtgBotCommand.Create('start', 'Start command'), //
+      TtgBotCommand.Create('help', 'Help command') //
+      ];
+    LSetMyCommands.Scope := TtgBotCommandScopeDefault.Create;
     LResult := Bot.SetMyCommands(LSetMyCommands);
     Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LGetMyCommandsRes := Bot.GetMyCommands(nil);
+    Assert.AreEqual(2, Length(LGetMyCommandsRes.Result));
   finally
     LSetMyCommands.Free;
   end;
