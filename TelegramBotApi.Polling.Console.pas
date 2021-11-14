@@ -34,7 +34,6 @@ type
     procedure DoOnUpdate(AUpdate: TtgUpdate); override;
     procedure DoOnUpdates(AUpdates: System.TArray<TelegramBotApi.Types.TtgUpdate>); override;
   public
-    procedure Start; override;
     property OnCallbackQuery: TProc<TtgCallbackQuery> read FOnCallbackQuery write FOnCallbackQuery;
     property OnChannelPost: TProc<TtgMessage> read FOnChannelPost write FOnChannelPost;
     property OnChosenInlineResult: TProc<TtgChosenInlineResult> read FOnChosenInlineResult write FOnChosenInlineResult;
@@ -127,11 +126,6 @@ begin
   inherited;
   if Assigned(OnUpdates) then
     OnUpdates(AUpdates);
-end;
-
-procedure TtgPollingConsole.Start;
-begin
-  inherited Start;
 end;
 
 end.

@@ -262,6 +262,8 @@ type
     /// </summary>
     function SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
 {$ENDREGION}
+    function GetMyCommands(AGetMyCommands: TtgGetMyCommandsArgument): ItgResponse<TArray<TtgBotCommand>>;
+    function SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -378,7 +380,6 @@ begin
 end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;
-
 var
   lGetMe: TtgGetMeArgunent;
 begin
@@ -388,6 +389,11 @@ begin
   finally
     lGetMe.Free;
   end;
+end;
+
+function TTelegramBotApi.GetMyCommands(AGetMyCommands: TtgGetMyCommandsArgument): ItgResponse<TArray<TtgBotCommand>>;
+begin
+  Result := InternalExecute < TtgGetMyCommandsArgument, TArray < TtgBotCommand >> (AGetMyCommands);
 end;
 
 function TTelegramBotApi.GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>;
@@ -580,6 +586,11 @@ begin
     FBotToken := Value;
     TTelegramAuthenticator(FCloudApi.Authenticator).BotToken := Value;
   end;
+end;
+
+function TTelegramBotApi.SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgSetMyCommandsArgument, Boolean>(ASetMyCommands);
 end;
 
 function TTelegramBotApi.SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;

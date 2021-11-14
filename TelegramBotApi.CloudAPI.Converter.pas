@@ -2,14 +2,18 @@ unit TelegramBotApi.CloudAPI.Converter;
 
 interface
 
+uses
+  System.SysUtils,
+  System.Rtti;
+
 type
   TtgConverters = class
   private
+    class procedure RegisterToJson<T>;
+  protected
     class procedure TtgUserLinkConverter;
     class procedure TtgParseModeConverter;
     class procedure TtgAllowedUpdatesConverter;
-    class procedure TArrayTcaFileToSendConverter;
-    class procedure TArrayTtgInputMediaConverter;
     class procedure TtgChatActionConverter;
     class procedure ItgReplyMarkupConverter;
   public
@@ -22,12 +26,10 @@ uses
   CloudAPI.Client.Base,
   CloudAPI.Types,
   CloudAPI.RequestArgument,
-
-  System.SysUtils,
-  System.Rtti,
   TelegramBotApi.Types,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Helpers, TelegramBotApi.Types.Keyboards;
+  TelegramBotApi.Types.Helpers,
+  TelegramBotApi.Types.Keyboards;
 { TtgConverters }
 
 class procedure TtgConverters.TtgAllowedUpdatesConverter;
@@ -53,50 +55,31 @@ begin
   TcaRequestArgument.Current.RegisterConverter<ItgReplyMarkup>(
     function(AValue: TValue): string
     var
-      lValue: TInterfacedObject;
+      LValue: TInterfacedObject;
       lCA: TCloudApiClientBase;
     begin
-
-      lValue := TInterfacedObject(AValue.AsInterface);
+      LValue := TInterfacedObject(AValue.AsInterface);
       lCA := TCloudApiClientBase.Create;
       try
-        Result := lCA.Serializer.Serialize<TObject>(lValue);
+        Result := lCA.Serializer.Serialize<TObject>(LValue);
       finally
         lCA.Free;
       end;
     end);
 end;
 
-class procedure TtgConverters.TArrayTcaFileToSendConverter;
+class procedure TtgConverters.RegisterToJson<T>;
 begin
-  TcaRequestArgument.Current.RegisterConverter < TArray < TcaFileToSend >> (
+  TcaRequestArgument.Current.RegisterConverter<T>(
     function(AValue: TValue): string
     var
-      LArray: TArray<TcaFileToSend>;
+      lData: T;
       lCA: TCloudApiClientBase;
     begin
-      LArray := AValue.AsType<TArray<TcaFileToSend>>;
+      lData := AValue.AsType<T>;
       lCA := TCloudApiClientBase.Create;
       try
-        Result := lCA.Serializer.Serialize < TArray < TcaFileToSend >> (LArray);
-      finally
-        lCA.Free;
-      end;
-    end);
-end;
-
-class procedure TtgConverters.TArrayTtgInputMediaConverter;
-begin
-  TcaRequestArgument.Current.RegisterConverter < TArray < TtgInputMedia >> (
-    function(AValue: TValue): string
-    var
-      LArray: TArray<TtgInputMedia>;
-      lCA: TCloudApiClientBase;
-    begin
-      LArray := AValue.AsType<TArray<TtgInputMedia>>;
-      lCA := TCloudApiClientBase.Create;
-      try
-        Result := lCA.Serializer.Serialize < TArray < TtgInputMedia >> (LArray);
+        Result := lCA.Serializer.Serialize<T>(lData);
       finally
         lCA.Free;
       end;
@@ -108,10 +91,12 @@ begin
   TtgUserLinkConverter;
   TtgParseModeConverter;
   TtgAllowedUpdatesConverter;
-  TArrayTcaFileToSendConverter;
-  TArrayTtgInputMediaConverter;
+  RegisterToJson<TArray<TcaFileToSend>>;
+  RegisterToJson<TArray<TtgInputMedia>>;
   TtgChatActionConverter;
   ItgReplyMarkupConverter;
+  RegisterToJson<TtgBotCommandScopeDefault>;
+  RegisterToJson<TArray<TtgBotCommand>>;;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;

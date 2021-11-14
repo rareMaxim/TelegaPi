@@ -2480,13 +2480,14 @@ type
   /// <summary>
   /// This object represents a bot command.
   /// </summary>
-  TtgBotCommand = class
+  TtgBotCommand = record
   private
     [JsonName('command')]
     FCommand: string;
     [JsonName('description')]
     FDescription: string;
   public
+    class function Create(const ACommand, ADescription: string): TtgBotCommand; static;
     /// <summary>
     /// Text of the command, 1-32 characters. Can contain only lowercase English
     /// letters, digits and underscores.
@@ -2566,6 +2567,109 @@ type
     /// decimal point for each currency (2 for the majority of currencies).
     /// </summary>
     property Amount: Integer read FAmount write FAmount;
+  end;
+
+  /// <summary>
+  /// This object represents the scope to which bot commands are applied.
+  /// </summary>
+  TtgBotCommandScope = class abstract
+  private
+    [JsonName('type')]
+    FType: string;
+  public
+    constructor Create; virtual;
+    property &Type: string read FType write FType;
+  end;
+
+  /// <summary>
+  /// Represents the default scope of bot commands. Default commands are used if no
+  /// commands with a narrower scope are specified for the user.
+  /// </summary>
+  TtgBotCommandScopeDefault = class(TtgBotCommandScope)
+  public
+    constructor Create; override;
+    property &Type;
+  end;
+
+  /// <summary>
+  /// Represents the scope of bot commands, covering all private chats.
+  /// </summary>
+  TtgBotCommandScopeAllPrivateChats = class(TtgBotCommandScope)
+  public
+    constructor Create; override;
+    property &Type;
+  end;
+
+  /// <summary>
+  /// Represents the scope of bot commands, covering all group and supergroup chats.
+  /// </summary>
+  TtgBotCommandScopeAllGroupChats = class(TtgBotCommandScope)
+  public
+    constructor Create; override;
+    property &Type;
+  end;
+
+  /// <summary>
+  /// Represents the scope of bot commands, covering all group and supergroup chat
+  /// administrators.
+  /// </summary>
+  TtgBotCommandScopeAllChatAdministrators = class(TtgBotCommandScope)
+  public
+    constructor Create; override;
+    property &Type;
+  end;
+
+  /// <summary>
+  /// Represents the scope of bot commands, covering a specific chat.
+  /// </summary>
+  TtgBotCommandScopeChat = class(TtgBotCommandScope)
+  private
+    [JsonName('chat_id')]
+    FChatId: TtgUserLink;
+  public
+    constructor Create; override;
+    property &Type;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target supergroup (in
+    /// the format @supergroupusername)
+    /// </summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+  end;
+
+  /// <summary>
+  /// Represents the scope of bot commands, covering all administrators of a specific
+  /// group or supergroup chat.
+  /// </summary>
+  TtgBotCommandScopeChatAdministrators = class(TtgBotCommandScopeChat)
+  public
+    constructor Create; override;
+    property &Type;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target supergroup (in
+    /// the format @supergroupusername)
+    /// </summary>
+    property ChatId;
+  end;
+
+  TtgBotCommandScopeChatMember = class(TtgBotCommandScopeChat)
+  private
+    [JsonName('user_id')]
+    FUserId: Int64;
+  public
+    constructor Create; override;
+    /// <summary>
+    /// Scope type, must be chat_member
+    /// </summary>
+    property &Type;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target supergroup (in
+    /// the format @supergroupusername)
+    /// </summary>
+    property ChatId;
+    /// <summary>
+    /// Unique identifier of the target user
+    /// </summary>
+    property UserId: Int64 read FUserId write FUserId;
   end;
 
 implementation
@@ -3063,6 +3167,75 @@ end;
 function TtgFile.GetFileUrl(const AToken: string): string;
 begin
   Result := 'https://api.telegram.org/file/bot' + AToken + '/' + FilePath;
+end;
+
+{ TtgBotCommandScope }
+
+constructor TtgBotCommandScope.Create;
+begin
+  FType := '';
+end;
+
+{ TtgBotCommandScopeDefault }
+
+constructor TtgBotCommandScopeDefault.Create;
+begin
+  inherited;
+  FType := 'default';
+end;
+
+{ TtgBotCommandScopeAllPrivateChats }
+
+constructor TtgBotCommandScopeAllPrivateChats.Create;
+begin
+  inherited;
+  FType := 'all_private_chats';
+end;
+
+{ TtgBotCommandScopeAllGroupChats }
+
+constructor TtgBotCommandScopeAllGroupChats.Create;
+begin
+  inherited;
+  FType := 'all_group_chats';
+end;
+
+{ TtgBotCommandScopeAllChatAdministrators }
+
+constructor TtgBotCommandScopeAllChatAdministrators.Create;
+begin
+  inherited;
+  FType := 'all_chat_administrators';
+end;
+
+{ TtgBotCommandScopeChat }
+
+constructor TtgBotCommandScopeChat.Create;
+begin
+  inherited;
+  FType := 'chat';
+end;
+
+{ TtgBotCommandScopeChatAdministrators }
+
+constructor TtgBotCommandScopeChatAdministrators.Create;
+begin
+  inherited;
+  FType := 'chat_administrators';
+end;
+
+{ TtgBotCommandScopeChatMember }
+
+constructor TtgBotCommandScopeChatMember.Create;
+begin
+  inherited;
+  FType := 'chat_member';
+end;
+
+class function TtgBotCommand.Create(const ACommand, ADescription: string): TtgBotCommand;
+begin
+  Result.FCommand := ACommand;
+  Result.FDescription := ADescription;
 end;
 
 end.

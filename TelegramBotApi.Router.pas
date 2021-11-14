@@ -40,7 +40,7 @@ type
     function DoGetUserState(const AUserID: Int64): string; override;
     procedure DoSetUserState(const AIndex: Int64; const Value: string); override;
   public
-    constructor Create;
+    constructor Create; override;
     destructor Destroy; override;
   end;
 
@@ -64,6 +64,7 @@ type
     function IsEmpty: Boolean;
     property TagString: string read FTagString write FTagString;
     property TagInteger: Integer read FTagInteger write FTagInteger;
+    property TagValue: TValue read FTagValue write FTagValue;
     // Имя точки.
     // Возможно, по имени точки будет происходить переход на нужныый маршрут
     property Name: string read FName write FName;

@@ -21,7 +21,7 @@ uses
   Test.Constants in 'Test.Constants.pas',
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
   Test.Config in 'Integ\Framework\Test.Config.pas',
-  AudioMessageTests in 'Integ\Sending Messages\AudioMessageTests.pas';
+  CommandsTests in 'Integ\Commands\CommandsTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

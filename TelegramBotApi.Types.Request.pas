@@ -1368,7 +1368,7 @@ type
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId: TtgUserLink read FChatId write FChatId;
-   /// <summary> Unique identifier of the target user.</summary>
+    /// <summary> Unique identifier of the target user.</summary>
     property UserId: Int64 read FUserID write FUserID;
     /// <summary>
     /// Do nothing if the user is not banned
@@ -1646,7 +1646,7 @@ type
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId: TtgUserLink read FChatId write FChatId;
-   /// <summary> Unique identifier of the target user.</summary>
+    /// <summary> Unique identifier of the target user.</summary>
     property UserId: Int64 read FUserID write FUserID;
     /// <summary>
     /// Date when the user will be unbanned, unix time. If user is banned for more than
@@ -1860,6 +1860,63 @@ type
     /// A JSON-serialized object for an keyboard
     /// </summary>
     property ReplyMarkup;
+  end;
+
+  /// <summary> Use this method to get the current list of the bot's commands for the
+  /// given scope and user language. Returns Array of BotCommand on success. If
+  /// commands aren't set, an empty list is returned.</summary>
+  [caName('getMyCommands')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgGetMyCommandsArgument = class
+  private
+    [caName('scope')]
+    [caDefaultValueString('{}')]
+    FScope: TtgBotCommandScope;
+    [caName('language_code')]
+    [caDefaultValueString('')]
+    FLanguageCode: string;
+  public
+    /// <summary>A JSON-serialized object, describing scope of users. Defaults to
+    /// BotCommandScopeDefault.</summary>
+    property Scope: TtgBotCommandScope read FScope write FScope;
+    /// <summary>
+    /// A two-letter ISO 639-1 language code or an empty string
+    /// </summary>
+    property LanguageCode: string read FLanguageCode write FLanguageCode;
+  end;
+
+  /// <summary> Use this method to change the list of the bot's commands. See https:
+  /// //core.telegram.org/bots#commands for more details about bot commands. Returns
+  /// True on success.</summary>
+  [caName('setMyCommands')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSetMyCommandsArgument = class
+  private
+    [caName('commands')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FCommands: TArray<TtgBotCommand>;
+    [caName('scope')]
+    [caDefaultValueString('{}')]
+    FScope: TtgBotCommandScope;
+    [caName('language_code')]
+    [caDefaultValueString('')]
+    FLanguageCode: string;
+  public
+    /// <summary>
+    /// A JSON-serialized list of bot commands to be set as the list of the bot's
+    /// commands. At most 100 commands can be specified.
+    /// </summary>
+    property Commands: TArray<TtgBotCommand> read FCommands write FCommands;
+    /// <summary>A JSON-serialized object, describing scope of users. Defaults to
+    /// BotCommandScopeDefault.</summary>
+    property Scope: TtgBotCommandScope read FScope write FScope;
+    /// <summary>
+    /// A two-letter ISO 639-1 language code or an empty string
+    /// </summary>
+    property LanguageCode: string read FLanguageCode write FLanguageCode;
   end;
 
 implementation
