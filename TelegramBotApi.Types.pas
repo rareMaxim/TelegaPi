@@ -2217,6 +2217,92 @@ type
     property ReplyMarkup: TtgInlineKeyboardMarkup read FReplyMarkup write FReplyMarkup;
   end;
 
+  /// <summary>
+  /// Represents an invite link for a chat.
+  /// </summary>
+  TtgChatInviteLink = class
+  private
+    [JsonName('invite_link')]
+    FInviteLink: string;
+    [JsonName('creator')]
+    FCreator: TtgUser;
+    [JsonName('is_primary')]
+    FIsPrimary: Boolean;
+    [JsonName('is_revoked')]
+    FIsRevoked: Boolean;
+    [JsonName('expire_date')]
+    FExpireDate: TDateTime;
+    [JsonName('member_limit')]
+    FMemberLimit: Integer;
+  public
+    /// <summary>
+    /// The invite link. If the link was created by another chat administrator, then
+    /// the second part of the link will be replaced with “…”.
+    /// </summary>
+    property InviteLink: string read FInviteLink write FInviteLink;
+    /// <summary>
+    /// Creator of the link
+    /// </summary>
+    property Creator: TtgUser read FCreator write FCreator;
+    /// <summary>
+    /// True, if the link is primary
+    /// </summary>
+    property IsPrimary: Boolean read FIsPrimary write FIsPrimary;
+    /// <summary>
+    /// True, if the link is revoked
+    /// </summary>
+    property IsRevoked: Boolean read FIsRevoked write FIsRevoked;
+    /// <summary>
+    /// Optional. Point in time (Unix timestamp) when the link will expire or has been
+    /// expired
+    /// </summary>
+    property ExpireDate: TDateTime read FExpireDate write FExpireDate;
+    /// <summary>
+    /// Optional. Maximum number of users that can be members of the chat
+    /// simultaneously after joining the chat via this invite link; 1-99999
+    /// </summary>
+    property MemberLimit: Integer read FMemberLimit write FMemberLimit;
+  end;
+
+  /// <summary>
+  /// Represents a join request sent to a chat.
+  /// </summary>
+  TtgChatJoinRequest = class
+  private
+    [JsonName('chat')]
+    FChat: TtgChat;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FDate: TDateTime;
+    [JsonName('bio')]
+    FBio: string;
+    [JsonName('invite_link')]
+    FInviteLink: TtgChatInviteLink;
+  public
+    /// <summary>
+    /// Chat to which the request was sent
+    /// </summary>
+    property Chat: TtgChat read FChat write FChat;
+    /// <summary>
+    /// User that sent the join request
+    /// </summary>
+    property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Date the request was sent in Unix time
+    /// </summary>
+    property Date: TDateTime read FDate write FDate;
+    /// <summary>
+    /// Optional. Bio of the user.
+    /// </summary>
+    property Bio: string read FBio write FBio;
+    /// <summary>
+    /// Optional. Chat invite link that was used by the user to send the join request
+    /// </summary>
+    property InviteLink: TtgChatInviteLink read FInviteLink write FInviteLink;
+  end;
+
   TtgUpdate = class
   private
     [JsonName('update_id')]
@@ -2243,6 +2329,8 @@ type
     FPoll: TtgPoll;
     [JsonName('poll_answer')]
     FPollAnswer: TtgPollAnswer;
+    [JsonName('chat_join_request')]
+    FChatJoinRequest: TtgChatJoinRequest;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2292,6 +2380,11 @@ type
     /// receive new votes only in polls that were sent by the bot itself.
     /// </summary>
     property PollAnswer: TtgPollAnswer read FPollAnswer write FPollAnswer;
+    /// <summary>
+    /// Optional. A request to join the chat has been sent. The bot must have the
+    /// can_invite_users administrator right in the chat to receive these updates.
+    /// </summary>
+    property ChatJoinRequest: TtgChatJoinRequest read FChatJoinRequest write FChatJoinRequest;
   end;
 
   /// <summary>
@@ -2497,53 +2590,6 @@ type
     /// Description of the command, 3-256 characters.
     /// </summary>
     property Description: string read FDescription write FDescription;
-  end;
-
-  /// <summary>
-  /// Represents an invite link for a chat.
-  /// </summary>
-  TtgChatInviteLink = class
-  private
-    [JsonName('invite_link')]
-    FInviteLink: string;
-    [JsonName('creator')]
-    FCreator: TtgUser;
-    [JsonName('is_primary')]
-    FIsPrimary: Boolean;
-    [JsonName('is_revoked')]
-    FIsRevoked: Boolean;
-    [JsonName('expire_date')]
-    FExpireDate: TDateTime;
-    [JsonName('member_limit')]
-    FMemberLimit: Integer;
-  public
-    /// <summary>
-    /// The invite link. If the link was created by another chat administrator, then
-    /// the second part of the link will be replaced with “…”.
-    /// </summary>
-    property InviteLink: string read FInviteLink write FInviteLink;
-    /// <summary>
-    /// Creator of the link
-    /// </summary>
-    property Creator: TtgUser read FCreator write FCreator;
-    /// <summary>
-    /// True, if the link is primary
-    /// </summary>
-    property IsPrimary: Boolean read FIsPrimary write FIsPrimary;
-    /// <summary>
-    /// True, if the link is revoked
-    /// </summary>
-    property IsRevoked: Boolean read FIsRevoked write FIsRevoked;
-    /// <summary>
-    /// Optional. Point in time (Unix timestamp) when the link will expire or has been
-    /// expired
-    /// </summary>
-    property ExpireDate: TDateTime read FExpireDate write FExpireDate;
-    /// <summary>
-    /// Optional. Maximum number of users that can be members of the chat
-    /// simultaneously after joining the chat via this invite link; 1-99999
-    /// </summary>
-    property MemberLimit: Integer read FMemberLimit write FMemberLimit;
   end;
 
   /// <summary>
@@ -2909,15 +2955,17 @@ begin
   inherited Create;
   FMessage := nil;
   FEditedMessage := nil;
-
+  FChatJoinRequest := nil;
 end;
 
 destructor TtgUpdate.Destroy;
 begin
   if Assigned(FEditedMessage) then
-    FEditedMessage.Free;
+    FreeAndNil(FEditedMessage);
   if Assigned(FMessage) then
-    FMessage.Free;
+    FreeAndNil(FMessage);
+  if Assigned(FChatJoinRequest) then
+    FreeAndNil(FChatJoinRequest);
   inherited Destroy;
 end;
 
