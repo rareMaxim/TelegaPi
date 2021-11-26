@@ -2303,110 +2303,6 @@ type
     property InviteLink: TtgChatInviteLink read FInviteLink write FInviteLink;
   end;
 
-  TtgUpdate = class
-  private
-    [JsonName('update_id')]
-    FUpdateID: Int64;
-    [JsonName('message')]
-    FMessage: TtgMessage;
-    [JsonName('edited_message')]
-    FEditedMessage: TtgMessage;
-    [JsonName('channel_post')]
-    FChannelPost: TtgMessage;
-    [JsonName('edited_channel_post')]
-    FEditedChannelPost: TtgMessage;
-    [JsonName('inline_query')]
-    FInlineQuery: TtgInlineQuery;
-    [JsonName('chosen_inline_result')]
-    FChosenInlineResult: TtgChosenInlineResult;
-    [JsonName('callback_query')]
-    FCallbackQuery: TtgCallbackQuery;
-    [JsonName('shipping_query')]
-    FShippingQuery: TtgShippingQuery;
-    [JsonName('pre_checkout_query')]
-    FPreCheckoutQuery: TtgPreCheckoutQuery;
-    [JsonName('poll')]
-    FPoll: TtgPoll;
-    [JsonName('poll_answer')]
-    FPollAnswer: TtgPollAnswer;
-    [JsonName('chat_join_request')]
-    FChatJoinRequest: TtgChatJoinRequest;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    function &Type: TtgUpdateType;
-    /// <summary>
-    /// The update‘s unique identifier. Update identifiers start from a certain
-    /// positive number and increase sequentially. This ID becomes especially handy if
-    /// you’re using Webhooks, since it allows you to ignore repeated updates or to
-    /// restore the correct update sequence, should they get out of order. If there are
-    /// no new updates for at least a week, then identifier of the next update will be
-    /// chosen randomly instead of sequentially.
-    /// </summary>
-    property UpdateID: Int64 read FUpdateID write FUpdateID;
-    /// <summary>Optional. New incoming message of any kind — text, photo, sticker, etc.
-    /// </summary>
-    property &Message: TtgMessage read FMessage write FMessage;
-    /// <summary>Optional. New version of a message that is known to the bot and was
-    /// edited</summary>
-    property EditedMessage: TtgMessage read FEditedMessage write FEditedMessage;
-    /// <summary>Optional. New incoming channel post of any kind — text, photo, sticker,
-    /// etc.
-    /// </summary>
-    property ChannelPost: TtgMessage read FChannelPost write FChannelPost;
-    /// <summary>Optional. New version of a channel post that is known to the bot and
-    /// was edited</summary>
-    property EditedChannelPost: TtgMessage read FEditedChannelPost write FEditedChannelPost;
-    /// <summary>Optional. New incoming inline query</summary>
-    property InlineQuery: TtgInlineQuery read FInlineQuery write FInlineQuery;
-    /// <summary>Optional. The result of an inline query that was chosen by a user and
-    /// sent to their chat partner. Please see our documentation on the feedback
-    /// collecting for details on how to enable these updates for your bot.</summary>
-    property ChosenInlineResult: TtgChosenInlineResult read FChosenInlineResult write FChosenInlineResult;
-    /// <summary>	Optional. New incoming callback query</summary>
-    property CallbackQuery: TtgCallbackQuery read FCallbackQuery write FCallbackQuery;
-    /// <summary>Optional. New incoming shipping query. Only for invoices with flexible
-    /// price</summary>
-    /// type:string
-    property ShippingQuery: TtgShippingQuery read FShippingQuery write FShippingQuery;
-    /// <summary>Optional. New incoming pre-checkout query. Contains full information
-    /// about checkout
-    /// </summary>
-    property PreCheckoutQuery: TtgPreCheckoutQuery read FPreCheckoutQuery write FPreCheckoutQuery;
-    /// <summary>Optional. New poll state. Bots receive only updates about stopped
-    /// polls and polls, which are sent by the bot</summary>
-    property Poll: TtgPoll read FPoll write FPoll;
-    /// <summary>Optional. A user changed their answer in a non-anonymous poll. Bots
-    /// receive new votes only in polls that were sent by the bot itself.
-    /// </summary>
-    property PollAnswer: TtgPollAnswer read FPollAnswer write FPollAnswer;
-    /// <summary>
-    /// Optional. A request to join the chat has been sent. The bot must have the
-    /// can_invite_users administrator right in the chat to receive these updates.
-    /// </summary>
-    property ChatJoinRequest: TtgChatJoinRequest read FChatJoinRequest write FChatJoinRequest;
-  end;
-
-  /// <summary>
-  /// This object represent a user's profile pictures.
-  /// </summary>
-  TtgUserProfilePhotos = class
-  private
-    [JsonName('total_count')]
-    FTotalCount: Integer;
-    [JsonName('photos')]
-    FPhotos: TArray<TArray<TtgPhotosize>>;
-  public
-    /// <summary>
-    /// Total number of profile pictures the target user has
-    /// </summary>
-    property TotalCount: Integer read FTotalCount write FTotalCount;
-    /// <summary>
-    /// Requested profile pictures (in up to 4 sizes each)
-    /// </summary>
-    property Photos: TArray < TArray < TtgPhotosize >> read FPhotos write FPhotos;
-  end;
-
   /// <summary>
   /// This object contains information about one member of a chat.
   /// </summary>
@@ -2568,6 +2464,169 @@ type
     /// this user; unix time
     /// </summary>
     property UntilDate: TDateTime read FUntilDate write FUntilDate;
+  end;
+
+  /// <summary> This object represents changes in the status of a chat member.
+  /// </summary>
+  TtgChatMemberUpdated = class
+  private
+    [JsonName('chat')]
+    FChat: TtgChat;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FDate: TDateTime;
+    [JsonName('invite_link')]
+    FInviteLink: TtgChatInviteLink;
+    [JsonName('old_chat_member')]
+    FOldChatMember: TtgChatMember;
+    [JsonName('new_chat_member')]
+    FNewChatMember: TtgChatMember;
+  public
+    /// <summary>
+    /// Chat to which the request was sent
+    /// </summary>
+    property Chat: TtgChat read FChat write FChat;
+    /// <summary>
+    /// User that sent the join request
+    /// </summary>
+    property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Date the request was sent in Unix time
+    /// </summary>
+    property Date: TDateTime read FDate write FDate;
+    /// <summary>
+    /// Previous information about the chat member
+    /// </summary>
+    property OldChatMember: TtgChatMember read FOldChatMember write FOldChatMember;
+    /// <summary>
+    /// New information about the chat member
+    /// </summary>
+    property NewChatMember: TtgChatMember read FNewChatMember write FNewChatMember;
+    /// <summary>
+    /// Optional. Chat invite link that was used by the user to send the join request
+    /// </summary>
+    property InviteLink: TtgChatInviteLink read FInviteLink write FInviteLink;
+  end;
+
+  TtgUpdate = class
+  private
+    [JsonName('update_id')]
+    FUpdateID: Int64;
+    [JsonName('message')]
+    FMessage: TtgMessage;
+    [JsonName('edited_message')]
+    FEditedMessage: TtgMessage;
+    [JsonName('channel_post')]
+    FChannelPost: TtgMessage;
+    [JsonName('edited_channel_post')]
+    FEditedChannelPost: TtgMessage;
+    [JsonName('inline_query')]
+    FInlineQuery: TtgInlineQuery;
+    [JsonName('chosen_inline_result')]
+    FChosenInlineResult: TtgChosenInlineResult;
+    [JsonName('callback_query')]
+    FCallbackQuery: TtgCallbackQuery;
+    [JsonName('shipping_query')]
+    FShippingQuery: TtgShippingQuery;
+    [JsonName('pre_checkout_query')]
+    FPreCheckoutQuery: TtgPreCheckoutQuery;
+    [JsonName('poll')]
+    FPoll: TtgPoll;
+    [JsonName('poll_answer')]
+    FPollAnswer: TtgPollAnswer;
+    [JsonName('chat_join_request')]
+    FChatJoinRequest: TtgChatJoinRequest;
+    [JsonName('my_chat_member')]
+    FMyChatMember: TtgChatMemberUpdated;
+    [JsonName('chat_member')]
+    FChatMember: TtgChatMemberUpdated;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function &Type: TtgUpdateType;
+    /// <summary>
+    /// The update‘s unique identifier. Update identifiers start from a certain
+    /// positive number and increase sequentially. This ID becomes especially handy if
+    /// you’re using Webhooks, since it allows you to ignore repeated updates or to
+    /// restore the correct update sequence, should they get out of order. If there are
+    /// no new updates for at least a week, then identifier of the next update will be
+    /// chosen randomly instead of sequentially.
+    /// </summary>
+    property UpdateID: Int64 read FUpdateID write FUpdateID;
+    /// <summary>Optional. New incoming message of any kind — text, photo, sticker, etc.
+    /// </summary>
+    property &Message: TtgMessage read FMessage write FMessage;
+    /// <summary>Optional. New version of a message that is known to the bot and was
+    /// edited</summary>
+    property EditedMessage: TtgMessage read FEditedMessage write FEditedMessage;
+    /// <summary>Optional. New incoming channel post of any kind — text, photo, sticker,
+    /// etc.
+    /// </summary>
+    property ChannelPost: TtgMessage read FChannelPost write FChannelPost;
+    /// <summary>Optional. New version of a channel post that is known to the bot and
+    /// was edited</summary>
+    property EditedChannelPost: TtgMessage read FEditedChannelPost write FEditedChannelPost;
+    /// <summary>Optional. New incoming inline query</summary>
+    property InlineQuery: TtgInlineQuery read FInlineQuery write FInlineQuery;
+    /// <summary>Optional. The result of an inline query that was chosen by a user and
+    /// sent to their chat partner. Please see our documentation on the feedback
+    /// collecting for details on how to enable these updates for your bot.</summary>
+    property ChosenInlineResult: TtgChosenInlineResult read FChosenInlineResult write FChosenInlineResult;
+    /// <summary>	Optional. New incoming callback query</summary>
+    property CallbackQuery: TtgCallbackQuery read FCallbackQuery write FCallbackQuery;
+    /// <summary>Optional. New incoming shipping query. Only for invoices with flexible
+    /// price</summary>
+    /// type:string
+    property ShippingQuery: TtgShippingQuery read FShippingQuery write FShippingQuery;
+    /// <summary>Optional. New incoming pre-checkout query. Contains full information
+    /// about checkout
+    /// </summary>
+    property PreCheckoutQuery: TtgPreCheckoutQuery read FPreCheckoutQuery write FPreCheckoutQuery;
+    /// <summary>Optional. New poll state. Bots receive only updates about stopped
+    /// polls and polls, which are sent by the bot</summary>
+    property Poll: TtgPoll read FPoll write FPoll;
+    /// <summary>Optional. A user changed their answer in a non-anonymous poll. Bots
+    /// receive new votes only in polls that were sent by the bot itself.
+    /// </summary>
+    property PollAnswer: TtgPollAnswer read FPollAnswer write FPollAnswer;
+    /// <summary>
+    /// Optional. The bot's chat member status was updated in a chat. For private chats,
+    /// this update is received only when the bot is blocked or unblockedby the user.
+    /// </summary>
+    property MyChatMember: TtgChatMemberUpdated read FMyChatMember write FMyChatMember;
+    /// <summary>
+    /// Optional. A chat member's status was updated in a chat. The bot must be an
+    /// administrator in the chat and must  explicitly specify "ChatMember" in the list
+    /// of allowed_updates to receive these updates.
+    /// </summary>
+    property ChatMember: TtgChatMemberUpdated read FChatMember write FChatMember;
+    /// <summary>
+    /// Optional. A request to join the chat has been sent. The bot must have the
+    /// can_invite_users administrator right in the chat to receive these updates.
+    /// </summary>
+    property ChatJoinRequest: TtgChatJoinRequest read FChatJoinRequest write FChatJoinRequest;
+  end;
+
+  /// <summary>
+  /// This object represent a user's profile pictures.
+  /// </summary>
+  TtgUserProfilePhotos = class
+  private
+    [JsonName('total_count')]
+    FTotalCount: Integer;
+    [JsonName('photos')]
+    FPhotos: TArray<TArray<TtgPhotosize>>;
+  public
+    /// <summary>
+    /// Total number of profile pictures the target user has
+    /// </summary>
+    property TotalCount: Integer read FTotalCount write FTotalCount;
+    /// <summary>
+    /// Requested profile pictures (in up to 4 sizes each)
+    /// </summary>
+    property Photos: TArray < TArray < TtgPhotosize >> read FPhotos write FPhotos;
   end;
 
   /// <summary>
@@ -2956,6 +3015,8 @@ begin
   FMessage := nil;
   FEditedMessage := nil;
   FChatJoinRequest := nil;
+  FMyChatMember := nil;
+  FChatMember := nil;
 end;
 
 destructor TtgUpdate.Destroy;
@@ -2966,6 +3027,10 @@ begin
     FreeAndNil(FMessage);
   if Assigned(FChatJoinRequest) then
     FreeAndNil(FChatJoinRequest);
+  if Assigned(FMyChatMember) then
+    FreeAndNil(FMyChatMember);
+  if Assigned(FChatMember) then
+    FreeAndNil(FChatMember);
   inherited Destroy;
 end;
 
