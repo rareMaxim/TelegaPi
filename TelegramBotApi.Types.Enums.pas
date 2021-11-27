@@ -170,6 +170,10 @@ type
     /// </summary>
     UploadDocument,
     /// <summary>
+    /// choose_sticker for stickers
+    /// </summary>
+    ChooseSticker,
+    /// <summary>
     /// Finding a <see cref="Location"/>
     /// </summary>
     FindLocation,

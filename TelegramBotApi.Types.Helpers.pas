@@ -165,7 +165,11 @@ begin
       Result := 'record_video_note';
     TtgChatAction.UploadVideoNote:
       Result := 'upload_video_note';
-  end;
+    TtgChatAction.ChooseSticker:
+      Result := 'choose_sticker';
+  else
+    raise Exception.Create('Unknown function TtgChatActionHelper.ToString: string;');
+  end
 end;
 
 end.

@@ -116,7 +116,7 @@ type
   /// <summary>
   /// This object represents one size of a photo or a file / sticker thumbnail
   /// </summary>
-  TtgPhotosize = class(TtgFileInfo)
+  TtgPhotoSize = class(TtgFileInfo)
   private
     [JsonName('width')]
     FWidth: Int64;
@@ -152,7 +152,7 @@ type
   TtgDocument = class(TtgFileInfo)
   private
     [JsonName('thumb')]
-    FThumb: TtgPhotosize;
+    FThumb: TtgPhotoSize;
     [JsonName('file_name')]
     FFilename: string;
     [JsonName('mime_type')]
@@ -172,7 +172,7 @@ type
     /// <summary>
     /// Optional. Document thumbnail as defined by sender
     /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
+    property Thumb: TtgPhotoSize read FThumb write FThumb;
     /// <summary>
     /// Optional. Original filename as defined by sender
     /// </summary>
@@ -230,7 +230,7 @@ type
     [JsonName('title')]
     FTitle: string;
     [JsonName('thumb')]
-    FThumb: TtgPhotosize;
+    FThumb: TtgPhotoSize;
     FFilename: string;
   public
     constructor Create;
@@ -271,18 +271,18 @@ type
     /// <summary>
     /// Optional. Thumbnail of the album cover to which the music file belongs
     /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
+    property Thumb: TtgPhotoSize read FThumb write FThumb;
   end;
 
   /// <summary>
   /// This object represents a video file.
   /// </summary>
-  TtgVideo = class(TtgPhotosize)
+  TtgVideo = class(TtgPhotoSize)
   private
     [JsonName('duration')]
     FDuration: Int64;
     [JsonName('thumb')]
-    FThumb: TtgPhotosize;
+    FThumb: TtgPhotoSize;
     [JsonName('mime_type')]
     FMimeType: string;
     FFilename: string;
@@ -313,7 +313,7 @@ type
     /// <summary>
     /// Optional. Video thumbnail
     /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
+    property Thumb: TtgPhotoSize read FThumb write FThumb;
     /// <summary>
     /// Optional. Original filename as defined by sender
     /// </summary>
@@ -386,7 +386,7 @@ type
     [JsonName('duration')]
     FDuration: Int64;
     [JsonName('thumb')]
-    FThumb: TtgPhotosize;
+    FThumb: TtgPhotoSize;
   public
     constructor Create;
     destructor Destroy; override;
@@ -410,7 +410,7 @@ type
     /// <summary>
     /// Optional. Video thumbnail
     /// </summary>
-    property Thumb: TtgPhotosize read FThumb write FThumb;
+    property Thumb: TtgPhotoSize read FThumb write FThumb;
     /// <summary>
     /// Optional. File size
     /// </summary>
@@ -758,7 +758,6 @@ type
   /// </summary>
   TtgChatPhoto = class
   private
-    [JsonName('big_file_unique_id')]
     [JsonName('small_file_id')]
     FSmallFileId: string;
     [JsonName('small_file_unique_id')]
@@ -1821,7 +1820,7 @@ type
   TtgMessage = class
   private type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
-    TMessPhotoConv = class(TJsonListConverter<TtgPhotosize>);
+    TMessPhotoConv = class(TJsonListConverter<TtgPhotoSize>);
   private
     [JsonName('chat')]
     FChat: TtgChat;
@@ -1858,7 +1857,7 @@ type
     FVenue: TtgVenue;
     [JsonName('photo')]
     [JsonConverter(TMessPhotoConv)]
-    FPhoto: TObjectList<TtgPhotosize>;
+    FPhoto: TObjectList<TtgPhotoSize>;
     [JsonName('caption_entities')]
     [JsonConverter(TMessEntConv)]
     FCaptionEntities: TObjectList<TtgMessageEntity>;
@@ -1904,7 +1903,7 @@ type
     [JsonName('new_chat_title')]
     FNewChatTitle: string;
     [JsonName('new_chat_photo')]
-    FNewChatPhoto: TArray<TtgPhotosize>;
+    FNewChatPhoto: TArray<TtgPhotoSize>;
     [JsonName('delete_chat_photo')]
     FDeleteChatPhoto: Boolean;
     [JsonName('group_chat_created')]
@@ -2048,7 +2047,7 @@ type
     /// <summary>
     /// Optional. Message is a photo, available sizes of the photo
     /// </summary>
-    property Photo: TObjectList<TtgPhotosize> read FPhoto write FPhoto;
+    property Photo: TObjectList<TtgPhotoSize> read FPhoto write FPhoto;
     /// <summary>
     /// Optional. Message is a sticker, information about the sticker
     /// </summary>
@@ -2117,7 +2116,7 @@ type
     /// <summary>
     /// Optional. A chat photo was change to this value
     /// </summary>
-    property NewChatPhoto: TArray<TtgPhotosize> read FNewChatPhoto write FNewChatPhoto;
+    property NewChatPhoto: TArray<TtgPhotoSize> read FNewChatPhoto write FNewChatPhoto;
     /// <summary>
     /// Optional. Service message: the chat photo was deleted
     /// </summary>
@@ -2741,7 +2740,7 @@ type
     [JsonName('total_count')]
     FTotalCount: Integer;
     [JsonName('photos')]
-    FPhotos: TArray<TArray<TtgPhotosize>>;
+    FPhotos: TArray<TArray<TtgPhotoSize>>;
   public
     /// <summary>
     /// Total number of profile pictures the target user has
@@ -2750,7 +2749,7 @@ type
     /// <summary>
     /// Requested profile pictures (in up to 4 sizes each)
     /// </summary>
-    property Photos: TArray < TArray < TtgPhotosize >> read FPhotos write FPhotos;
+    property Photos: TArray < TArray < TtgPhotoSize >> read FPhotos write FPhotos;
   end;
 
   /// <summary>
@@ -3090,7 +3089,7 @@ begin
   FForwardFromChat := TtgChat.Create;
   FEntities := TObjectList<TtgMessageEntity>.Create;
   FCaptionEntities := TObjectList<TtgMessageEntity>.Create;
-  FPhoto := TObjectList<TtgPhotosize>.Create;
+  FPhoto := TObjectList<TtgPhotoSize>.Create;
 end;
 
 destructor TtgMessage.Destroy;
@@ -3296,7 +3295,7 @@ end;
 
 constructor TtgVideo.Create;
 begin
-  FThumb := TtgPhotosize.Create;
+  FThumb := TtgPhotoSize.Create;
 end;
 
 destructor TtgVideo.Destroy;
@@ -3309,7 +3308,7 @@ end;
 
 constructor TtgDocument.Create;
 begin
-  FThumb := TtgPhotosize.Create;
+  FThumb := TtgPhotoSize.Create;
 end;
 
 destructor TtgDocument.Destroy;
@@ -3322,7 +3321,7 @@ end;
 
 constructor TtgAudio.Create;
 begin
-  FThumb := TtgPhotosize.Create;
+  FThumb := TtgPhotoSize.Create;
 end;
 
 destructor TtgAudio.Destroy;
@@ -3335,7 +3334,7 @@ end;
 
 constructor TtgVideoNote.Create;
 begin
-  FThumb := TtgPhotosize.Create;
+  FThumb := TtgPhotoSize.Create;
 end;
 
 destructor TtgVideoNote.Destroy;
