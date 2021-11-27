@@ -199,7 +199,7 @@ type
     /// be an administrator in the chat for this to work and must have the appropriate
     /// admin rights. Returns True on success.
     /// </summary>
-    function KickChatMember(AKickChatMember: TtgKickChatMemberArgument): ItgResponse<Boolean>;
+    function BanChatMember(ABanChatMember: TtgBanChatMember): ItgResponse<Boolean>;
     function UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
     /// <summary>
     /// Use this method to remove a message from the list of pinned messages in a chat.
@@ -262,8 +262,22 @@ type
     /// </summary>
     function SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
 {$ENDREGION}
+    /// <summary>
+    /// Use this method to get the current list of the bot's commands for the given
+    /// scope and user language. Returns Array of BotCommand on success. If commands
+    /// aren't set, an empty list is returned.
+    /// </summary>
     function GetMyCommands(AGetMyCommands: TtgGetMyCommandsArgument): ItgResponse<TArray<TtgBotCommand>>;
+    /// <summary>
+    /// Use this method to change the list of the bot's commands. See https://core.
+    /// telegram.org/bots#commands for more details about bot commands. Returns True on
+    /// success.
+    /// </summary>
     function SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to get the number of members in a chat. Returns Int on success.
+    /// </summary>
+    function GetChatMemberCount(AGetChatMemberCount: TtgGetChatMemberCountArgument): ItgResponse<Integer>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -374,6 +388,18 @@ begin
   Result := InternalExecute<TtgGetChatArgument, TtgChat>(AGetChatArgument);
 end;
 
+function TTelegramBotApi.GetChatMemberCount(AGetChatMemberCount: TtgGetChatMemberCountArgument): ItgResponse<Integer>;
+var
+  lGetChatMemberCount: TtgGetChatMemberCountArgument;
+begin
+  lGetChatMemberCount := TtgGetChatMemberCountArgument.Create;
+  try
+    Result := InternalExecute<TtgGetChatMemberCountArgument, Integer>(lGetChatMemberCount);
+  finally
+    lGetChatMemberCount.Free;
+  end;
+end;
+
 function TTelegramBotApi.GetFile(AGetFile: TtgGetFileArgument): ItgResponse<TtgFile>;
 begin
   Result := InternalExecute<TtgGetFileArgument, TtgFile>(AGetFile);
@@ -456,9 +482,9 @@ begin
   Result := LCloudResponse.Data;
 end;
 
-function TTelegramBotApi.KickChatMember(AKickChatMember: TtgKickChatMemberArgument): ItgResponse<Boolean>;
+function TTelegramBotApi.BanChatMember(ABanChatMember: TtgBanChatMember): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgKickChatMemberArgument, Boolean>(AKickChatMember);
+  Result := InternalExecute<TtgBanChatMember, Boolean>(ABanChatMember);
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;

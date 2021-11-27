@@ -1622,10 +1622,10 @@ type
   /// return to the chat on their own using invite links, etc., unless unbanned first.
   /// The bot must be an administrator in the chat for this to work and must have the
   /// appropriate admin rights. Returns True on success.</summary>
-  [caName('kickChatMember')]
+  [caName('banChatMember')]
   [caMethod(TcaMethod.GET)]
   [caParameterType(TcaParameterType.QueryString)]
-  TtgKickChatMemberArgument = class
+  TtgBanChatMember = class
   private
     [caName('chat_id')]
     [caIsRequaired]
@@ -1917,6 +1917,23 @@ type
     /// A two-letter ISO 639-1 language code or an empty string
     /// </summary>
     property LanguageCode: string read FLanguageCode write FLanguageCode;
+  end;
+
+  /// <summary> Use this method to get the number of members in a chat. Returns Int
+  /// on success.</summary>
+  [caName('getChatMemberCount')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgGetChatMemberCountArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
   end;
 
 implementation
@@ -2353,7 +2370,7 @@ end;
 
 { TtgKickChatMemberArgument }
 
-constructor TtgKickChatMemberArgument.Create;
+constructor TtgBanChatMember.Create;
 begin
   FChatId := TtgUserLink.Empty;
   FUserID := 0;

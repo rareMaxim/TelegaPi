@@ -2490,9 +2490,7 @@ type
     FCanAddWebPagePreviews: Boolean;
     [JsonName('until_date')]
     [JsonConverter(TJsonUnixTimeConverter)]
-    FDate: TDateTime;
     FUntilDate: TDateTime;
-
   public
     /// <summary>
     /// The member's status in the chat, always “creator”
@@ -2502,7 +2500,6 @@ type
     /// Information about the user
     /// </summary>
     property User;
-
     /// <summary>
     /// True, if the user is a member of the chat at the moment of the request
     /// </summary>
@@ -2551,7 +2548,6 @@ type
     /// user is restricted forever
     /// </summary>
     property UntilDate: TDateTime read FUntilDate write FUntilDate;
-
   end;
 
   /// <summary>
