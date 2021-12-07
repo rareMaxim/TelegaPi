@@ -24,6 +24,7 @@ type
     fPooling: TtgPollingConsole;
     FRouteManager: TtgRouter;
     FUserStates: TtgRouteUserStateManagerRAM;
+    procedure WhaitEnter;
   protected
     procedure UpdateConsoleTitle(ABot: TTelegramBotApi);
     procedure SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
@@ -35,7 +36,6 @@ type
     procedure Main;
     constructor Create;
     destructor Destroy; override;
-
   end;
 
   { TEchoCore }
@@ -56,7 +56,6 @@ begin
   FUserStates.Free;
   fBot.Free;
   fPooling.Free;
-
   inherited;
 end;
 
@@ -76,6 +75,7 @@ begin
       DoReadMessage(AMsg);
     end;
   fPooling.Start;
+  WhaitEnter;
 end;
 
 procedure TDemoPooling.SendFile(AMsg: TtgMessage);
@@ -217,6 +217,12 @@ begin
   end;
 end;
 
+procedure TDemoPooling.WhaitEnter;
+begin
+  Writeln('Press Enter to stop bot service... ');
+  Readln;
+end;
+
 procedure Main;
 var
   lCore: TDemoPooling;
@@ -233,7 +239,6 @@ begin
   try
     { TODO -oUser -cConsole Main : Insert code here }
     Main;
-    Readln;
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);
