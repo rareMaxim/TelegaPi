@@ -7,6 +7,7 @@ uses
   TelegramBotApi.JSON.Converter;
 
 type
+
 {$REGION 'Standard keyboards'}
   /// <summary>
   /// This object represents type of a poll, which is allowed to be created and sent
@@ -26,14 +27,6 @@ type
     property &Type: string read FType write FType;
   end;
 
-  ItgKeyboardButton = interface
-    ['{0F806B29-6CC4-47E2-BB89-5B636886E16E}']
-    function GetText: string;
-    procedure SetText(const Value: string);
-    // public
-    property Text: string read GetText write SetText;
-  end;
-
   /// <summary> This object represents one button of the reply keyboard. For simple
   /// text buttons String can be used instead of this object to specify text of the
   /// button. Optional fields request_contact, request_location, and request_poll are
@@ -46,7 +39,7 @@ type
   /// Note: request_poll option will only work in Telegram versions released after 23
   /// January, 2020. Older clients will display unsupported message.
   /// </remarks>
-  TtgKeyboardButton = class(TInterfacedObject, ItgKeyboardButton)
+  TtgKeyboardButton = class(TObject)
   private
     [JsonName('text')]
     FText: string;
@@ -85,74 +78,6 @@ type
     /// the bot when the button is pressed. Available in private chats only
     /// </summary>
     property RequestPoll: TtgKeyboardButtonPollType read FRequestPoll write FRequestPoll;
-  end;
-
-  ItgReplyMarkup = interface
-    ['{D1ED8610-587B-4A46-933B-113DDFECC7B9}']
-
-  end;
-
-  ItgKeyboardKeyboardRow = interface
-    ['{5908E788-B410-4C97-B563-6AD0B5A97179}']
-    function AddButton(ABtn: TtgKeyboardButton): ItgKeyboardKeyboardRow;
-  end;
-
-  TtgKeyboardKeyboardRow = class(TInterfacedObject, ItgKeyboardKeyboardRow)
-  private
-    FRow: TArray<TtgKeyboardButton>;
-  public
-    function Count: Integer;
-    constructor Create(ARow: TArray<TtgKeyboardButton>);
-    function AddButton(ABtn: TtgKeyboardButton): ItgKeyboardKeyboardRow;
-  end;
-
-  /// <summary>
-  /// This object represents a custom keyboard with reply options (see Introduction
-  /// to bots for details and examples).
-  /// </summary>
-  TtgReplyKeyboardMarkup = class(TInterfacedObject, ItgReplyMarkup)
-  private
-    [JsonName('keyboard')]
-    FKeyboard: TArray<TArray<TtgKeyboardButton>>;
-    [JsonName('resize_keyboard')]
-    FResizeKeyboard: Boolean;
-    [JsonName('one_time_keyboard')]
-    FOneTimeKeyboard: Boolean;
-    [JsonName('selective')]
-    FSelective: Boolean;
-  public
-    constructor Create;
-    function RowCount: Byte;
-    function AddRow(AButtons: TArray < TtgKeyboardButton >= []): ItgKeyboardKeyboardRow;
-    /// <summary>
-    /// Array of button rows, each represented by an Array of KeyboardButton objects
-    /// </summary>
-    property Keyboard: TArray < TArray < TtgKeyboardButton >> read FKeyboard write FKeyboard;
-    /// <summary>
-    /// Optional. Requests clients to resize the keyboard vertically for optimal fit (e.
-    /// g., make the keyboard smaller if there are just two rows of buttons). Defaults
-    /// to false, in which case the custom keyboard is always of the same height as the
-    /// app's standard keyboard.
-    /// </summary>
-    property ResizeKeyboard: Boolean read FResizeKeyboard write FResizeKeyboard;
-    /// <summary>
-    /// Optional. Requests clients to hide the keyboard as soon as it's been used. The
-    /// keyboard will still be available, but clients will automatically display the
-    /// usual letter-keyboard in the chat – the user can press a special button in the
-    /// input field to see the custom keyboard again. Defaults to false.
-    /// </summary>
-    property OneTimeKeyboard: Boolean read FOneTimeKeyboard write FOneTimeKeyboard;
-    /// <summary>
-    /// Optional. Use this parameter if you want to show the keyboard to specific users
-    /// only. Targets: 1) users that are @mentioned in the text of the Message object;
-    /// 2) if the bot's message is a reply (has reply_to_message_id), sender of the
-    /// original message.
-    ///
-    /// Example: A user requests to change the bot's language, bot replies to the
-    /// request with a keyboard to select the new language. Other users in the group
-    /// don't see the keyboard.
-    /// </summary>
-    property Selective: Boolean read FSelective write FSelective;
   end;
 
   /// <summary>
@@ -322,14 +247,35 @@ type
     property Pay: Boolean read FPay write FPay;
   end;
 
+  TtgKeyboardAbstractProto = class(TObject);
+
+  TtgKeyboardAbstract<TtgButton> = class(TtgKeyboardAbstractProto)
+  protected
+    function ValidCoord(const ARow, ACol: Byte): Boolean;
+    procedure BuildCoord(const ARow, ACol: Byte);
+    function GetButton(const ARow, ACol: Byte): TtgButton; virtual;
+    procedure SetButton(const ARow, ACol: Byte; const Value: TtgButton); virtual;
+    function GetKeyboard: TArray<TArray<TtgButton>>; virtual; abstract;
+    procedure SetKeyboard(AKeyboard: TArray < TArray < TtgButton >> ); virtual; abstract;
+  public
+    function RowCount: Byte; virtual;
+    function ButtonsCount(const ARow: Byte): Byte; virtual;
+    function NewRow: Byte;
+    function NewButton(ABtn: TtgButton): Byte;
+    property Button[const ARow, ACol: Byte]: TtgButton read GetButton write SetButton; default;
+  end;
+
   /// <summary>
   /// This object represents an inline keyboard that appears right next to the
   /// message it belongs to.
   /// </summary>
-  TtgInlineKeyboardMarkup = class
+  TtgInlineKeyboardMarkup = class(TtgKeyboardAbstract<TtgInlineKeyboardButton>)
   private
     [JsonName('inline_keyboard')]
     FInlineKeyboard: TArray<TArray<TtgInlineKeyboardButton>>;
+  protected
+    function GetKeyboard: TArray<TArray<TtgInlineKeyboardButton>>; override;
+    procedure SetKeyboard(AKeyboard: TArray < TArray < TtgInlineKeyboardButton >> ); override;
   public
     /// <summary>
     /// Array of button rows, each represented by an Array of InlineKeyboardButton
@@ -337,7 +283,55 @@ type
     /// </summary>
     property InlineKeyboard: TArray < TArray < TtgInlineKeyboardButton >> read FInlineKeyboard write FInlineKeyboard;
   end;
+
 {$ENDREGION}
+
+  /// <summary>
+  /// This object represents a custom keyboard with reply options (see Introduction
+  /// to bots for details and examples).
+  /// </summary>
+  TtgReplyKeyboardMarkup = class(TtgKeyboardAbstract<TtgKeyboardButton>)
+  private
+    [JsonName('keyboard')]
+    FKeyboard: TArray<TArray<TtgKeyboardButton>>;
+    [JsonName('resize_keyboard')]
+    FResizeKeyboard: Boolean;
+    [JsonName('one_time_keyboard')]
+    FOneTimeKeyboard: Boolean;
+    [JsonName('selective')]
+    FSelective: Boolean;
+  public
+    constructor Create;
+    /// <summary>
+    /// Array of button rows, each represented by an Array of KeyboardButton objects
+    /// </summary>
+    property Keyboard: TArray < TArray < TtgKeyboardButton >> read FKeyboard write FKeyboard;
+    /// <summary>
+    /// Optional. Requests clients to resize the keyboard vertically for optimal fit (e.
+    /// g., make the keyboard smaller if there are just two rows of buttons). Defaults
+    /// to false, in which case the custom keyboard is always of the same height as the
+    /// app's standard keyboard.
+    /// </summary>
+    property ResizeKeyboard: Boolean read FResizeKeyboard write FResizeKeyboard;
+    /// <summary>
+    /// Optional. Requests clients to hide the keyboard as soon as it's been used. The
+    /// keyboard will still be available, but clients will automatically display the
+    /// usual letter-keyboard in the chat – the user can press a special button in the
+    /// input field to see the custom keyboard again. Defaults to false.
+    /// </summary>
+    property OneTimeKeyboard: Boolean read FOneTimeKeyboard write FOneTimeKeyboard;
+    /// <summary>
+    /// Optional. Use this parameter if you want to show the keyboard to specific users
+    /// only. Targets: 1) users that are @mentioned in the text of the Message object;
+    /// 2) if the bot's message is a reply (has reply_to_message_id), sender of the
+    /// original message.
+    ///
+    /// Example: A user requests to change the bot's language, bot replies to the
+    /// request with a keyboard to select the new language. Other users in the group
+    /// don't see the keyboard.
+    /// </summary>
+    property Selective: Boolean read FSelective write FSelective;
+  end;
 
   /// <summary>
   /// Upon receiving a message with this object, Telegram clients will display a
@@ -366,6 +360,12 @@ type
     property Selective: Boolean read FSelective write FSelective;
   end;
 
+  TtgKeyboardBuilder = class
+    class function InlineKb: TtgInlineKeyboardMarkup;
+    class function ReplyKb: TtgReplyKeyboardMarkup;
+    class function ForceReply: TtgForceReply;
+  end;
+
 implementation
 
 { TtgKeyboardButton }
@@ -387,49 +387,96 @@ begin
   FText := Value;
 end;
 
-{ TtgReplyKeyboardMarkup }
-
-function TtgReplyKeyboardMarkup.AddRow(AButtons: TArray<TtgKeyboardButton> = []): ItgKeyboardKeyboardRow;
-var
-  lNewPosition: Integer;
-begin
-  lNewPosition := RowCount;
-  SetLength(FKeyboard, lNewPosition + 1);
-  FKeyboard[lNewPosition] := AButtons;
-  Result := TtgKeyboardKeyboardRow.Create(FKeyboard[lNewPosition]);
-end;
-
 constructor TtgReplyKeyboardMarkup.Create;
 begin
   FResizeKeyboard := True;
 end;
 
-function TtgReplyKeyboardMarkup.RowCount: Byte;
+{ TtgKeyboardBuilder }
+
+class function TtgKeyboardBuilder.ForceReply: TtgForceReply;
 begin
-  Result := Length(FKeyboard);
+  Result := TtgForceReply.Create;
 end;
 
-{ TtgKeyboardKeyboardRow }
+class function TtgKeyboardBuilder.InlineKb: TtgInlineKeyboardMarkup;
+begin
+  Result := TtgInlineKeyboardMarkup.Create;
+end;
 
-function TtgKeyboardKeyboardRow.AddButton(ABtn: TtgKeyboardButton): ItgKeyboardKeyboardRow;
+class function TtgKeyboardBuilder.ReplyKb: TtgReplyKeyboardMarkup;
+begin
+  Result := TtgReplyKeyboardMarkup.Create;
+end;
+
+{ TtgKeyboardAbstract<TtgButton> }
+
+procedure TtgKeyboardAbstract<TtgButton>.BuildCoord(const ARow, ACol: Byte);
 var
-  lNewPosition: Integer;
+  lKeyboard: TArray<TArray<TtgButton>>;
 begin
-  lNewPosition := Count;
-  SetLength(FRow, lNewPosition + 1);
-  FRow[lNewPosition] := ABtn;
-  Result := Self;
-
+  lKeyboard := GetKeyboard;
+  if Length(lKeyboard) <= ARow then
+    SetLength(lKeyboard, ARow + 1);
+  if Length(lKeyboard[ARow]) <= ACol then
+    SetLength(lKeyboard[ARow], ACol + 1);
+  SetKeyboard(lKeyboard);
 end;
 
-function TtgKeyboardKeyboardRow.Count: Integer;
+function TtgKeyboardAbstract<TtgButton>.ButtonsCount(const ARow: Byte): Byte;
 begin
-  Result := Length(FRow);
+  if Length(GetKeyboard) <= ARow then
+    Result := 0
+  else
+    Result := Length(GetKeyboard[ARow]);
 end;
 
-constructor TtgKeyboardKeyboardRow.Create(ARow: TArray<TtgKeyboardButton>);
+function TtgKeyboardAbstract<TtgButton>.GetButton(const ARow, ACol: Byte): TtgButton;
 begin
-  FRow := ARow;
+  if not ValidCoord(ARow, ACol) then
+    Result := Default (TtgButton)
+  else
+    Result := GetKeyboard[ARow, ACol];
+end;
+
+function TtgKeyboardAbstract<TtgButton>.NewButton(ABtn: TtgButton): Byte;
+begin
+  Button[RowCount, ButtonsCount(RowCount) + 1] := ABtn;
+  Result := ButtonsCount(RowCount);
+end;
+
+function TtgKeyboardAbstract<TtgButton>.NewRow: Byte;
+begin
+  Button[RowCount + 1, 0] := Default (TtgButton);
+  Result := RowCount;
+end;
+
+function TtgKeyboardAbstract<TtgButton>.RowCount: Byte;
+begin
+  Result := Length(GetKeyboard);
+end;
+
+procedure TtgKeyboardAbstract<TtgButton>.SetButton(const ARow, ACol: Byte; const Value: TtgButton);
+begin
+  if not ValidCoord(ARow, ACol) then
+    BuildCoord(ARow, ACol);
+  GetKeyboard[ARow, ACol] := Value;
+end;
+
+function TtgKeyboardAbstract<TtgButton>.ValidCoord(const ARow, ACol: Byte): Boolean;
+begin
+  Result := (Length(GetKeyboard) > ARow) and (Length(GetKeyboard[ARow]) > ACol);
+end;
+
+function TtgInlineKeyboardMarkup.GetKeyboard: TArray<TArray<TtgInlineKeyboardButton>>;
+begin
+  Result := FInlineKeyboard;
+end;
+
+procedure TtgInlineKeyboardMarkup.SetKeyboard(AKeyboard: TArray < TArray < TtgInlineKeyboardButton >> );
+begin
+  inherited;
+  FInlineKeyboard := AKeyboard;
 end;
 
 end.

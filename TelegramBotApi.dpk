@@ -45,7 +45,8 @@ contains
   TelegramBotApi.Json.Converter in 'TelegramBotApi.Json.Converter.pas',
   TelegramBotApi.Polling.Base in 'TelegramBotApi.Polling.Base.pas',
   TelegramBotApi.Polling.Console in 'TelegramBotApi.Polling.Console.pas',
-  TelegramBotApi.Router in 'TelegramBotApi.Router.pas';
+  TelegramBotApi.Router in 'TelegramBotApi.Router.pas',
+  TelegramBotApi.Ext.Calendar in 'TelegramBotApi.Ext.Calendar.pas';
 
 end.
 

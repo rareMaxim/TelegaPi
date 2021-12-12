@@ -13,7 +13,6 @@ type
     class procedure TtgParseModeConverter;
     class procedure TtgAllowedUpdatesConverter;
     class procedure TtgChatActionConverter;
-    class procedure ItgReplyMarkupConverter;
   public
     class procedure TelegramConverter;
   end;
@@ -48,23 +47,7 @@ begin
     end);
 end;
 
-class procedure TtgConverters.ItgReplyMarkupConverter;
-begin
-  TcaRequestArgument.Current.RegisterConverter<ItgReplyMarkup>(
-    function(AValue: TValue): string
-    var
-      LValue: TInterfacedObject;
-      lCA: TCloudApiClientBase;
-    begin
-      LValue := TInterfacedObject(AValue.AsInterface);
-      lCA := TCloudApiClientBase.Create;
-      try
-        Result := lCA.Serializer.Serialize<TObject>(LValue);
-      finally
-        lCA.Free;
-      end;
-    end);
-end;
+
 
 class procedure TtgConverters.TelegramConverter;
 begin
@@ -72,7 +55,6 @@ begin
   TtgParseModeConverter;
   TtgAllowedUpdatesConverter;
   TtgChatActionConverter;
-  ItgReplyMarkupConverter;
 
   TcaRequestArgument.Current.RegisterToJson<TArray<TtgBotCommand>>;
   TcaRequestArgument.Current.RegisterToJson<TArray<TcaFileToSend>>;
@@ -84,6 +66,7 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChat>;
   TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatAdministrators>;
   TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatMember>;
+  TcaRequestArgument.Current.RegisterToJson<TtgInlineKeyboardMarkup>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;

@@ -50,7 +50,7 @@ type
     [caName('disable_notification')]
     FDisableNotification: Boolean;
     [caName('reply_markup')]
-    FReplyMarkup: ItgReplyMarkup;
+    FReplyMarkup: TtgKeyboardAbstractProto;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -64,7 +64,7 @@ type
     /// <summary>
     /// A JSON-serialized object for an keyboard
     /// </summary>
-    property ReplyMarkup: ItgReplyMarkup read FReplyMarkup write FReplyMarkup;
+    property ReplyMarkup: TtgKeyboardAbstractProto read FReplyMarkup write FReplyMarkup;
   end;
 
   TtgSendMessageBase = class(TtgMessageAbstract)
@@ -120,7 +120,8 @@ type
   end;
 
   [caName('sendMessage')]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  [caMethod(TcaMethod.POST)]
   /// <summary>Use this method to send text messages.
   /// On success, the sent Message is returned.
   /// </summary>
@@ -985,7 +986,8 @@ type
   end;
 
   [caName('getUpdates')]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  [caMethod(TcaMethod.POST)]
   /// <summary>
   /// Use this method to send video files, Telegram clients support mp4 videos (other
   /// formats may be sent as Document). On success, the sent Message is returned.
