@@ -249,20 +249,20 @@ type
 
   TtgKeyboardAbstractProto = class(TObject);
 
-  TtgKeyboardAbstract<TtgButton> = class(TtgKeyboardAbstractProto)
+  TtgKeyboardAbstract<TtgButton: class, constructor> = class(TtgKeyboardAbstractProto)
   protected
-    function ValidCoord(const ARow, ACol: Byte): Boolean;
-    procedure BuildCoord(const ARow, ACol: Byte);
-    function GetButton(const ARow, ACol: Byte): TtgButton; virtual;
-    procedure SetButton(const ARow, ACol: Byte; const Value: TtgButton); virtual;
+    function ValidCoord(const ARow, ACol: Integer): Boolean;
+    procedure BuildCoord(const ARow, ACol: Integer);
+    function GetButton(const ARow, ACol: Integer): TtgButton; virtual;
+    procedure SetButton(const ARow, ACol: Integer; const Value: TtgButton); virtual;
     function GetKeyboard: TArray<TArray<TtgButton>>; virtual; abstract;
     procedure SetKeyboard(AKeyboard: TArray < TArray < TtgButton >> ); virtual; abstract;
   public
-    function RowCount: Byte; virtual;
-    function ButtonsCount(const ARow: Byte): Byte; virtual;
-    function NewRow: Byte;
-    function NewButton(ABtn: TtgButton): Byte;
-    property Button[const ARow, ACol: Byte]: TtgButton read GetButton write SetButton; default;
+    function RowCount: Integer; virtual;
+    function ButtonsCount(const ARow: Integer): Integer; virtual;
+    function NewButton: TtgButton;
+    function NewRow: Integer;
+    property Button[const ARow, ACol: Integer]: TtgButton read GetButton write SetButton; default;
   end;
 
   /// <summary>
@@ -411,7 +411,7 @@ end;
 
 { TtgKeyboardAbstract<TtgButton> }
 
-procedure TtgKeyboardAbstract<TtgButton>.BuildCoord(const ARow, ACol: Byte);
+procedure TtgKeyboardAbstract<TtgButton>.BuildCoord(const ARow, ACol: Integer);
 var
   lKeyboard: TArray<TArray<TtgButton>>;
 begin
@@ -423,15 +423,18 @@ begin
   SetKeyboard(lKeyboard);
 end;
 
-function TtgKeyboardAbstract<TtgButton>.ButtonsCount(const ARow: Byte): Byte;
+function TtgKeyboardAbstract<TtgButton>.ButtonsCount(const ARow: Integer): Integer;
+var
+  lRowCount: Integer;
 begin
-  if Length(GetKeyboard) <= ARow then
-    Result := 0
+  lRowCount := RowCount;
+  if lRowCount > ARow then
+    Result := Length(GetKeyboard[ARow])
   else
-    Result := Length(GetKeyboard[ARow]);
+    Result := 0;
 end;
 
-function TtgKeyboardAbstract<TtgButton>.GetButton(const ARow, ACol: Byte): TtgButton;
+function TtgKeyboardAbstract<TtgButton>.GetButton(const ARow, ACol: Integer): TtgButton;
 begin
   if not ValidCoord(ARow, ACol) then
     Result := Default (TtgButton)
@@ -439,31 +442,39 @@ begin
     Result := GetKeyboard[ARow, ACol];
 end;
 
-function TtgKeyboardAbstract<TtgButton>.NewButton(ABtn: TtgButton): Byte;
+function TtgKeyboardAbstract<TtgButton>.NewButton: TtgButton;
+var
+  lRowCount: Integer;
+  lBtnCount: Integer;
 begin
-  Button[RowCount, ButtonsCount(RowCount) + 1] := ABtn;
-  Result := ButtonsCount(RowCount);
+  Result := TtgButton.Create;
+  lRowCount := RowCount;
+  lBtnCount := ButtonsCount(lRowCount - 1);
+  Button[lRowCount - 1, lBtnCount] := Result;
 end;
 
-function TtgKeyboardAbstract<TtgButton>.NewRow: Byte;
+function TtgKeyboardAbstract<TtgButton>.NewRow: Integer;
+var
+  lKeyboard: TArray<TArray<TtgButton>>;
 begin
-  Button[RowCount + 1, 0] := Default (TtgButton);
-  Result := RowCount;
+  lKeyboard := GetKeyboard;
+  SetLength(lKeyboard, Length(lKeyboard) + 1);
+  SetKeyboard(lKeyboard);
 end;
 
-function TtgKeyboardAbstract<TtgButton>.RowCount: Byte;
+function TtgKeyboardAbstract<TtgButton>.RowCount: Integer;
 begin
   Result := Length(GetKeyboard);
 end;
 
-procedure TtgKeyboardAbstract<TtgButton>.SetButton(const ARow, ACol: Byte; const Value: TtgButton);
+procedure TtgKeyboardAbstract<TtgButton>.SetButton(const ARow, ACol: Integer; const Value: TtgButton);
 begin
   if not ValidCoord(ARow, ACol) then
     BuildCoord(ARow, ACol);
   GetKeyboard[ARow, ACol] := Value;
 end;
 
-function TtgKeyboardAbstract<TtgButton>.ValidCoord(const ARow, ACol: Byte): Boolean;
+function TtgKeyboardAbstract<TtgButton>.ValidCoord(const ARow, ACol: Integer): Boolean;
 begin
   Result := (Length(GetKeyboard) > ARow) and (Length(GetKeyboard[ARow]) > ACol);
 end;

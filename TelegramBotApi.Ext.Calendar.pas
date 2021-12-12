@@ -7,20 +7,33 @@ uses
   TelegramBotApi.Types.Keyboards;
 
 type
+  TDayOfWeek = 0 .. 6;
+
   TtgCalendarControl = class
   private
-    FCurentData: TDate;
+    FDate: TDate;
     FFS: TFormatSettings;
     FCalendar: TtgInlineKeyboardMarkup;
+    FStartOfWeek: TDayOfWeek;
+    FMonthOffset: Integer;
     procedure AddButtonSelectMonth;
     procedure AddButtonDayName;
     procedure AddButtonDates;
-
+  protected
+    function IsLeapYear(AYear: Integer): Boolean; virtual;
+    function DaysPerMonth(AYear, AMonth: Integer): Integer; virtual;
+    function DaysThisMonth: Integer; virtual;
+    function GetDateElement(Index: Integer): Integer;
+    procedure SetDateElement(Index: Integer; Value: Integer);
   public
 
     constructor Create;
     destructor Destroy; override;
     function Keyboard: TtgInlineKeyboardMarkup;
+    property Day: Integer index 3 read GetDateElement write SetDateElement stored False;
+    property Month: Integer index 2 read GetDateElement write SetDateElement stored False;
+    property Year: Integer index 1 read GetDateElement write SetDateElement stored False;
+    property StartOfWeek: TDayOfWeek read FStartOfWeek write FStartOfWeek;
   end;
 
 implementation
@@ -32,40 +45,17 @@ uses
 
 procedure TtgCalendarControl.AddButtonDates;
 var
-  lYear, lMonth, lDay: Word;
-  lDateCursor: TDate;
-  lBeginDay, lEndDay: Word;
-  lTotalDays: Word;
-  I: Integer;
-  lRowCursor: Byte;
   LBtn: TtgInlineKeyboardButton;
+  AYear, AMonth, ADay: Word;
+  FirstDate: TDateTime;
 begin
-  lRowCursor := 2;
-  DecodeDate(FCurentData, lYear, lMonth, lDay);
-  lTotalDays := DaysInMonth(FCurentData);
-  lDateCursor := EncodeDate(lYear, lMonth, 1);
-  lBeginDay := DayOfTheWeek(lDateCursor);
-  lDateCursor := EncodeDate(lYear, lMonth, lTotalDays);
-  lEndDay := DayOfTheWeek(lDateCursor);
-
-  for I := 0 - lBeginDay to lTotalDays do
-  begin
-    FCalendar[lRowCursor, I - ((lRowCursor - 2) * 7)] := TtgInlineKeyboardButton.Create;
-    LBtn := FCalendar[lRowCursor, I - ((lRowCursor - 2) * 7)];
-    if I < 0 then
-    begin
-      LBtn.Text := '0';
-      LBtn.CallbackData := 'empty_date';
-    end
-    else
-    begin
-      LBtn.Text := I.ToString;
-      LBtn.CallbackData := 'empty_date';
-    end;
-
-    if I mod 7 = 0 then
-      Inc(lRowCursor);
-  end;
+  DecodeDate(FDate, AYear, AMonth, ADay);
+  FirstDate := EncodeDate(AYear, AMonth, 1);
+  FCalendar.NewRow;
+  FMonthOffset := 2 - ((DayOfWeek(FirstDate) - StartOfWeek + 7) mod 7); { day of week for 1st of month }
+  if FMonthOffset = 2 then
+    FMonthOffset := -5;
+  MoveColRow((ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1, False, False);
 
 end;
 
@@ -74,12 +64,12 @@ var
   I: Integer;
   LBtn: TtgInlineKeyboardButton;
 begin
+  FCalendar.NewRow;
   for I := Low(FFS.ShortDayNames) to High(FFS.ShortDayNames) do
   begin
-    LBtn := TtgInlineKeyboardButton.Create;
-    LBtn.Text := FFS.ShortDayNames[I];
-    LBtn.CallbackData := FFS.ShortDayNames[I];
-    FCalendar.Button[1, I - 1] := LBtn;
+    LBtn := FCalendar.NewButton;
+    LBtn.Text := FFS.ShortDayNames[(StartOfWeek + I) mod 7 + 1];
+    LBtn.CallbackData := FFS.ShortDayNames[(StartOfWeek + I) mod 7 + 1];
   end;
 end;
 
@@ -87,21 +77,37 @@ procedure TtgCalendarControl.AddButtonSelectMonth;
 var
   LBtn: TtgInlineKeyboardButton;
 begin
-  LBtn := TtgInlineKeyboardButton.Create;
-  LBtn.Text := FFS.LongMonthNames[MonthOf(FCurentData)];
+  FCalendar.NewRow;
+  LBtn := FCalendar.NewButton;
+  LBtn.Text := FFS.LongMonthNames[MonthOf(FDate)];
   LBtn.CallbackData := 'select_month';
-  FCalendar.Button[0, 0] := LBtn;
 end;
 
 constructor TtgCalendarControl.Create;
 begin
   inherited Create;
-  FCurentData := Now;
+  FStartOfWeek := 0;
+  FDate := Now;
   FFS := TFormatSettings.Create;
   FCalendar := TtgKeyboardBuilder.InlineKb;
   AddButtonSelectMonth;
   AddButtonDayName;
-  // AddButtonDates;
+  AddButtonDates;
+end;
+
+function TtgCalendarControl.DaysPerMonth(AYear, AMonth: Integer): Integer;
+const
+  DaysInMonth: array [1 .. 12] of Integer = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+begin
+  Result := DaysInMonth[AMonth];
+  if (AMonth = 2) and IsLeapYear(AYear) then
+    Inc(Result);
+  { leap-year Feb is special }
+end;
+
+function TtgCalendarControl.DaysThisMonth: Integer;
+begin
+  Result := DaysPerMonth(Year, Month);
 end;
 
 destructor TtgCalendarControl.Destroy;
@@ -110,9 +116,61 @@ begin
   inherited Destroy;
 end;
 
+function TtgCalendarControl.GetDateElement(Index: Integer): Integer;
+var
+  AYear, AMonth, ADay: Word;
+begin
+  DecodeDate(FDate, AYear, AMonth, ADay);
+  case Index of
+    1:
+      Result := AYear;
+    2:
+      Result := AMonth;
+    3:
+      Result := ADay;
+  else
+    Result := -1;
+  end;
+end;
+
+function TtgCalendarControl.IsLeapYear(AYear: Integer): Boolean;
+begin
+  Result := (AYear mod 4 = 0) and ((AYear mod 100 <> 0) or (AYear mod 400 = 0));
+end;
+
 function TtgCalendarControl.Keyboard: TtgInlineKeyboardMarkup;
 begin
   Result := FCalendar;
+end;
+
+procedure TtgCalendarControl.SetDateElement(Index, Value: Integer);
+var
+  AYear, AMonth, ADay: Word;
+begin
+  if Value > 0 then
+  begin
+    DecodeDate(FDate, AYear, AMonth, ADay);
+    case Index of
+      1:
+        if AYear <> Value then
+          AYear := Value
+        else
+          Exit;
+      2:
+        if (Value <= 12) and (Value <> AMonth) then
+          AMonth := Value
+        else
+          Exit;
+      3:
+        if (Value <= DaysThisMonth) and (Value <> ADay) then
+          ADay := Value
+        else
+          Exit;
+    else
+      Exit;
+    end;
+    FDate := EncodeDate(AYear, AMonth, ADay);
+  end;
 end;
 
 end.
