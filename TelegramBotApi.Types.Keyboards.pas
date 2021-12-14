@@ -300,6 +300,10 @@ type
     FOneTimeKeyboard: Boolean;
     [JsonName('selective')]
     FSelective: Boolean;
+  protected
+    function GetKeyboard: TArray<TArray<TtgKeyboardButton>>; override;
+    procedure SetKeyboard(AKeyboard: TArray < TArray < TtgKeyboardButton >> ); override;
+
   public
     constructor Create;
     /// <summary>
@@ -488,6 +492,17 @@ procedure TtgInlineKeyboardMarkup.SetKeyboard(AKeyboard: TArray < TArray < TtgIn
 begin
   inherited;
   FInlineKeyboard := AKeyboard;
+end;
+
+function TtgReplyKeyboardMarkup.GetKeyboard: TArray<TArray<TtgKeyboardButton>>;
+begin
+  Result := FKeyboard;
+end;
+
+procedure TtgReplyKeyboardMarkup.SetKeyboard(AKeyboard: TArray < TArray < TtgKeyboardButton >> );
+begin
+  inherited;
+  FKeyboard := AKeyboard;
 end;
 
 end.

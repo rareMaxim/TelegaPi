@@ -47,8 +47,6 @@ begin
     end);
 end;
 
-
-
 class procedure TtgConverters.TelegramConverter;
 begin
   TtgUserLinkConverter;
@@ -67,6 +65,7 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatAdministrators>;
   TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatMember>;
   TcaRequestArgument.Current.RegisterToJson<TtgInlineKeyboardMarkup>;
+  TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardMarkup>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;
