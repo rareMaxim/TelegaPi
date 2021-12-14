@@ -20,6 +20,7 @@ type
     procedure AddButtonDayName;
     procedure AddButtonDates;
   protected
+    function GetCellText(ACol, ARow: Integer): string;
     function IsLeapYear(AYear: Integer): Boolean; virtual;
     function DaysPerMonth(AYear, AMonth: Integer): Integer; virtual;
     function DaysThisMonth: Integer; virtual;
@@ -48,6 +49,8 @@ var
   LBtn: TtgInlineKeyboardButton;
   AYear, AMonth, ADay: Word;
   FirstDate: TDateTime;
+  I: Integer;
+  lCol, lRow: Integer;
 begin
   DecodeDate(FDate, AYear, AMonth, ADay);
   FirstDate := EncodeDate(AYear, AMonth, 1);
@@ -55,20 +58,34 @@ begin
   FMonthOffset := 2 - ((DayOfWeek(FirstDate) - StartOfWeek + 7) mod 7); { day of week for 1st of month }
   if FMonthOffset = 2 then
     FMonthOffset := -5;
-  MoveColRow((ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1, False, False);
-
+  // MoveColRow((ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1, False, False);
+  lRow := 0;
+  lCol := 0;
+  for lRow := 0 to 6 do
+  begin
+    for lCol := 0 to 6 do
+    begin
+      LBtn := FCalendar.NewButton;
+      LBtn.Text := GetCellText(lCol, lRow);
+      LBtn.CallbackData := 'selected_date_' + GetCellText(lCol, lRow);
+    end;
+    if (lRow > 0) and (GetCellText(lCol, lRow) = ' ') then
+      break;
+    FCalendar.NewRow;
+  end;
 end;
 
 procedure TtgCalendarControl.AddButtonDayName;
 var
   I: Integer;
+
   LBtn: TtgInlineKeyboardButton;
 begin
   FCalendar.NewRow;
   for I := Low(FFS.ShortDayNames) to High(FFS.ShortDayNames) do
   begin
     LBtn := FCalendar.NewButton;
-    LBtn.Text := FFS.ShortDayNames[(StartOfWeek + I) mod 7 + 1];
+    LBtn.Text := FFS.ShortDayNames[(StartOfWeek + I - 1) mod 7 + 1];
     LBtn.CallbackData := FFS.ShortDayNames[(StartOfWeek + I) mod 7 + 1];
   end;
 end;
@@ -86,7 +103,7 @@ end;
 constructor TtgCalendarControl.Create;
 begin
   inherited Create;
-  FStartOfWeek := 0;
+  FStartOfWeek := 1;
   FDate := Now;
   FFS := TFormatSettings.Create;
   FCalendar := TtgKeyboardBuilder.InlineKb;
@@ -114,6 +131,17 @@ destructor TtgCalendarControl.Destroy;
 begin
   // FCalendar.Free;
   inherited Destroy;
+end;
+
+function TtgCalendarControl.GetCellText(ACol, ARow: Integer): string;
+var
+  DayNum: Integer;
+begin
+  DayNum := FMonthOffset + ACol + (ARow) * 7;
+  if (DayNum < 1) or (DayNum > DaysThisMonth) then
+    Result := ' '
+  else
+    Result := IntToStr(DayNum);
 end;
 
 function TtgCalendarControl.GetDateElement(Index: Integer): Integer;
