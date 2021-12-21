@@ -25,7 +25,7 @@
             <Dependencies>TelegramBotApi.dproj</Dependencies>
         </Projects>
         <Projects Include="Demos\Calendar\CalendarDemo.dproj">
-            <Dependencies>TelegramBotApi.dproj</Dependencies>
+            <Dependencies/>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -98,13 +98,13 @@
     <Target Name="Router:Make" DependsOnTargets="TelegramBotApi:Make">
         <MSBuild Projects="Demos\Router\Router.dproj" Targets="Make"/>
     </Target>
-    <Target Name="CalendarDemo" DependsOnTargets="TelegramBotApi">
+    <Target Name="CalendarDemo">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj"/>
     </Target>
-    <Target Name="CalendarDemo:Clean" DependsOnTargets="TelegramBotApi:Clean">
+    <Target Name="CalendarDemo:Clean">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="CalendarDemo:Make" DependsOnTargets="TelegramBotApi:Make">
+    <Target Name="CalendarDemo:Make">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
