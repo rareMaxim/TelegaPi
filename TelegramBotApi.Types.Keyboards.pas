@@ -368,6 +368,7 @@ type
     class function InlineKb: TtgInlineKeyboardMarkup;
     class function ReplyKb: TtgReplyKeyboardMarkup;
     class function ForceReply: TtgForceReply;
+    class function RemoveKb: TtgReplyKeyboardRemove;
   end;
 
 implementation
@@ -406,6 +407,11 @@ end;
 class function TtgKeyboardBuilder.InlineKb: TtgInlineKeyboardMarkup;
 begin
   Result := TtgInlineKeyboardMarkup.Create;
+end;
+
+class function TtgKeyboardBuilder.RemoveKb: TtgReplyKeyboardRemove;
+begin
+  Result := TtgReplyKeyboardRemove.Create;
 end;
 
 class function TtgKeyboardBuilder.ReplyKb: TtgReplyKeyboardMarkup;
