@@ -9,6 +9,24 @@ uses
 type
 
 {$REGION 'Standard keyboards'}
+  TtgKeyboardAbstractProto = class(TObject);
+
+  TtgKeyboardAbstract<TtgButton: class, constructor> = class(TtgKeyboardAbstractProto)
+  protected
+    function ValidCoord(const ARow, ACol: Integer): Boolean;
+    procedure BuildCoord(const ARow, ACol: Integer);
+    function GetButton(const ARow, ACol: Integer): TtgButton; virtual;
+    procedure SetButton(const ARow, ACol: Integer; const Value: TtgButton); virtual;
+    function GetKeyboard: TArray<TArray<TtgButton>>; virtual; abstract;
+    procedure SetKeyboard(AKeyboard: TArray < TArray < TtgButton >> ); virtual; abstract;
+  public
+    function RowCount: Integer; virtual;
+    function ButtonsCount(const ARow: Integer): Integer; virtual;
+    function NewButton: TtgButton;
+    function NewRow: Integer;
+    property Button[const ARow, ACol: Integer]: TtgButton read GetButton write SetButton; default;
+  end;
+
   /// <summary>
   /// This object represents type of a poll, which is allowed to be created and sent
   /// when the corresponding button is pressed.
@@ -87,7 +105,7 @@ type
   /// exception is made for one-time keyboards that are hidden immediately after the
   /// user presses a button (see ReplyKeyboardMarkup).
   /// </summary>
-  TtgReplyKeyboardRemove = class
+  TtgReplyKeyboardRemove = class(TtgKeyboardAbstractProto)
   private
     [JsonName('remove_keyboard')]
     FRemoveKeyboard: Boolean;
@@ -245,24 +263,6 @@ type
     /// NOTE: This type of button must always be the first button in the first row.
     /// </summary>
     property Pay: Boolean read FPay write FPay;
-  end;
-
-  TtgKeyboardAbstractProto = class(TObject);
-
-  TtgKeyboardAbstract<TtgButton: class, constructor> = class(TtgKeyboardAbstractProto)
-  protected
-    function ValidCoord(const ARow, ACol: Integer): Boolean;
-    procedure BuildCoord(const ARow, ACol: Integer);
-    function GetButton(const ARow, ACol: Integer): TtgButton; virtual;
-    procedure SetButton(const ARow, ACol: Integer; const Value: TtgButton); virtual;
-    function GetKeyboard: TArray<TArray<TtgButton>>; virtual; abstract;
-    procedure SetKeyboard(AKeyboard: TArray < TArray < TtgButton >> ); virtual; abstract;
-  public
-    function RowCount: Integer; virtual;
-    function ButtonsCount(const ARow: Integer): Integer; virtual;
-    function NewButton: TtgButton;
-    function NewRow: Integer;
-    property Button[const ARow, ACol: Integer]: TtgButton read GetButton write SetButton; default;
   end;
 
   /// <summary>
