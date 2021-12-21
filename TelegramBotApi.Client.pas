@@ -262,6 +262,14 @@ type
     /// </summary>
     function SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
 {$ENDREGION}
+{$REGION 'Updating messages'}
+    /// <summary>
+    /// Use this method to edit text and game messages. On success, if the edited
+    /// message is not an inline message, the edited Message is returned, otherwise
+    /// True is returned.
+    /// </summary>
+    function EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<Boolean>;
+{$ENDREGION}
     /// <summary>
     /// Use this method to get the current list of the bot's commands for the given
     /// scope and user language. Returns Array of BotCommand on success. If commands
@@ -485,6 +493,11 @@ end;
 function TTelegramBotApi.BanChatMember(ABanChatMember: TtgBanChatMember): ItgResponse<Boolean>;
 begin
   Result := InternalExecute<TtgBanChatMember, Boolean>(ABanChatMember);
+end;
+
+function TTelegramBotApi.EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgEditMessageTextArgument, Boolean>(AEditMessageArgument);
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;

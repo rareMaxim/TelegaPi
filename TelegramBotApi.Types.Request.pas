@@ -43,7 +43,6 @@ type
   TtgMessageAbstract = class
   private
     [caName('chat_id')]
-    [caIsRequaired]
     [caDefaultValueInt64(0)]
     FChatId: TtgUserLink;
     [caDefaultValueBoolean(False)]
@@ -168,6 +167,120 @@ type
     destructor Destroy; override;
   end;
 
+  [caName('editMessageText')]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  [caMethod(TcaMethod.POST)]
+  /// <summary>Use this method to send text messages.
+  /// On success, the sent Message is returned.
+  /// </summary>
+  TtgEditMessageTextArgument = class(TtgSendMessageBaseWithParseMode)
+  private
+    [caName('text')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FText: string;
+    [caName('entities')]
+    [caDefaultValueString('[]')]
+    FEntities: TArray<TtgMessageEntity>;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_web_page_preview')]
+    FDisableWebPagePreview: Boolean;
+    [caName('message_id')]
+    [caIsRequaired]
+    FMessageID: Int64;
+    [caName('chat_id')]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// Required if inline_message_id is not specified. Identifier of the message to
+    /// edit
+    /// </summary>
+    property MessageID: Int64 read FMessageID write FMessageID;
+    /// <summary>Text of the message to be sent, 1-4096 characters after entities
+    /// parsing</summary>
+    property Text: string read FText write FText;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode;
+    /// <summary>
+    /// List of special entities that appear in message text, which can be specified
+    /// instead of parse_mode
+    /// </summary>
+    property Entities: TArray<TtgMessageEntity> read FEntities write FEntities;
+    /// <summary>Disables link previews for links in this message</summary>
+    property DisableWebPagePreview: Boolean read FDisableWebPagePreview write FDisableWebPagePreview;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+    constructor Create; override;
+    destructor Destroy; override;
+  end;
+
+  [caName('editMessageText')]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  [caMethod(TcaMethod.POST)]
+  /// <summary>Use this method to send text messages.
+  /// On success, the sent Message is returned.
+  /// </summary>
+  TtgEditMessageTextInlineArgument = class(TtgSendMessageBaseWithParseMode)
+  private
+    [caName('text')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FText: string;
+    [caName('entities')]
+    [caDefaultValueString('[]')]
+    FEntities: TArray<TtgMessageEntity>;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_web_page_preview')]
+    FDisableWebPagePreview: Boolean;
+    [caName('inline_message_id')]
+    [caIsRequaired]
+    FInlineMessageId: Int64;
+  public
+    /// <summary>
+    /// Required if chat_id and message_id are not specified. Identifier of the inline
+    /// message
+    /// </summary>
+    property InlineMessageId: Int64 read FInlineMessageId write FInlineMessageId;
+    /// <summary>Text of the message to be sent, 1-4096 characters after entities
+    /// parsing</summary>
+    property Text: string read FText write FText;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode;
+    /// <summary>
+    /// List of special entities that appear in message text, which can be specified
+    /// instead of parse_mode
+    /// </summary>
+    property Entities: TArray<TtgMessageEntity> read FEntities write FEntities;
+    /// <summary>Disables link previews for links in this message</summary>
+    property DisableWebPagePreview: Boolean read FDisableWebPagePreview write FDisableWebPagePreview;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+    constructor Create; override;
+    destructor Destroy; override;
+  end;
+
   [caName('forwardMessage')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to forward messages of any kind. On success, the sent
@@ -181,7 +294,7 @@ type
     [caName('message_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    FMessageId: Int64;
+    FMessageID: Int64;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
@@ -193,7 +306,7 @@ type
     /// sound.</summary>
     property DisableNotification;
     /// <summary>Message identifier in the chat specified in from_chat_id</summary>
-    property MessageId: Int64 read FMessageId write FMessageId;
+    property MessageID: Int64 read FMessageID write FMessageID;
     constructor Create; override;
     destructor Destroy; override;
   end;
@@ -205,14 +318,15 @@ type
   /// </summary>
   TtgCopyMessageArgument = class(TtgSendMessageBaseWithParseMode)
   private
-    [caName('from_chat_id')]
+    [caName('from_chat_id')
+      ]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
     FFromChatId: TtgUserLink;
     [caName('message_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
-    FMessageId: Int64;
+    FMessageID: Int64;
     [caName('caption')]
     [caDefaultValueStringAttribute('')]
     FCaption: string;
@@ -229,7 +343,7 @@ type
     /// channel (in the format @channelusername)</summary>
     property FromChatId: TtgUserLink read FFromChatId write FFromChatId;
     /// <summary>Message identifier in the chat specified in from_chat_id</summary>
-    property MessageId: Int64 read FMessageId write FMessageId;
+    property MessageID: Int64 read FMessageID write FMessageID;
     /// <summary>New caption for media, 0-1024 characters after entities parsing. If
     /// not specified, the original caption is kept
     /// </summary>
@@ -255,7 +369,8 @@ type
 
   TtgSendMediaAbstractArgument = class(TtgSendMessageBaseWithParseMode)
   private
-    [caName('caption')]
+    [caName('caption')
+      ]
     [caDefaultValueStringAttribute('')]
     FCaption: string;
     [caName('caption_entities')]
@@ -336,7 +451,8 @@ type
 
   TtgSendMediaWithThumbAbstractArgument = class(TtgSendMediaAbstractArgument)
   private
-    [caName('thumb')]
+    [caName('thumb')
+      ]
     [caDefaultValueStringAttribute('')]
     fThumb: TcaFileToSend;
   public
@@ -360,7 +476,8 @@ type
   /// </summary>
   [caName('sendVoice')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendVoiceArgument = class(TtgSendMediaAbstractArgument)
   private
     [caName('voice')]
@@ -419,7 +536,8 @@ type
   TtgSendAudioArgument = class(TtgSendVoiceArgument)
   private
     [caName('thumb')]
-    [caDefaultValueStringAttribute('')]
+    [caDefaultValueStringAttribute('')
+      ]
     fThumb: TcaFileToSend;
     [caName('audio')]
     [caIsRequaired]
@@ -487,10 +605,12 @@ type
   /// </summary>
   [caName('sendDocument')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendDocumentArgument = class(TtgSendMediaWithThumbAbstractArgument)
   private
-    [caName('document')]
+    [caName('document')
+      ]
     [caIsRequaired]
     [caDefaultValueString('')]
     fDocument: TcaFileToSend;
@@ -553,10 +673,12 @@ type
   /// </summary>
   [caName('sendVideo')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.GetOrPost)]
+  [caParameterType(TcaParameterType.GetOrPost)
+    ]
   TtgSendVideoArgument = class(TtgSendMediaWithThumbAbstractArgument)
   private
-    [caName('video')]
+    [caName('video')
+      ]
     [caIsRequaired]
     [caDefaultValueString('')]
     fVideo: TcaFileToSend;
@@ -698,7 +820,8 @@ type
   /// </summary>
   [caName('sendVideoNote')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendVideoNoteArgument = record
   public
     [caName('chat_id')]
@@ -750,7 +873,8 @@ type
   /// </summary>
   [caName('sendVenue')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendVenueArgument = record
   public
     [caName('chat_id')]
@@ -819,7 +943,8 @@ type
 
   [caName('SendMediaGroup')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendMediaGroupArgument = record
   public
     [caName('chat_id')]
@@ -830,7 +955,8 @@ type
     ChatId: TtgUserLink;
     [caName('media')]
     [caIsRequaired]
-    [caDefaultValueString('')]
+    [caDefaultValueString('')
+      ]
     [caParameterType(TcaParameterType.GetOrPost)]
     /// <summary>
     /// Audio file to send. Pass a file_id as String to send an animation that exists on
@@ -897,11 +1023,12 @@ type
   /// the bot, the edited Message is returned, otherwise True is returned.</summary>
   TtgEditMessageLiveLocationHaveInlineMessageIDArgument = record
   public
-    [caName('inline_message_id')]
+    [caName('inline_message_id')
+      ]
     [caIsRequaired]
     [caDefaultValueString('')]
     /// <summary>If the message is a reply, ID of the original message</summary>
-    InlineMessageID: Int64;
+    InlineMessageId: Int64;
     [caName('latitude')]
     [caIsRequaired]
     [caDefaultValueSingle(0.0)]
@@ -934,7 +1061,7 @@ type
     /// message to edit</summary>
     [caName('message_id')]
     [caDefaultValueInt64(0)]
-    MessageId: Int64;
+    MessageID: Int64;
     [caName('latitude')]
     [caIsRequaired]
     [caDefaultValueSingle(0.0)]
@@ -952,14 +1079,16 @@ type
   /// live_period expires. On success, if the message was sent by the bot, the sent
   /// Message is returned, otherwise True is returned.</summary>
   [caName('stopMessageLiveLocation')]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgStopMessageLiveLocationHaveInlineMessageIDArgument = record
   public
-    [caName('inline_message_id')]
+    [caName('inline_message_id')
+      ]
     [caIsRequaired]
     [caDefaultValueString('')]
     /// <summary>If the message is a reply, ID of the original message</summary>
-    InlineMessageID: Int64;
+    InlineMessageId: Int64;
     class function Default: TtgStopMessageLiveLocationHaveInlineMessageIDArgument; static;
   end;
 
@@ -967,7 +1096,8 @@ type
   /// live_period expires. On success, if the message was sent by the bot, the sent
   /// Message is returned, otherwise True is returned.</summary>
   [caName('stopMessageLiveLocation')]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgStopMessageLiveLocationArgument = record
   public
     /// <summary>Required if inline_message_id is not specified. Unique identifier for
@@ -981,7 +1111,7 @@ type
     /// message to edit</summary>
     [caName('message_id')]
     [caDefaultValueInt64(0)]
-    MessageId: Int64;
+    MessageID: Int64;
     class function Default: TtgStopMessageLiveLocationArgument; static;
   end;
 
@@ -1117,7 +1247,8 @@ type
   /// On success, returns a WebhookInfo object. If the bot is using getUpdates, will
   /// return an object with the url field empty.</summary>
   [caName('getWebhookInfo')]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgGetWebhookInfoArgument = record
   public
     class function Default: TtgGetWebhookInfoArgument; static;
@@ -1125,7 +1256,8 @@ type
 
   [caName('exportChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.GetOrPost)]
+  [caParameterType(TcaParameterType.GetOrPost)
+    ]
   TtgExportChatInviteLinkArgument = record
   public
     [caName('chat_id')]
@@ -1139,7 +1271,8 @@ type
 
   [caName('getChat')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.GetOrPost)]
+  [caParameterType(TcaParameterType.GetOrPost)
+    ]
   TtgGetChatArgument = record
   public
     [caName('chat_id')]
@@ -1161,7 +1294,8 @@ type
   /// </summary>
   [caName('getFile')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.GetOrPost)]
+  [caParameterType(TcaParameterType.GetOrPost)
+    ]
   TtgGetFileArgument = class
   private
     [caName('file_id')]
@@ -1176,7 +1310,8 @@ type
 
   [caName('sendPoll')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendPollArgument = record
   public
     [caName('chat_id')]
@@ -1273,7 +1408,8 @@ type
   /// </summary>
   [caName('sendDice')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSendDiceArgument = class
   private
     [caName('chat_id')]
@@ -1351,7 +1487,8 @@ type
   /// use the parameter only_if_banned. Returns True on success.</summary>
   [caName('unbanChatMember')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgUnbanChatMemberArgument = class
   private
     [caName('chat_id')]
@@ -1386,7 +1523,8 @@ type
   /// </summary>
   [caName('unpinChatMessage')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgUnpinChatMessageArgument = class
   private
     [caName('chat_id')]
@@ -1395,14 +1533,14 @@ type
     FChatId: TtgUserLink;
     [caName('message_id')]
     [caDefaultValueInt64(0)]
-    FMessageId: Int64;
+    FMessageID: Int64;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
     property ChatId: TtgUserLink read FChatId write FChatId;
     /// <summary>Identifier of a message to unpin. If not specified, the most recent
     /// pinned message (by sending date) will be unpinned.</summary>
-    property MessageId: Int64 read FMessageId write FMessageId;
+    property MessageID: Int64 read FMessageID write FMessageID;
     constructor Create(AChatId: TtgUserLink; const AMessageId: Int64 = 0);
   end;
 
@@ -1414,12 +1552,14 @@ type
   /// </summary>
   [caName('unpinAllChatMessages')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgUnpinAllChatMessagesArgument = class
   private
     [caName('chat_id')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)]
+    [caDefaultValueInt64(0)
+      ]
     FChatId: TtgUserLink;
   public
     /// <summary>Unique identifier for the target chat or username of the target
@@ -1436,12 +1576,14 @@ type
   /// </summary>
   [caName('createChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgCreateChatInviteLinkArgument = class
   private
     [caName('chat_id')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)]
+    [caDefaultValueInt64(0)
+      ]
     FChatId: TtgUserLink;
     [caName('expire_date')]
     FExpireDate: TDateTime;
@@ -1470,10 +1612,12 @@ type
   /// </summary>
   [caName('editChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgEditChatInviteLinkArgument = class(TtgCreateChatInviteLinkArgument)
   private
-    [caName('invite_link')]
+    [caName('invite_link')
+      ]
     [caIsRequaired]
     [caDefaultValueString('')]
     FInviteLink: string;
@@ -1503,12 +1647,14 @@ type
   /// </summary>
   [caName('revokeChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgRevokeChatInviteLinkArgument = class
   private
     [caName('chat_id')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)]
+    [caDefaultValueInt64(0)
+      ]
     FChatId: TtgUserLink;
     [caName('invite_link')]
     [caIsRequaired]
@@ -1626,7 +1772,8 @@ type
   /// appropriate admin rights. Returns True on success.</summary>
   [caName('banChatMember')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgBanChatMember = class
   private
     [caName('chat_id')]
@@ -1671,7 +1818,8 @@ type
   private
     [caName('title')]
     [caIsRequaired]
-    [caDefaultValueString('')]
+    [caDefaultValueString('')
+      ]
     fTitle: string;
     [caName('description')]
     [caIsRequaired]
@@ -1868,7 +2016,8 @@ type
   /// commands aren't set, an empty list is returned.</summary>
   [caName('getMyCommands')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgGetMyCommandsArgument = class
   private
     [caName('scope')]
@@ -1892,7 +2041,8 @@ type
   /// True on success.</summary>
   [caName('setMyCommands')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgSetMyCommandsArgument = class
   private
     [caName('commands')]
@@ -1925,7 +2075,8 @@ type
   /// on success.</summary>
   [caName('getChatMemberCount')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
+  [caParameterType(TcaParameterType.QueryString)
+    ]
   TtgGetChatMemberCountArgument = class
   private
     [caName('chat_id')]
@@ -1940,8 +2091,7 @@ type
 
 implementation
 
-uses
-  System.SysUtils;
+uses System.SysUtils;
 { TtgForwardMessageArgument }
 
 constructor TtgForwardMessageArgument.Create;
@@ -1950,7 +2100,7 @@ begin
   FChatId := TtgUserLink.Empty;
   FFromChatId := TtgUserLink.Empty;
   FDisableNotification := False;
-  FMessageId := 0;
+  FMessageID := 0;
 end;
 
 destructor TtgForwardMessageArgument.Destroy;
@@ -2132,7 +2282,7 @@ end;
 class function TtgEditMessageLiveLocationHaveInlineMessageIDArgument.Default
   : TtgEditMessageLiveLocationHaveInlineMessageIDArgument;
 begin
-  Result.InlineMessageID := 0;
+  Result.InlineMessageId := 0;
   Result.Latitude := 0.0;
   Result.Longitude := 0.0;
 end;
@@ -2142,7 +2292,7 @@ end;
 class function TtgEditMessageLiveLocationArgument.Default: TtgEditMessageLiveLocationArgument;
 begin
   Result.ChatId := TtgUserLink.Empty;
-  Result.MessageId := 0;
+  Result.MessageID := 0;
   Result.Latitude := 0.0;
   Result.Longitude := 0.0;
 end;
@@ -2152,7 +2302,7 @@ end;
 class function TtgStopMessageLiveLocationArgument.Default: TtgStopMessageLiveLocationArgument;
 begin
   Result.ChatId := TtgUserLink.Empty;
-  Result.MessageId := 0;
+  Result.MessageID := 0;
 end;
 
 { TtgStopMessageLiveLocationHaveInlineMessageIDArgument }
@@ -2160,7 +2310,7 @@ end;
 class function TtgStopMessageLiveLocationHaveInlineMessageIDArgument.Default
   : TtgStopMessageLiveLocationHaveInlineMessageIDArgument;
 begin
-  Result.InlineMessageID := 0;
+  Result.InlineMessageId := 0;
 end;
 
 { TtgSendDiceArgument }
@@ -2239,7 +2389,7 @@ constructor TtgCopyMessageArgument.Create;
 begin
   inherited Create();
   FFromChatId := TtgUserLink.Empty;
-  FMessageId := 0;
+  FMessageID := 0;
   FCaption := '';
   FCaptionEntities := nil;
 end;
@@ -2361,7 +2511,7 @@ constructor TtgUnpinChatMessageArgument.Create(AChatId: TtgUserLink; const AMess
 begin
   inherited Create();
   FChatId := AChatId;
-  FMessageId := AMessageId;
+  FMessageID := AMessageId;
 end;
 
 constructor TtgUnpinAllChatMessagesArgument.Create(AChatId: TtgUserLink);
@@ -2384,6 +2534,34 @@ destructor TtgSetMyCommandsArgument.Destroy;
 begin
   if Assigned(FScope) then
     FreeAndNil(FScope);
+  inherited;
+end;
+
+{ TtgEditMessageTextArgument }
+
+constructor TtgEditMessageTextArgument.Create;
+begin
+  inherited;
+
+end;
+
+destructor TtgEditMessageTextArgument.Destroy;
+begin
+
+  inherited;
+end;
+
+{ TtgEditMessageTextInlineArgument }
+
+constructor TtgEditMessageTextInlineArgument.Create;
+begin
+  inherited;
+  FInlineMessageId := 0;
+end;
+
+destructor TtgEditMessageTextInlineArgument.Destroy;
+begin
+
   inherited;
 end;
 
