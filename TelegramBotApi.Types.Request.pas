@@ -318,8 +318,7 @@ type
   /// </summary>
   TtgCopyMessageArgument = class(TtgSendMessageBaseWithParseMode)
   private
-    [caName('from_chat_id')
-      ]
+    [caName('from_chat_id')]
     [caIsRequaired]
     [caDefaultValueInt64(0)]
     FFromChatId: TtgUserLink;
@@ -369,8 +368,7 @@ type
 
   TtgSendMediaAbstractArgument = class(TtgSendMessageBaseWithParseMode)
   private
-    [caName('caption')
-      ]
+    [caName('caption')]
     [caDefaultValueStringAttribute('')]
     FCaption: string;
     [caName('caption_entities')]
@@ -451,8 +449,7 @@ type
 
   TtgSendMediaWithThumbAbstractArgument = class(TtgSendMediaAbstractArgument)
   private
-    [caName('thumb')
-      ]
+    [caName('thumb')]
     [caDefaultValueStringAttribute('')]
     fThumb: TcaFileToSend;
   public
@@ -536,8 +533,7 @@ type
   TtgSendAudioArgument = class(TtgSendVoiceArgument)
   private
     [caName('thumb')]
-    [caDefaultValueStringAttribute('')
-      ]
+    [caDefaultValueStringAttribute('')]
     fThumb: TcaFileToSend;
     [caName('audio')]
     [caIsRequaired]
@@ -605,12 +601,10 @@ type
   /// </summary>
   [caName('sendDocument')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSendDocumentArgument = class(TtgSendMediaWithThumbAbstractArgument)
   private
-    [caName('document')
-      ]
+    [caName('document')]
     [caIsRequaired]
     [caDefaultValueString('')]
     fDocument: TcaFileToSend;
@@ -673,12 +667,10 @@ type
   /// </summary>
   [caName('sendVideo')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.GetOrPost)
-    ]
+  [caParameterType(TcaParameterType.GetOrPost)]
   TtgSendVideoArgument = class(TtgSendMediaWithThumbAbstractArgument)
   private
-    [caName('video')
-      ]
+    [caName('video')]
     [caIsRequaired]
     [caDefaultValueString('')]
     fVideo: TcaFileToSend;
@@ -820,8 +812,7 @@ type
   /// </summary>
   [caName('sendVideoNote')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSendVideoNoteArgument = record
   public
     [caName('chat_id')]
@@ -873,8 +864,7 @@ type
   /// </summary>
   [caName('sendVenue')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSendVenueArgument = record
   public
     [caName('chat_id')]
@@ -943,8 +933,7 @@ type
 
   [caName('SendMediaGroup')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSendMediaGroupArgument = record
   public
     [caName('chat_id')]
@@ -955,8 +944,7 @@ type
     ChatId: TtgUserLink;
     [caName('media')]
     [caIsRequaired]
-    [caDefaultValueString('')
-      ]
+    [caDefaultValueString('')]
     [caParameterType(TcaParameterType.GetOrPost)]
     /// <summary>
     /// Audio file to send. Pass a file_id as String to send an animation that exists on
@@ -1023,8 +1011,7 @@ type
   /// the bot, the edited Message is returned, otherwise True is returned.</summary>
   TtgEditMessageLiveLocationHaveInlineMessageIDArgument = record
   public
-    [caName('inline_message_id')
-      ]
+    [caName('inline_message_id')]
     [caIsRequaired]
     [caDefaultValueString('')]
     /// <summary>If the message is a reply, ID of the original message</summary>
@@ -1079,12 +1066,10 @@ type
   /// live_period expires. On success, if the message was sent by the bot, the sent
   /// Message is returned, otherwise True is returned.</summary>
   [caName('stopMessageLiveLocation')]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgStopMessageLiveLocationHaveInlineMessageIDArgument = record
   public
-    [caName('inline_message_id')
-      ]
+    [caName('inline_message_id')]
     [caIsRequaired]
     [caDefaultValueString('')]
     /// <summary>If the message is a reply, ID of the original message</summary>
@@ -1096,8 +1081,7 @@ type
   /// live_period expires. On success, if the message was sent by the bot, the sent
   /// Message is returned, otherwise True is returned.</summary>
   [caName('stopMessageLiveLocation')]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgStopMessageLiveLocationArgument = record
   public
     /// <summary>Required if inline_message_id is not specified. Unique identifier for
@@ -1247,8 +1231,7 @@ type
   /// On success, returns a WebhookInfo object. If the bot is using getUpdates, will
   /// return an object with the url field empty.</summary>
   [caName('getWebhookInfo')]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgGetWebhookInfoArgument = record
   public
     class function Default: TtgGetWebhookInfoArgument; static;
@@ -1256,8 +1239,7 @@ type
 
   [caName('exportChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.GetOrPost)
-    ]
+  [caParameterType(TcaParameterType.GetOrPost)]
   TtgExportChatInviteLinkArgument = record
   public
     [caName('chat_id')]
@@ -1271,8 +1253,7 @@ type
 
   [caName('getChat')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.GetOrPost)
-    ]
+  [caParameterType(TcaParameterType.GetOrPost)]
   TtgGetChatArgument = record
   public
     [caName('chat_id')]
@@ -1294,8 +1275,7 @@ type
   /// </summary>
   [caName('getFile')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.GetOrPost)
-    ]
+  [caParameterType(TcaParameterType.GetOrPost)]
   TtgGetFileArgument = class
   private
     [caName('file_id')]
@@ -1310,8 +1290,7 @@ type
 
   [caName('sendPoll')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSendPollArgument = record
   public
     [caName('chat_id')]
@@ -1408,8 +1387,7 @@ type
   /// </summary>
   [caName('sendDice')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSendDiceArgument = class
   private
     [caName('chat_id')]
@@ -1487,8 +1465,7 @@ type
   /// use the parameter only_if_banned. Returns True on success.</summary>
   [caName('unbanChatMember')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgUnbanChatMemberArgument = class
   private
     [caName('chat_id')]
@@ -1523,8 +1500,7 @@ type
   /// </summary>
   [caName('unpinChatMessage')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgUnpinChatMessageArgument = class
   private
     [caName('chat_id')]
@@ -1552,14 +1528,12 @@ type
   /// </summary>
   [caName('unpinAllChatMessages')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgUnpinAllChatMessagesArgument = class
   private
     [caName('chat_id')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)
-      ]
+    [caDefaultValueInt64(0)]
     FChatId: TtgUserLink;
   public
     /// <summary>Unique identifier for the target chat or username of the target
@@ -1576,14 +1550,12 @@ type
   /// </summary>
   [caName('createChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgCreateChatInviteLinkArgument = class
   private
     [caName('chat_id')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)
-      ]
+    [caDefaultValueInt64(0)]
     FChatId: TtgUserLink;
     [caName('expire_date')]
     FExpireDate: TDateTime;
@@ -1612,12 +1584,10 @@ type
   /// </summary>
   [caName('editChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgEditChatInviteLinkArgument = class(TtgCreateChatInviteLinkArgument)
   private
-    [caName('invite_link')
-      ]
+    [caName('invite_link')]
     [caIsRequaired]
     [caDefaultValueString('')]
     FInviteLink: string;
@@ -1647,14 +1617,12 @@ type
   /// </summary>
   [caName('revokeChatInviteLink')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgRevokeChatInviteLinkArgument = class
   private
     [caName('chat_id')]
     [caIsRequaired]
-    [caDefaultValueInt64(0)
-      ]
+    [caDefaultValueInt64(0)]
     FChatId: TtgUserLink;
     [caName('invite_link')]
     [caIsRequaired]
@@ -1772,8 +1740,7 @@ type
   /// appropriate admin rights. Returns True on success.</summary>
   [caName('banChatMember')]
   [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgBanChatMember = class
   private
     [caName('chat_id')]
@@ -1818,8 +1785,7 @@ type
   private
     [caName('title')]
     [caIsRequaired]
-    [caDefaultValueString('')
-      ]
+    [caDefaultValueString('')]
     fTitle: string;
     [caName('description')]
     [caIsRequaired]
@@ -2016,8 +1982,7 @@ type
   /// commands aren't set, an empty list is returned.</summary>
   [caName('getMyCommands')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgGetMyCommandsArgument = class
   private
     [caName('scope')]
@@ -2041,8 +2006,7 @@ type
   /// True on success.</summary>
   [caName('setMyCommands')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgSetMyCommandsArgument = class
   private
     [caName('commands')]
@@ -2075,8 +2039,7 @@ type
   /// on success.</summary>
   [caName('getChatMemberCount')]
   [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)
-    ]
+  [caParameterType(TcaParameterType.QueryString)]
   TtgGetChatMemberCountArgument = class
   private
     [caName('chat_id')]

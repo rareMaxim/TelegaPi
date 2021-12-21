@@ -49,7 +49,6 @@ var
   LBtn: TtgInlineKeyboardButton;
   AYear, AMonth, ADay: Word;
   FirstDate: TDateTime;
-  I: Integer;
   lCol, lRow: Integer;
 begin
   DecodeDate(FDate, AYear, AMonth, ADay);
@@ -59,8 +58,6 @@ begin
   if FMonthOffset = 2 then
     FMonthOffset := -5;
   // MoveColRow((ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1, False, False);
-  lRow := 0;
-  lCol := 0;
   for lRow := 0 to 6 do
   begin
     for lCol := 0 to 6 do
