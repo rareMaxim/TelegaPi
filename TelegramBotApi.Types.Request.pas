@@ -188,13 +188,10 @@ type
     [caName('message_id')]
     [caIsRequaired]
     FMessageID: Int64;
-    [caName('chat_id')]
-    [caDefaultValueInt64(0)]
-    FChatId: TtgUserLink;
   public
     /// <summary>Unique identifier for the target chat or username of the target
     /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read FChatId write FChatId;
+    property ChatId;
     /// <summary>
     /// Required if inline_message_id is not specified. Identifier of the message to
     /// edit
