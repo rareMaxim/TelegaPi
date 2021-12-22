@@ -441,6 +441,7 @@ end;
 class function TtgKeyboardBuilder.RemoveKb: TtgReplyKeyboardRemove;
 begin
   Result := TtgReplyKeyboardRemove.Create;
+  Result.RemoveKeyboard := True;
 end;
 
 class function TtgKeyboardBuilder.ReplyKb: TtgReplyKeyboardMarkup;
