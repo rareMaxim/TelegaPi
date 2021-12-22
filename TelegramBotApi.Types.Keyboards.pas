@@ -185,6 +185,7 @@ type
     [JsonName('selective')]
     FSelective: Boolean;
   public
+    constructor Create;
     /// <summary>
     /// Requests clients to remove the custom keyboard (user will not be able to summon
     /// this keyboard; if you want to hide the keyboard from sight but keep it
@@ -441,7 +442,6 @@ end;
 class function TtgKeyboardBuilder.RemoveKb: TtgReplyKeyboardRemove;
 begin
   Result := TtgReplyKeyboardRemove.Create;
-  Result.RemoveKeyboard := True;
 end;
 
 class function TtgKeyboardBuilder.ReplyKb: TtgReplyKeyboardMarkup;
@@ -560,6 +560,13 @@ destructor TtgKeyboardButtonPool.Destroy;
 begin
   FRequestPoll.Free;
   inherited;
+end;
+
+{ TtgReplyKeyboardRemove }
+
+constructor TtgReplyKeyboardRemove.Create;
+begin
+  FRemoveKeyboard := True;
 end;
 
 end.
