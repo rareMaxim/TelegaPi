@@ -33,10 +33,14 @@ type
   /// when the corresponding button is pressed.
   /// </summary>
   TtgKeyboardButtonPollType = class
+  const
+    QUIZ = 'quiz';
+    REGULAR = 'regular';
   private
     [JsonName('type')]
     FType: string;
   public
+    constructor Create(AType: string);
     /// <summary>
     /// Optional. If quiz is passed, the user will be allowed to create only polls in
     /// the quiz mode. If regular is passed, only regular polls will be allowed.
@@ -144,31 +148,6 @@ type
     property Selective: Boolean read FSelective write FSelective;
   end;
 
-  /// <summary> This object represents one button of the reply keyboard. For simple
-  /// text buttons String can be used instead of this object to specify text of the
-  /// button. Optional fields request_contact, request_location, and request_poll are
-  /// mutually exclusive
-  /// </summary>
-  /// <remarks>
-  /// Note: request_contact and request_location options will only work in Telegram
-  /// versions released after 9 April, 2016. Older clients will display unsupported
-  /// message.
-  /// Note: request_poll option will only work in Telegram versions released after 23
-  /// January, 2020. Older clients will display unsupported message.
-  /// </remarks>
-
-  TtgKeyboardButtonPoll = class(TtgKeyboardButton)
-  private
-    [JsonName('request_poll')]
-    FRequestPoll: TtgKeyboardButtonPollType;
-  public
-    /// <summary>
-    /// Optional. If specified, the user will be asked to create a poll and send it to
-    /// the bot when the button is pressed. Available in private chats only
-    /// </summary>
-    property RequestPoll: TtgKeyboardButtonPollType read FRequestPoll write FRequestPoll;
-  end;
-
   /// <summary>
   /// Upon receiving a message with this object, Telegram clients will remove the
   /// current custom keyboard and display the default letter-keyboard. By default,
@@ -200,6 +179,41 @@ type
     /// keyboard with poll options to users who haven't voted yet.
     /// </summary>
     property Selective: Boolean read FSelective write FSelective;
+  end;
+
+  /// <summary>
+  /// Upon receiving a message with this object, Telegram clients will display a
+  /// reply interface to the user (act as if the user has selected the bot's message
+  /// and tapped 'Reply'). This can be extremely useful if you want to create
+  /// user-friendly step-by-step interfaces without having to sacrifice privacy mode.
+  /// </summary>
+  TtgForceReply = class
+  private
+    [JsonName('force_reply')]
+    FForceReply: Boolean;
+    [JsonName('selective')]
+    FSelective: Boolean;
+    [JsonName('input_field_placeholder')]
+    FInputFieldPlaceholder: string;
+  public
+    /// <summary>
+    /// Shows reply interface to the user, as if they manually selected the bot's
+    /// message and tapped 'Reply'
+    /// </summary>
+    property ForceReply: Boolean read FForceReply write FForceReply;
+    /// <summary>
+    /// Optional. The placeholder to be shown in the input field when the reply is
+    /// active; 1-64 characters
+    /// </summary>
+    property InputFieldPlaceholder: string read FInputFieldPlaceholder write FInputFieldPlaceholder;
+    /// <summary>
+    /// Optional. Use this parameter if you want to force reply from specific users
+    /// only. Targets: 1) users that are @mentioned in the text of the Message object;
+    /// 2) if the bot's message is a reply (has reply_to_message_id), sender of the
+    /// original message.
+    /// </summary>
+    property Selective: Boolean read FSelective write FSelective;
+
   end;
 {$ENDREGION}
 {$REGION 'Inline keyboards'}
@@ -357,33 +371,6 @@ type
 
 {$ENDREGION}
 
-  /// <summary>
-  /// Upon receiving a message with this object, Telegram clients will display a
-  /// reply interface to the user (act as if the user has selected the bot's message
-  /// and tapped 'Reply'). This can be extremely useful if you want to create
-  /// user-friendly step-by-step interfaces without having to sacrifice privacy mode.
-  /// </summary>
-  TtgForceReply = class
-  private
-    [JsonName('force_reply')]
-    FForceReply: Boolean;
-    [JsonName('selective')]
-    FSelective: Boolean;
-  public
-    /// <summary>
-    /// Shows reply interface to the user, as if they manually selected the bot's
-    /// message and tapped 'Reply'
-    /// </summary>
-    property ForceReply: Boolean read FForceReply write FForceReply;
-    /// <summary>
-    /// Optional. Use this parameter if you want to force reply from specific users
-    /// only. Targets: 1) users that are @mentioned in the text of the Message object;
-    /// 2) if the bot's message is a reply (has reply_to_message_id), sender of the
-    /// original message.
-    /// </summary>
-    property Selective: Boolean read FSelective write FSelective;
-  end;
-
   TtgKeyboardBuilder = class
     class function InlineKb: TtgInlineKeyboardMarkup;
     class function ReplyKb: TtgReplyKeyboardMarkup;
@@ -530,6 +517,13 @@ procedure TtgReplyKeyboardMarkup.SetKeyboard(AKeyboard: TArray < TArray < TtgKey
 begin
   inherited;
   FKeyboard := AKeyboard;
+end;
+
+{ TtgKeyboardButtonPollType }
+
+constructor TtgKeyboardButtonPollType.Create(AType: string);
+begin
+  FType := AType;
 end;
 
 end.
