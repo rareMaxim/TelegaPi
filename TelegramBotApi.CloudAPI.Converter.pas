@@ -66,6 +66,8 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgBotCommandScopeChatMember>;
   TcaRequestArgument.Current.RegisterToJson<TtgInlineKeyboardMarkup>;
   TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardMarkup>;
+  TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardRemove>;
+  TcaRequestArgument.Current.RegisterToJson<TtgForceReply>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;
