@@ -14,13 +14,11 @@ type
   TTestsFixture = class
   private
     FBot: TTelegramBotApi;
-
   public
     [Setup]
     procedure Setup;
     [TearDown]
     procedure TearDown;
-
     property Bot: TTelegramBotApi read FBot write FBot;
   end;
 

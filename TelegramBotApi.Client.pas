@@ -268,7 +268,7 @@ type
     /// message is not an inline message, the edited Message is returned, otherwise
     /// True is returned.
     /// </summary>
-    function EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<Boolean>;
+    function EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<TtgMessage>;
 {$ENDREGION}
     /// <summary>
     /// Use this method to get the current list of the bot's commands for the given
@@ -514,9 +514,9 @@ begin
   Result := InternalExecute<TtgBanChatMember, Boolean>(ABanChatMember);
 end;
 
-function TTelegramBotApi.EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<Boolean>;
+function TTelegramBotApi.EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgEditMessageTextArgument, Boolean>(AEditMessageArgument);
+  Result := InternalExecute<TtgEditMessageTextArgument, TtgMessage>(AEditMessageArgument);
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;

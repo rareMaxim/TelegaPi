@@ -119,6 +119,7 @@
         <DCCReference Include="Integ\Framework\Test.Assert.pas"/>
         <DCCReference Include="Integ\Framework\Test.Config.pas"/>
         <DCCReference Include="Integ\Commands\CommandsTests.pas"/>
+        <DCCReference Include="Integ\Editing Messages\EditTextMessageTests.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
