@@ -286,6 +286,19 @@ type
     /// Use this method to get the number of members in a chat. Returns Int on success.
     /// </summary>
     function GetChatMemberCount(AGetChatMemberCount: TtgGetChatMemberCountArgument): ItgResponse<Integer>;
+
+    /// <summary>
+    /// Use this method to send answers to callback queries sent from inline keyboards.
+    /// The answer will be displayed to the user as a notification at the top of the
+    /// chat screen or as an alert. On success, True is returned.
+    /// </summary>
+    /// <remarks>
+    /// Alternatively, the user can be redirected to the specified Game URL. For this
+    /// option to work, you must first create a game for your bot via @Botfather and
+    /// accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX
+    /// that open your bot with a parameter.
+    /// </remarks>
+    function AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
 
@@ -337,6 +350,12 @@ destructor TTelegramBotApi.Destroy;
 begin
   FCloudApi.Free;
   inherited Destroy;
+end;
+
+function TTelegramBotApi.AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument)
+  : ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgAnswerCallbackQueryArgument, Boolean>(AAnswerCallbackQuery);
 end;
 
 function TTelegramBotApi.Close: ItgResponse<Boolean>;

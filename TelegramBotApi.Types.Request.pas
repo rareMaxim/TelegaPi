@@ -2052,6 +2052,63 @@ type
     property ChatId: TtgUserLink read FChatId write FChatId;
   end;
 
+  /// <summary>
+  /// Use this method to send answers to callback queries sent from inline keyboards.
+  /// The answer will be displayed to the user as a notification at the top of the
+  /// chat screen or as an alert. On success, True is returned.
+  /// </summary>
+  [caName('answerCallbackQuery')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgAnswerCallbackQueryArgument = record
+  private
+    [caName('callback_query_id')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FCallbackQueryId: string;
+    [caDefaultValueString('')]
+    [caName('text')]
+    FText: string;
+    [caName('show_alert')]
+    [caDefaultValueBoolean(False)]
+    FShowAlert: Boolean;
+    [caName('url')]
+    [caDefaultValueString('')]
+    FUrl: string;
+    [caName('cache_time')]
+    [caDefaultValueInt(0)]
+    FCacheTime: Integer;
+  public
+    /// <summary>
+    /// Unique identifier for the query to be answered
+    /// </summary>
+    property CallbackQueryId: string read FCallbackQueryId write FCallbackQueryId;
+    /// <summary>
+    /// Text of the notification. If not specified, nothing will be shown to the user,
+    /// 0-200 characters
+    /// </summary>
+    property Text: string read FText write FText;
+    /// <summary>
+    /// If True, an alert will be shown by the client instead of a notification at the
+    /// top of the chat screen. Defaults to false.
+    /// </summary>
+    property ShowAlert: Boolean read FShowAlert write FShowAlert;
+    /// <summary>
+    /// URL that will be opened by the user's client. If you have created a Game and
+    /// accepted the conditions via @Botfather, specify the URL that opens your game —
+    /// note that this will only work if the query comes from a callback_game button.
+    ///
+    /// Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
+    /// </summary>
+    property Url: string read FUrl write FUrl;
+    /// <summary>
+    /// The maximum amount of time in seconds that the result of the callback query may
+    /// be cached client-side. Telegram apps will support caching starting in version 3.
+    /// 14. Defaults to 0.
+    /// </summary>
+    property CacheTime: Integer read FCacheTime write FCacheTime;
+  end;
+
 implementation
 
 uses System.SysUtils;
