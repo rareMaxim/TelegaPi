@@ -9,50 +9,27 @@ uses
   TelegramBotApi.Types.Request,
   TelegramBotApi.Polling.Console,
   System.SysUtils,
-  Winapi.Windows;
+  Winapi.Windows,
+  Demo.BotBase in '..\Demo.BotBase.pas';
 
 type
-  TEchoCore = class
-  const
-    BOT_TOKEN = '';
-  private
-    fBot: TTelegramBotApi;
-    fPooling: TtgPollingConsole;
-    procedure WhaitEnter;
+  TEchoCore = class(TDemoBotBase)
   protected
     procedure UpdateConsoleTitle(ABot: TTelegramBotApi);
     procedure SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
   public
     procedure Main;
-    constructor Create;
-    destructor Destroy; override;
   end;
-
-  { TEchoCore }
-
-constructor TEchoCore.Create;
-begin
-  fBot := TTelegramBotApi.Create(BOT_TOKEN);
-  fPooling := TtgPollingConsole.Create;
-  fPooling.Bot := fBot;
-end;
-
-destructor TEchoCore.Destroy;
-begin
-  fBot.Free;
-  fPooling.Free;
-  inherited;
-end;
 
 procedure TEchoCore.Main;
 begin
-  UpdateConsoleTitle(fBot);
-  fPooling.OnMessage := procedure(AMsg: TtgMessage)
+  UpdateConsoleTitle(Bot);
+  Pooling.OnMessage := procedure(AMsg: TtgMessage)
     begin
       Writeln(AMsg.Text);
       SendTextMessage(AMsg.Chat.ID, AMsg.Text);
     end;
-  fPooling.Start;
+  Pooling.Start;
   WhaitEnter;
 end;
 
@@ -64,7 +41,7 @@ begin
   try
     lMsg.ChatId := UserLink;
     lMsg.Text := MsgText;
-    fBot.SendMessage(lMsg);
+    Bot.SendMessage(lMsg);
   finally
     lMsg.Free;
   end;
@@ -80,12 +57,6 @@ begin
   finally
     // lUser.Free; <-- Autofree in TelegaPi core
   end;
-end;
-
-procedure TEchoCore.WhaitEnter;
-begin
-  Writeln('Press Enter to stop bot service... ');
-  Readln;
 end;
 
 procedure Main;

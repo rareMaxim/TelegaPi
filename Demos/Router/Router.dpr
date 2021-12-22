@@ -13,18 +13,14 @@ uses
   System.SysUtils,
   System.Rtti,
   Winapi.Windows,
-  TelegramBotApi.Types.Keyboards;
+  TelegramBotApi.Types.Keyboards,
+  Demo.BotBase in '..\Demo.BotBase.pas';
 
 type
-  TDemoPooling = class
-  const
-    BOT_TOKEN = '1225990942:AAEfSINTq5fMdAOiswxNScZ8wQUDD_5KDYQ';
+  TDemoPooling = class(TDemoBotBase)
   private
-    fBot: TTelegramBotApi;
-    fPooling: TtgPollingConsole;
     FRouteManager: TtgRouter;
     FUserStates: TtgRouteUserStateManagerRAM;
-    procedure WhaitEnter;
   protected
     procedure UpdateConsoleTitle(ABot: TTelegramBotApi);
     procedure SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
@@ -34,17 +30,13 @@ type
     procedure SetupRoutes;
   public
     procedure Main;
-    constructor Create;
     destructor Destroy; override;
+    constructor Create; override;
   end;
-
-  { TEchoCore }
 
 constructor TDemoPooling.Create;
 begin
-  fBot := TTelegramBotApi.Create(BOT_TOKEN);
-  fPooling := TtgPollingConsole.Create;
-  fPooling.Bot := fBot;
+  inherited Create;
   FUserStates := TtgRouteUserStateManagerRAM.Create;
   FRouteManager := TtgRouter.Create(FUserStates);
   SetupRoutes;
@@ -54,8 +46,6 @@ destructor TDemoPooling.Destroy;
 begin
   FRouteManager.Free;
   FUserStates.Free;
-  fBot.Free;
-  fPooling.Free;
   inherited;
 end;
 
@@ -69,12 +59,12 @@ end;
 
 procedure TDemoPooling.Main;
 begin
-  UpdateConsoleTitle(fBot);
-  fPooling.OnMessage := procedure(AMsg: TtgMessage)
+  UpdateConsoleTitle(Bot);
+  Pooling.OnMessage := procedure(AMsg: TtgMessage)
     begin
       DoReadMessage(AMsg);
     end;
-  fPooling.Start;
+  Pooling.Start;
   WhaitEnter;
 end;
 
@@ -85,7 +75,7 @@ var
 begin
   lChatActionArg := TtgSendChatActionArgument.Create(AMsg.Chat.ID, TtgChatAction.Typing);
   try
-    fBot.SendChatAction(lChatActionArg);
+    Bot.SendChatAction(lChatActionArg);
   finally
     lChatActionArg.Free;
   end;
@@ -95,7 +85,7 @@ begin
     lSendPhotoArg.Photo := 'https://telegram.org/img/t_logo.png?1';
     lSendPhotoArg.Caption := 'Nice Picture';
     lSendPhotoArg.ChatId := AMsg.Chat.ID;
-    fBot.SendPhoto(lSendPhotoArg);
+    Bot.SendPhoto(lSendPhotoArg);
   finally
     lSendPhotoArg.Free;
   end;
@@ -116,7 +106,7 @@ begin
     lMsg.ChatId := AMsg.Chat.ID;
     lMsg.Text := 'Choose';
     lMsg.ReplyMarkup := lKB;
-    fBot.SendMessage(lMsg);
+    Bot.SendMessage(lMsg);
   finally
     lMsg.Free;
     // lKB.Free;     <-- Autofree in TelegaPi core
@@ -131,7 +121,7 @@ begin
   try
     lMsg.ChatId := UserLink;
     lMsg.Text := MsgText;
-    fBot.SendMessage(lMsg);
+    Bot.SendMessage(lMsg);
   finally
     lMsg.Free;
   end;
@@ -215,12 +205,6 @@ begin
   finally
     // lUser.Free; <-- Autofree in TelegaPi core
   end;
-end;
-
-procedure TDemoPooling.WhaitEnter;
-begin
-  Writeln('Press Enter to stop bot service... ');
-  Readln;
 end;
 
 procedure Main;
