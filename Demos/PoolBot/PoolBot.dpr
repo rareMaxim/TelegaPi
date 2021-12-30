@@ -5,13 +5,8 @@ program PoolBot;
 
 uses
   System.SysUtils,
-  TelegramBotApi.Client,
-  TelegramBotApi.Tools.CommandParser,
-  TelegramBotApi.Tools.Router,
+  TelegaPi,
   Demo.BotBase in '..\Demo.BotBase.pas',
-  TelegramBotApi.Types,
-  TelegramBotApi.Types.Keyboards,
-  TelegramBotApi.Types.Request,
   Winapi.Windows;
 
 type
@@ -50,10 +45,6 @@ end;
 procedure TPoolBot.Main;
 begin
   UpdateConsoleTitle(Bot);
-  Pooling.OnUpdates := procedure(AUpdates: TArray<TtgUpdate>)
-    begin
-      // Writeln(fBot.CloudApi.ResponsePrinter.AsJson);
-    end;
   Pooling.OnMessage := procedure(AMsg: TtgMessage)
     begin
       Writeln(AMsg.Text);

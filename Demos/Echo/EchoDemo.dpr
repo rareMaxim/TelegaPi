@@ -4,10 +4,7 @@
 {$R *.res}
 
 uses
-  TelegramBotApi.Client,
-  TelegramBotApi.Types,
-  TelegramBotApi.Types.AvailableMethods,
-  TelegramBotApi.Polling.Console,
+  TelegaPi,
   System.SysUtils,
   Winapi.Windows,
   Demo.BotBase in '..\Demo.BotBase.pas';

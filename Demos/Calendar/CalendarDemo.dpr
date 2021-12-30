@@ -4,13 +4,9 @@
 {$R *.res}
 
 uses
-  TelegramBotApi.Client,
-  TelegramBotApi.Types,
-  TelegramBotApi.Types.Request,
-  TelegramBotApi.Polling.Console,
+  TelegaPi,
   System.SysUtils,
   Winapi.Windows,
-  TelegramBotApi.Ext.Calendar in '..\..\TelegramBotApi.Ext.Calendar.pas',
   Demo.BotBase in '..\Demo.BotBase.pas';
 
 type
@@ -25,10 +21,6 @@ type
 procedure TEchoCore.Main;
 begin
   UpdateConsoleTitle(Bot);
-  Pooling.OnUpdates := procedure(AUpdates: TArray<TtgUpdate>)
-    begin
-      // Writeln(fBot.CloudApi.ResponsePrinter.AsJson);
-    end;
   Pooling.OnMessage := procedure(AMsg: TtgMessage)
     begin
       Writeln(AMsg.Text);
@@ -39,10 +31,10 @@ end;
 
 procedure TEchoCore.SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
 var
-  lMsg: TtgMessageArgument;
+  lMsg: TtgSendMessageArgument;
   lCalendar: TtgCalendarControl;
 begin
-  lMsg := TtgMessageArgument.Create;
+  lMsg := TtgSendMessageArgument.Create;
   lCalendar := TtgCalendarControl.Create;
   try
     lMsg.ChatId := UserLink;

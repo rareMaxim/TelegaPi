@@ -14,7 +14,7 @@ type
     function GetLastName: string;
     function GetSupportsInlineQueries: Boolean;
     function GetUsername: string;
-// public
+    // public
     property CanJoinGroups: Boolean read GetCanJoinGroups;
     property CanReadAllGroupMessages: Boolean read GetCanReadAllGroupMessages;
     property FirstName: string read GetFirstName;

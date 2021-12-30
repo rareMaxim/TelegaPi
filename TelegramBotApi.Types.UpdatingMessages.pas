@@ -10,7 +10,7 @@ uses
   CloudAPI.Attributes,
   CloudAPI.Types,
   TelegramBotApi.Types,
-  TelegramBotApi.Types.Core;
+  TelegramBotApi.Types.Abstract;
 
 type
 

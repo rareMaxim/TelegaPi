@@ -3,8 +3,7 @@ unit Demo.BotBase;
 interface
 
 uses
-  TelegramBotApi.Client,
-  TelegramBotApi.Polling.Console;
+  TelegaPi;
 
 type
   TDemoBotBase = class

@@ -4,16 +4,11 @@
 {$R *.res}
 
 uses
-  TelegramBotApi.Client,
-  TelegramBotApi.Types,
-  TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Request,
-  TelegramBotApi.Polling.Console,
+  TelegaPi,
   System.SysUtils,
   System.Rtti,
   Winapi.Windows,
-  TelegramBotApi.Types.Keyboards,
-  Demo.BotBase in '..\Demo.BotBase.pas', TelegramBotApi.Types.AvailableMethods;
+  Demo.BotBase in '..\Demo.BotBase.pas';
 
 type
   TDemoPooling = class(TDemoBotBase)

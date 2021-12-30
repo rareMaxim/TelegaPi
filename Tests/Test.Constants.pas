@@ -107,7 +107,7 @@ end;
 
 class function TtgConst.PathToFile.Photos.Logo: string;
 begin
-  Result := TPath.Combine(PhotoDir , 'logo.png');
+  Result := TPath.Combine(PhotoDir, 'logo.png');
 end;
 
 class function TtgConst.PathToFile.Photos.PhotoDir: string;

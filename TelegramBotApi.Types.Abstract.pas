@@ -1,4 +1,4 @@
-unit TelegramBotApi.Types.Core;
+unit TelegramBotApi.Types.Abstract;
 
 interface
 
@@ -87,6 +87,41 @@ type
     destructor Destroy; override;
   end;
 
+  TtgSendMediaAbstractArgument = class(TtgSendMessageBaseWithParseMode)
+  private
+    [caName('caption')]
+    [caDefaultValueStringAttribute('')]
+    FCaption: string;
+    [caName('caption_entities')]
+    [caDefaultValueString('[]')]
+    FCaptionEntities: TArray<TtgMessageEntity>;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Caption, 0-1024 characters after entities parsing</summary>
+    property Caption: string read FCaption write FCaption;
+    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
+    /// fixed-width text or inline URLs in your bot's message.   </summary>
+    property ParseMode;
+    /// <summary> List of special entities that appear in the new caption, which can be
+    /// specified instead of parse_mode
+    /// </summary>
+    property CaptionEntities: TArray<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+  end;
+
 implementation
 
 { TtgSendMessageBaseWithParseMode }
@@ -129,6 +164,21 @@ destructor TtgMessageAbstract.Destroy;
 begin
 
   inherited;
+end;
+
+{ TtgSendMediaAbstractArgument }
+
+constructor TtgSendMediaAbstractArgument.Create;
+begin
+  inherited Create;
+  FCaption := '';
+  FCaptionEntities := nil;
+end;
+
+destructor TtgSendMediaAbstractArgument.Destroy;
+begin
+
+  inherited Destroy;
 end;
 
 end.

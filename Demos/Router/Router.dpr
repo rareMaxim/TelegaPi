@@ -4,17 +4,12 @@
 {$R *.res}
 
 uses
-  TelegramBotApi.Client,
-  TelegramBotApi.Types,
-  TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Request,
-  TelegramBotApi.Polling.Console,
-  TelegramBotApi.Tools.Router,
+  TelegaPi,
+
   System.SysUtils,
   System.Rtti,
   Winapi.Windows,
-  TelegramBotApi.Types.Keyboards,
-  Demo.BotBase in '..\Demo.BotBase.pas';
+  Demo.BotBase in '..\Demo.BotBase.pas', TelegramBotApi.Types.AvailableMethods;
 
 type
   TDemoPooling = class(TDemoBotBase)
@@ -95,9 +90,9 @@ procedure TDemoPooling.SendReplyKeyboard(AMsg: TtgMessage);
 var
   lKB: TtgReplyKeyboardMarkup;
   lBtn: TtgKeyboardButton;
-  lMsg: TtgMessageArgument;
+  lMsg: TtgSendMessageArgument;
 begin
-  lMsg := TtgMessageArgument.Create;
+  lMsg := TtgSendMessageArgument.Create;
   lKB := TtgReplyKeyboardMarkup.Create;
   lBtn := TtgKeyboardButton.Create;
   try
@@ -115,9 +110,9 @@ end;
 
 procedure TDemoPooling.SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
 var
-  lMsg: TtgMessageArgument;
+  lMsg: TtgSendMessageArgument;
 begin
-  lMsg := TtgMessageArgument.Create;
+  lMsg := TtgSendMessageArgument.Create;
   try
     lMsg.ChatId := UserLink;
     lMsg.Text := MsgText;

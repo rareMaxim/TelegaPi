@@ -27,7 +27,6 @@ type
     function GetDateElement(Index: Integer): Integer;
     procedure SetDateElement(Index: Integer; Value: Integer);
   public
-
     constructor Create;
     destructor Destroy; override;
     function Keyboard: TtgInlineKeyboardMarkup;
