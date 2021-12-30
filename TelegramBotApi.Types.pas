@@ -1076,34 +1076,34 @@ type
     property Parameters: TtgResponseParameters read GerParameters;
   end;
 
-  ItgResponse<t> = interface(ItgResponseBase)
+  ItgResponse<T> = interface(ItgResponseBase)
     ['{B98FE3AF-73DF-4A1D-BC25-C36EA264055B}']
     // private
-    function GetResult: t;
-    procedure SetResult(const Value: t);
+    function GetResult: T;
+    procedure SetResult(const Value: T);
     function GetResponse: IcaResponseBase;
     procedure SetResponse(const Value: IcaResponseBase);
     // public
     /// <summary>
     /// Gets the result object.
     /// </summary>
-    property Result: t read GetResult write SetResult;
+    property Result: T read GetResult write SetResult;
     property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
 
-  TtgResponse<t> = class(TtgResponseBase, ItgResponse<t>)
+  TtgResponse<T> = class(TtgResponseBase, ItgResponse<T>)
   private
     [JsonName('result')]
-    FResult: t;
+    FResult: T;
     FResponse: IcaResponseBase;
-    function GetResult: t;
-    procedure SetResult(const Value: t);
+    function GetResult: T;
+    procedure SetResult(const Value: T);
     function GetResponse: IcaResponseBase;
     procedure SetResponse(const Value: IcaResponseBase);
   public
     constructor Create;
     destructor Destroy; override;
-    property Result: t read GetResult write SetResult;
+    property Result: T read GetResult write SetResult;
     property CloudResponse: IcaResponseBase read GetResponse write SetResponse;
   end;
 
@@ -2953,39 +2953,39 @@ begin
   FOk := Value;
 end;
 
-constructor TtgResponse<t>.Create;
+constructor TtgResponse<T>.Create;
 begin
   inherited Create;
 
 end;
 
-destructor TtgResponse<t>.Destroy;
+destructor TtgResponse<T>.Destroy;
 begin
-  case GetTypeKind(t) of
+  case GetTypeKind(T) of
     tkClass:
       PObject(@FResult).Free; // DONE -o@rareMax -cMemLeack: Проверить, рабочий ли это способ очистки памяти
   end;
   inherited Destroy;
 end;
 
-function TtgResponse<t>.GetResponse: IcaResponseBase;
+function TtgResponse<T>.GetResponse: IcaResponseBase;
 begin
   Result := FResponse;
 end;
 
-function TtgResponse<t>.GetResult: t;
+function TtgResponse<T>.GetResult: T;
 begin
   Result := FResult;
 end;
 
 { TtgResponse<T> }
 
-procedure TtgResponse<t>.SetResponse(const Value: IcaResponseBase);
+procedure TtgResponse<T>.SetResponse(const Value: IcaResponseBase);
 begin
   FResponse := Value;
 end;
 
-procedure TtgResponse<t>.SetResult(const Value: t);
+procedure TtgResponse<T>.SetResult(const Value: T);
 begin
   FResult := Value;
 end;

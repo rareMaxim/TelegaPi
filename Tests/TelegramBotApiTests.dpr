@@ -22,7 +22,8 @@ uses
   Test.Assert in 'Integ\Framework\Test.Assert.pas',
   Test.Config in 'Integ\Framework\Test.Config.pas',
   CommandsTests in 'Integ\Commands\CommandsTests.pas',
-  EditTextMessageTests in 'Integ\Editing Messages\EditTextMessageTests.pas';
+  EditTextMessageTests in 'Integ\Editing Messages\EditTextMessageTests.pas',
+  DeleteTextMessageTests in 'Integ\Editing Messages\DeleteTextMessageTests.pas';
 
 //
 {$IFNDEF TESTINSIGHT}

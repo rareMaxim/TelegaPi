@@ -47,7 +47,11 @@ contains
   TelegramBotApi.Polling.Console in 'TelegramBotApi.Polling.Console.pas',
   TelegramBotApi.Tools.Router in 'TelegramBotApi.Tools.Router.pas',
   TelegramBotApi.Ext.Calendar in 'TelegramBotApi.Ext.Calendar.pas',
-  TelegramBotApi.Tools.CommandParser in 'TelegramBotApi.Tools.CommandParser.pas';
+  TelegramBotApi.Tools.CommandParser in 'TelegramBotApi.Tools.CommandParser.pas',
+  TelegaPi in 'TelegaPi.pas',
+  TelegramBotApi.Types.UpdatingMessages in 'TelegramBotApi.Types.UpdatingMessages.pas',
+  TelegramBotApi.Types.AvailableMethods in 'TelegramBotApi.Types.AvailableMethods.pas',
+  TelegramBotApi.Types.Core in 'TelegramBotApi.Types.Core.pas';
 
 end.
 

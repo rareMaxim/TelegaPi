@@ -4,7 +4,7 @@ interface
 
 uses
   TestsFixture,
-  TelegramBotApi.Client,
+  TelegaPi,
   Test.Data,
   DUnitX.TestFramework,
   DUnitX.Attributes;
@@ -16,7 +16,7 @@ type
   public
     [Test]
     procedure Should_Get_Me;
-    // [Test]
+    [Test]
     procedure Should_Edit_Text_Message;
     [Test]
     procedure Should_Edit_Text_Message_With_Kb;

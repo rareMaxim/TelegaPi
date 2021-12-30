@@ -5,6 +5,8 @@ interface
 uses
   TelegramBotApi.Types,
   TelegramBotApi.Types.Request,
+  TelegramBotApi.Types.AvailableMethods,
+  TelegramBotApi.Types.UpdatingMessages,
   CloudApi.IAuthenticator,
   CloudApi.Request,
   CloudApi.Client.Sync;
@@ -269,6 +271,22 @@ type
     /// True is returned.
     /// </summary>
     function EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<TtgMessage>;
+  /// <summary>
+  /// Use this method to delete a message, including service messages, with the
+  /// following limitations:
+  /// - A message can only be deleted if it was sent less than 48 hours ago.
+  /// - A dice message in a private chat can only be deleted if it was sent more than
+  /// 24 hours ago.
+  /// - Bots can delete outgoing messages in private chats, groups, and supergroups.
+  /// - Bots can delete incoming messages in private chats.
+  /// - Bots granted can_post_messages permissions can delete outgoing messages in
+  /// channels.
+  /// - If the bot is an administrator of a group, it can delete any message there.
+  /// - If the bot has can_delete_messages permission in a supergroup or a channel,
+  /// it can delete any message there.
+  /// Returns True on success.
+  /// </summary>
+    function DeleteMessage(ADeleteMessageeArgument: TtgDeleteMessageArgument): ItgResponse<Boolean>;
 {$ENDREGION}
     /// <summary>
     /// Use this method to get the current list of the bot's commands for the given
@@ -339,6 +357,11 @@ function TTelegramBotApi.CreateChatInviteLink(ACreateChatInviteLink: TtgCreateCh
   : ItgResponse<TtgChatInviteLink>;
 begin
   Result := InternalExecute<TtgCreateChatInviteLinkArgument, TtgChatInviteLink>(ACreateChatInviteLink);
+end;
+
+function TTelegramBotApi.DeleteMessage(ADeleteMessageeArgument: TtgDeleteMessageArgument): ItgResponse<Boolean>;
+begin
+  Result := InternalExecute<TtgDeleteMessageArgument, Boolean>(ADeleteMessageeArgument);
 end;
 
 function TTelegramBotApi.DeleteWebhook(ADeleteWebhook: TtgDeleteWebhookArgument): Boolean;

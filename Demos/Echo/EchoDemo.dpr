@@ -6,7 +6,7 @@
 uses
   TelegramBotApi.Client,
   TelegramBotApi.Types,
-  TelegramBotApi.Types.Request,
+  TelegramBotApi.Types.AvailableMethods,
   TelegramBotApi.Polling.Console,
   System.SysUtils,
   Winapi.Windows,
@@ -35,9 +35,9 @@ end;
 
 procedure TEchoCore.SendTextMessage(const UserLink: TtgUserLink; const MsgText: string);
 var
-  lMsg: TtgMessageArgument;
+  lMsg: TtgSendMessageArgument;
 begin
-  lMsg := TtgMessageArgument.Create;
+  lMsg := TtgSendMessageArgument.Create;
   try
     lMsg.ChatId := UserLink;
     lMsg.Text := MsgText;
