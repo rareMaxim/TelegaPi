@@ -124,7 +124,7 @@ type
   /// <summary>Use this method to send text messages.
   /// On success, the sent Message is returned.
   /// </summary>
-  TtgMessageArgument = class(TtgSendMessageBaseWithParseMode)
+  TtgSendMessageArgument = class(TtgSendMessageBaseWithParseMode)
   private
     [caName('text')]
     [caIsRequaired]
@@ -2355,9 +2355,9 @@ begin
   Result.ChatId := TtgUserLink.Empty;
 end;
 
-{ TtgMessageArgument }
+{ TtgSendMessageArgument }
 
-constructor TtgMessageArgument.Create;
+constructor TtgSendMessageArgument.Create;
 begin
   inherited Create();
   FText := '';
@@ -2365,7 +2365,7 @@ begin
   FDisableWebPagePreview := False;
 end;
 
-destructor TtgMessageArgument.Destroy;
+destructor TtgSendMessageArgument.Destroy;
 begin
 
   inherited;

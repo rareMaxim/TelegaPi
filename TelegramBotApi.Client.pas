@@ -58,7 +58,7 @@ type
     /// <summary>
     /// Use this method to send text messages. On success, the sent Message is returned.
     /// </summary>
-    function SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
+    function SendMessage(ASendMessageArgument: TtgSendMessageArgument): ItgResponse<TtgMessage>;
     /// <summary>
     /// Use this method to forward messages of any kind. On success, the sent Message
     /// is returned.
@@ -601,9 +601,9 @@ begin
   Result := InternalExecute < TArray < TtgMessage >> (LRequest);
 end;
 
-function TTelegramBotApi.SendMessage(ASendMessageArgument: TtgMessageArgument): ItgResponse<TtgMessage>;
+function TTelegramBotApi.SendMessage(ASendMessageArgument: TtgSendMessageArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgMessageArgument, TtgMessage>(ASendMessageArgument);
+  Result := InternalExecute<TtgSendMessageArgument, TtgMessage>(ASendMessageArgument);
 end;
 
 function TTelegramBotApi.SendPhoto(ASendPhotoArgument: TtgSendPhotoArgument): ItgResponse<TtgMessage>;

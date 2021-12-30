@@ -21,8 +21,9 @@ type
   public
     function RowCount: Integer; virtual;
     function ButtonsCount(const ARow: Integer): Integer; virtual;
-    function NewButton: TtgButton;
-    function NewRow: Integer;
+    function AddButton: TtgButton; overload;
+    function AddButton<T: TtgButton>: TtgButton; overload;
+    function AddRow: Integer;
     property Button[const ARow, ACol: Integer]: TtgButton read GetButton write SetButton; default;
   end;
 {$ENDREGION}
@@ -81,7 +82,7 @@ type
     [JsonName('type')]
     FType: string;
   public
-    constructor Create(AType: string);
+    constructor Create(const AType: string);
     /// <summary>
     /// Optional. If quiz is passed, the user will be allowed to create only polls in
     /// the quiz mode. If regular is passed, only regular polls will be allowed.
@@ -96,7 +97,7 @@ type
     [JsonName('request_poll')]
     FRequestPoll: TtgKeyboardButtonPollType;
   public
-    constructor Create(const APollType: string); reintroduce;
+    constructor Create; override;
     destructor Destroy; override;
 
     /// <summary>
@@ -140,6 +141,7 @@ type
     procedure SetKeyboard(AKeyboard: TArray < TArray < TtgKeyboardButton >> ); override;
   public
     constructor Create;
+    function AddButtonPool: TtgKeyboardButtonPool;
     /// <summary>
     /// Array of button rows, each represented by an Array of KeyboardButton objects
     /// </summary>
@@ -422,6 +424,17 @@ begin
   FText := Value;
 end;
 
+function TtgReplyKeyboardMarkup.AddButtonPool: TtgKeyboardButtonPool;
+var
+  lRowCount: Integer;
+  lBtnCount: Integer;
+begin
+  Result := TtgKeyboardButtonPool.Create;
+  lRowCount := RowCount;
+  lBtnCount := ButtonsCount(lRowCount - 1);
+  Button[lRowCount - 1, lBtnCount] := Result;
+end;
+
 constructor TtgReplyKeyboardMarkup.Create;
 begin
   FResizeKeyboard := True;
@@ -482,7 +495,12 @@ begin
     Result := GetKeyboard[ARow, ACol];
 end;
 
-function TtgKeyboardAbstract<TtgButton>.NewButton: TtgButton;
+function TtgKeyboardAbstract<TtgButton>.AddButton: TtgButton;
+begin
+  Result := AddButton<TtgButton>;
+end;
+
+function TtgKeyboardAbstract<TtgButton>.AddButton<T>: TtgButton;
 var
   lRowCount: Integer;
   lBtnCount: Integer;
@@ -493,7 +511,7 @@ begin
   Button[lRowCount - 1, lBtnCount] := Result;
 end;
 
-function TtgKeyboardAbstract<TtgButton>.NewRow: Integer;
+function TtgKeyboardAbstract<TtgButton>.AddRow: Integer;
 var
   lKeyboard: TArray<TArray<TtgButton>>;
 begin
@@ -543,17 +561,17 @@ end;
 
 { TtgKeyboardButtonPollType }
 
-constructor TtgKeyboardButtonPollType.Create(AType: string);
+constructor TtgKeyboardButtonPollType.Create(const AType: string);
 begin
   FType := AType;
 end;
 
 { TtgKeyboardButtonPool }
 
-constructor TtgKeyboardButtonPool.Create(const APollType: string);
+constructor TtgKeyboardButtonPool.Create;
 begin
   inherited Create;
-  FRequestPoll := FRequestPoll.Create(APollType);
+  FRequestPoll := TtgKeyboardButtonPollType.Create(FRequestPoll.QUIZ);
 end;
 
 destructor TtgKeyboardButtonPool.Destroy;

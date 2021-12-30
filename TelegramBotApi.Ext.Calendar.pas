@@ -53,7 +53,7 @@ var
 begin
   DecodeDate(FDate, AYear, AMonth, ADay);
   FirstDate := EncodeDate(AYear, AMonth, 1);
-  FCalendar.NewRow;
+  FCalendar.AddRow;
   FMonthOffset := 2 - ((DayOfWeek(FirstDate) - StartOfWeek + 7) mod 7); { day of week for 1st of month }
   if FMonthOffset = 2 then
     FMonthOffset := -5;
@@ -62,13 +62,13 @@ begin
   begin
     for lCol := 0 to 6 do
     begin
-      LBtn := FCalendar.NewButton;
+      LBtn := FCalendar.AddButton;
       LBtn.Text := GetCellText(lCol, lRow);
       LBtn.CallbackData := 'selected_date_' + GetCellText(lCol, lRow);
+      if (lRow > 0) and (GetCellText(lCol, lRow) = ' ') then
+        break;
     end;
-    if (lRow > 0) and (GetCellText(lCol, lRow) = ' ') then
-      break;
-    FCalendar.NewRow;
+    FCalendar.AddRow;
   end;
 end;
 
@@ -78,10 +78,10 @@ var
 
   LBtn: TtgInlineKeyboardButton;
 begin
-  FCalendar.NewRow;
+  FCalendar.AddRow;
   for I := Low(FFS.ShortDayNames) to High(FFS.ShortDayNames) do
   begin
-    LBtn := FCalendar.NewButton;
+    LBtn := FCalendar.AddButton;
     LBtn.Text := FFS.ShortDayNames[(StartOfWeek + I - 1) mod 7 + 1];
     LBtn.CallbackData := FFS.ShortDayNames[(StartOfWeek + I) mod 7 + 1];
   end;
@@ -91,8 +91,8 @@ procedure TtgCalendarControl.AddButtonSelectMonth;
 var
   LBtn: TtgInlineKeyboardButton;
 begin
-  FCalendar.NewRow;
-  LBtn := FCalendar.NewButton;
+  FCalendar.AddRow;
+  LBtn := FCalendar.AddButton;
   LBtn.Text := FFS.LongMonthNames[MonthOf(FDate)];
   LBtn.CallbackData := 'select_month';
 end;

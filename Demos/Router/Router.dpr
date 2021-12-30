@@ -9,7 +9,7 @@ uses
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Request,
   TelegramBotApi.Polling.Console,
-  TelegramBotApi.Router,
+  TelegramBotApi.Tools.Router,
   System.SysUtils,
   System.Rtti,
   Winapi.Windows,

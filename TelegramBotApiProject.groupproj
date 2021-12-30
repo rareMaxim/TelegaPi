@@ -27,6 +27,9 @@
         <Projects Include="Demos\Calendar\CalendarDemo.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Demos\PoolBot\PoolBot.dproj">
+            <Dependencies>Tests\TelegramBotApiTests.dproj</Dependencies>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -107,14 +110,23 @@
     <Target Name="CalendarDemo:Make">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Make"/>
     </Target>
+    <Target Name="PoolBot" DependsOnTargets="TelegramBotApiTests">
+        <MSBuild Projects="Demos\PoolBot\PoolBot.dproj"/>
+    </Target>
+    <Target Name="PoolBot:Clean" DependsOnTargets="TelegramBotApiTests:Clean">
+        <MSBuild Projects="Demos\PoolBot\PoolBot.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PoolBot:Make" DependsOnTargets="TelegramBotApiTests:Make">
+        <MSBuild Projects="Demos\PoolBot\PoolBot.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo;Pooling;Router;CalendarDemo"/>
+        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo;Pooling;Router;CalendarDemo;PoolBot"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean;Pooling:Clean;Router:Clean;CalendarDemo:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean;Pooling:Clean;Router:Clean;CalendarDemo:Clean;PoolBot:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make;Pooling:Make;Router:Make;CalendarDemo:Make"/>
+        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make;Pooling:Make;Router:Make;CalendarDemo:Make;PoolBot:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
