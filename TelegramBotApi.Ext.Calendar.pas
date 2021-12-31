@@ -64,9 +64,9 @@ begin
       LBtn := FCalendar.AddButton;
       LBtn.Text := GetCellText(lCol, lRow);
       LBtn.CallbackData := 'selected_date_' + GetCellText(lCol, lRow);
-      if (lRow > 0) and (GetCellText(lCol, lRow) = ' ') then
-        break;
     end;
+    if (lRow > 0) and (GetCellText(lCol, lRow) = ' ') then
+      Exit;
     FCalendar.AddRow;
   end;
 end;
@@ -74,7 +74,6 @@ end;
 procedure TtgCalendarControl.AddButtonDayName;
 var
   I: Integer;
-
   LBtn: TtgInlineKeyboardButton;
 begin
   FCalendar.AddRow;
