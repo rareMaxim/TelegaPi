@@ -27,6 +27,7 @@ type
     function GetDateElement(Index: Integer): Integer;
     procedure SetDateElement(Index: Integer; Value: Integer);
   public
+    procedure Clear;
     constructor Create;
     destructor Destroy; override;
     function Keyboard: TtgInlineKeyboardMarkup;
@@ -87,12 +88,28 @@ end;
 
 procedure TtgCalendarControl.AddButtonSelectMonth;
 var
-  LBtn: TtgInlineKeyboardButton;
+  LBtnPrevMonth: TtgInlineKeyboardButton;
+  LBtnNextMonth: TtgInlineKeyboardButton;
+  LBtnMonthName: TtgInlineKeyboardButton;
 begin
   FCalendar.AddRow;
-  LBtn := FCalendar.AddButton;
-  LBtn.Text := FFS.LongMonthNames[MonthOf(FDate)];
-  LBtn.CallbackData := 'select_month';
+
+  LBtnPrevMonth := FCalendar.AddButton;
+  LBtnPrevMonth.Text := FFS.LongMonthNames[MonthOf(IncMonth(FDate, -1))];
+  LBtnPrevMonth.CallbackData := 'select_prev_month';
+  //
+  LBtnMonthName := FCalendar.AddButton;
+  LBtnMonthName.Text := FFS.LongMonthNames[MonthOf(FDate)];
+  LBtnMonthName.CallbackData := 'select_month';
+  //
+  LBtnNextMonth := FCalendar.AddButton;
+  LBtnNextMonth.Text := FFS.LongMonthNames[MonthOf(IncMonth(FDate, +1))];
+  LBtnNextMonth.CallbackData := 'select_next_month';
+end;
+
+procedure TtgCalendarControl.Clear;
+begin
+  FCalendar.Clear;
 end;
 
 constructor TtgCalendarControl.Create;
@@ -102,9 +119,6 @@ begin
   FDate := Now;
   FFS := TFormatSettings.Create;
   FCalendar := TtgKeyboardBuilder.InlineKb;
-  AddButtonSelectMonth;
-  AddButtonDayName;
-  AddButtonDates;
 end;
 
 function TtgCalendarControl.DaysPerMonth(AYear, AMonth: Integer): Integer;
@@ -163,6 +177,10 @@ end;
 
 function TtgCalendarControl.Keyboard: TtgInlineKeyboardMarkup;
 begin
+  Clear;
+  AddButtonSelectMonth;
+  AddButtonDayName;
+  AddButtonDates;
   Result := FCalendar;
 end;
 

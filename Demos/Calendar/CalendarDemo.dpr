@@ -37,6 +37,9 @@ begin
   lMsg := TtgSendMessageArgument.Create;
   lCalendar := TtgCalendarControl.Create;
   try
+//    lCalendar.Day := 1;
+//    lCalendar.Month := 1;
+//    lCalendar.Year := 2022;
     lMsg.ChatId := UserLink;
     lMsg.Text := 'Календарь';
     lMsg.ReplyMarkup := lCalendar.Keyboard;
