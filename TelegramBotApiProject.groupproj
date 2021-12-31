@@ -22,7 +22,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="Demos\Calendar\CalendarDemo.dproj">
-            <Dependencies/>
+            <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
         </Projects>
         <Projects Include="Demos\PoolBot\PoolBot.dproj">
             <Dependencies>Tests\TelegramBotApiTests.dproj</Dependencies>
@@ -89,13 +89,13 @@
     <Target Name="Pooling:Make">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Make"/>
     </Target>
-    <Target Name="CalendarDemo">
+    <Target Name="CalendarDemo" DependsOnTargets="CloudAPI">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj"/>
     </Target>
-    <Target Name="CalendarDemo:Clean">
+    <Target Name="CalendarDemo:Clean" DependsOnTargets="CloudAPI:Clean">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="CalendarDemo:Make">
+    <Target Name="CalendarDemo:Make" DependsOnTargets="CloudAPI:Make">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Make"/>
     </Target>
     <Target Name="PoolBot" DependsOnTargets="TelegramBotApiTests">

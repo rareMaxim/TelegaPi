@@ -89,6 +89,7 @@ begin
     LStore.Add('cashtag', TtgMessageEntityType.Cashtag);
     LStore.Add('underline', TtgMessageEntityType.Underline);
     LStore.Add('strikethrough', TtgMessageEntityType.Strikethrough);
+    LStore.Add('spoiler', TtgMessageEntityType.Spoiler);
     Result := LStore[AValue];
   finally
     LStore.Free;
