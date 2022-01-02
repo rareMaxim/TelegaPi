@@ -27,9 +27,12 @@ begin
     begin
       Writeln(E.ToString);
     end;
-  Bot.CloudAPI.OnExcecute := procedure(AResp: IcaResponseBase)
+  Bot.CloudAPI.OnExcecuteCallback := procedure(AResp: IcaResponseBase)
+    var
+      lIsOnline: boolean;
     begin
-      Writeln(AResp.HttpResponse.StatusCode, ' ', AResp.HttpResponse.StatusText);
+      lIsOnline := Assigned(AResp.HttpResponse);
+      //
     end;
   UpdateConsoleTitle(Bot);
 

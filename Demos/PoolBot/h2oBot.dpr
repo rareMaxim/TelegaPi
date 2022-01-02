@@ -1,4 +1,4 @@
-﻿program PoolBot;
+﻿program h2oBot;
 
 {$APPTYPE CONSOLE}
 {$R *.res}

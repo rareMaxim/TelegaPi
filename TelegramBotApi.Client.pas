@@ -9,10 +9,11 @@ uses
   TelegramBotApi.Types.UpdatingMessages,
   CloudApi.IAuthenticator,
   CloudApi.Request,
-  CloudApi.Client.Sync;
+  CloudApi.Client.Sync,
+  System.Classes;
 
 type
-  TTelegramBotApi = class
+  TTelegramBotApi = class(TPersistent)
   public const
     LIB_VERSION = '5.1.0';
   private
@@ -219,7 +220,6 @@ type
     /// 'can_edit_messages' admin right in a channel. Returns True on success.
     /// </summary>
     function UnpinAllChatMessages(AUnpinAllChatMessages: TtgUnpinAllChatMessagesArgument): ItgResponse<Boolean>;
-
     /// <summary>
     /// Use this method to get basic info about a file and prepare it for downloading.
     /// For the moment, bots can download files of up to 20MB in size. On success, a
@@ -305,7 +305,6 @@ type
     /// Use this method to get the number of members in a chat. Returns Int on success.
     /// </summary>
     function GetChatMemberCount(AGetChatMemberCount: TtgGetChatMemberCountArgument): ItgResponse<Integer>;
-
     /// <summary>
     /// Use this method to send answers to callback queries sent from inline keyboards.
     /// The answer will be displayed to the user as a notification at the top of the
@@ -320,8 +319,8 @@ type
     function AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
-
     destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
     property BotToken: string read GetBotToken write SetBotToken;
     property CloudApi: TCloudApiClient read FCloudApi write FCloudApi;
     property AutoFreeRequestArgument: Boolean read FAutoFreeRequestArgument write FAutoFreeRequestArgument;
@@ -383,7 +382,6 @@ begin
 end;
 
 function TTelegramBotApi.Close: ItgResponse<Boolean>;
-
 var
   lClose: TtgCloseArgunent;
 begin
@@ -479,7 +477,6 @@ begin
 end;
 
 class function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
-
 var
   lCA: TCloudApiClient;
 begin
@@ -537,6 +534,17 @@ begin
   end;
 end;
 
+procedure TTelegramBotApi.Assign(Source: TPersistent);
+begin
+  if Source is TTelegramBotApi then
+  begin
+    FCloudApi.Assign((Source as TTelegramBotApi).CloudApi);
+    BotToken := (Source as TTelegramBotApi).BotToken;
+  end
+  else
+    inherited Assign(Source);
+end;
+
 function TTelegramBotApi.BanChatMember(ABanChatMember: TtgBanChatMember): ItgResponse<Boolean>;
 begin
   TryInternalExecute<TtgBanChatMember, Boolean>(ABanChatMember, Result);
@@ -548,7 +556,6 @@ begin
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;
-
 var
   lLogOut: TtgLogOutArgunent;
 begin
@@ -613,7 +620,6 @@ end;
 
 function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
   : ItgResponse<TArray<TtgMessage>>;
-
 var
   LRequest: IcaRequest;
   LMedia: TtgInputMedia;

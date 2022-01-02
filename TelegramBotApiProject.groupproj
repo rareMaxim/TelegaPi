@@ -24,7 +24,7 @@
         <Projects Include="Demos\Calendar\CalendarDemo.dproj">
             <Dependencies>TelegramBotApi.dproj</Dependencies>
         </Projects>
-        <Projects Include="Demos\PoolBot\PoolBot.dproj">
+        <Projects Include="Demos\PoolBot\h2oBot.dproj">
             <Dependencies>Tests\TelegramBotApiTests.dproj</Dependencies>
         </Projects>
     </ItemGroup>
@@ -98,23 +98,23 @@
     <Target Name="CalendarDemo:Make" DependsOnTargets="TelegramBotApi:Make">
         <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Make"/>
     </Target>
-    <Target Name="PoolBot" DependsOnTargets="TelegramBotApiTests">
-        <MSBuild Projects="Demos\PoolBot\PoolBot.dproj"/>
+    <Target Name="h2oBot" DependsOnTargets="TelegramBotApiTests">
+        <MSBuild Projects="Demos\PoolBot\h2oBot.dproj"/>
     </Target>
-    <Target Name="PoolBot:Clean" DependsOnTargets="TelegramBotApiTests:Clean">
-        <MSBuild Projects="Demos\PoolBot\PoolBot.dproj" Targets="Clean"/>
+    <Target Name="h2oBot:Clean" DependsOnTargets="TelegramBotApiTests:Clean">
+        <MSBuild Projects="Demos\PoolBot\h2oBot.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="PoolBot:Make" DependsOnTargets="TelegramBotApiTests:Make">
-        <MSBuild Projects="Demos\PoolBot\PoolBot.dproj" Targets="Make"/>
+    <Target Name="h2oBot:Make" DependsOnTargets="TelegramBotApiTests:Make">
+        <MSBuild Projects="Demos\PoolBot\h2oBot.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo;Pooling;CalendarDemo;PoolBot"/>
+        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo;Pooling;CalendarDemo;h2oBot"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean;Pooling:Clean;CalendarDemo:Clean;PoolBot:Clean"/>
+        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean;Pooling:Clean;CalendarDemo:Clean;h2oBot:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make;Pooling:Make;CalendarDemo:Make;PoolBot:Make"/>
+        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make;Pooling:Make;CalendarDemo:Make;h2oBot:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

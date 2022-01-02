@@ -20,7 +20,7 @@ type
     FLimit: Int64;
     FPollingInterval: Int64;
   protected
-    procedure Go(const AToken: string);
+    procedure Go;
   public
     constructor Create;
     procedure Start; virtual;
@@ -59,7 +59,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TtgPollingBase.Go(const AToken: string);
+procedure TtgPollingBase.Go;
 var
   LUpdateArg: TtgGetUpdatesArgument;
   LBot: TTelegramBotApi;
@@ -70,7 +70,8 @@ begin
   LUpdateArg.Offset := FMessageOffset;
   LUpdateArg.AllowedUpdates := FAllowedUpdates;
   LUpdateArg.Limit := FLimit;
-  LBot := TTelegramBotApi.Create(AToken);
+  LBot := TTelegramBotApi.Create;
+  LBot.Assign(FBot);
   try
     LUpdates := LBot.GetUpdates(LUpdateArg);
     if Assigned(LUpdates) and (Length(LUpdates.Result) > 0) then
@@ -98,7 +99,7 @@ begin
       begin
         lWaitResult := FEvent.WaitFor(FPollingInterval);
         if lWaitResult = wrTimeout then
-          Go(FBot.BotToken)
+          Go
         else
           Break;
       end;
