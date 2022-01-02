@@ -66,9 +66,9 @@ begin
       LBtn.Text := GetCellText(lCol, lRow);
       LBtn.CallbackData := 'selected_date_' + GetCellText(lCol, lRow);
     end;
+    FCalendar.AddRow;
     if (lRow > 0) and (GetCellText(lCol, lRow) = ' ') then
       Exit;
-    FCalendar.AddRow;
   end;
 end;
 
@@ -95,7 +95,7 @@ begin
   FCalendar.AddRow;
 
   LBtnPrevMonth := FCalendar.AddButton;
-  LBtnPrevMonth.Text := FFS.LongMonthNames[MonthOf(IncMonth(FDate, -1))];
+  LBtnPrevMonth.Text := '<'; // FFS.LongMonthNames[MonthOf(IncMonth(FDate, -1))];
   LBtnPrevMonth.CallbackData := 'select_prev_month';
   //
   LBtnMonthName := FCalendar.AddButton;
@@ -103,7 +103,7 @@ begin
   LBtnMonthName.CallbackData := 'select_month';
   //
   LBtnNextMonth := FCalendar.AddButton;
-  LBtnNextMonth.Text := FFS.LongMonthNames[MonthOf(IncMonth(FDate, +1))];
+  LBtnNextMonth.Text := '>'; // FFS.LongMonthNames[MonthOf(IncMonth(FDate, +1))];
   LBtnNextMonth.CallbackData := 'select_next_month';
 end;
 

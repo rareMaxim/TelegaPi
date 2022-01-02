@@ -66,9 +66,7 @@ begin
   lUser := ABot.GetMe;
   try
     if lUser = nil then
-    begin
-     raise Exception.Create('Check bot token')
-    end
+      raise Exception.Create('Check bot token')
     else
       SetConsoleTitle(pwideChar(lUser.Result.Username));
   finally
