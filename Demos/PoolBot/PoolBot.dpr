@@ -1,4 +1,4 @@
-program PoolBot;
+п»їprogram PoolBot;
 
 {$APPTYPE CONSOLE}
 {$R *.res}
@@ -60,9 +60,6 @@ end;
 procedure TPoolBot.SetupRoutes;
 var
   lStart: TtgRoute;
-  lAge: TtgRoute;
-  lName: TtgRoute;
-
 begin
   lStart := TtgRoute.Create('/start');
   lStart.OnStartCallback := procedure(AUserID: Int64)
@@ -82,11 +79,11 @@ begin
         lPoolKb.ResizeKeyboard := True;
         lPoolKb.AddRow;
         lStartPool := lPoolKb.AddButtonPool;
-        lStartPool.Text := 'Создать викторину';
-        lPoolKb.AddButton.Text := 'Отмена';
+        lStartPool.Text := 'РЎРѕР·РґР°С‚СЊ РІРёРєС‚РѕСЂРёРЅСѓ';
+        lPoolKb.AddButton.Text := 'РћС‚РјРµРЅР°';
         //
         lMsg.ChatId := AMsg.From.ID;
-        lMsg.Text := 'Нажмите на кнопку ниже и создайте викторину!';
+        lMsg.Text := 'РќР°Р¶РјРёС‚Рµ РЅР° РєРЅРѕРїРєСѓ РЅРёР¶Рµ Рё СЃРѕР·РґР°Р№С‚Рµ РІРёРєС‚РѕСЂРёРЅСѓ!';
         lMsg.ReplyMarkup := lPoolKb;
         Bot.SendMessage(lMsg);
       finally

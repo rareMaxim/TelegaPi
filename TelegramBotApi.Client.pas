@@ -22,9 +22,10 @@ type
     function GetBotToken: string;
     procedure SetBotToken(const Value: string);
   protected
-    function InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>; overload;
-    function InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>; overload;
-    function InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult; overload;
+    function TryInternalExecute<TArgument, TResult>(AArgument: TArgument; var AResp: ItgResponse<TResult>)
+      : Boolean; overload;
+    function TryInternalExecute<TResult>(ARequest: IcaRequest; var AResp: ItgResponse<TResult>): Boolean; overload;
+    function TryInternalExecuteCustom<TResult>(ARequest: IcaRequest; var AResult: TResult): Boolean; overload;
     function InternalExecuteCustom<TArgument: record; TResult>(AArgument: TArgument): TResult; overload;
   public
 {$REGION 'Getting updates'}
@@ -356,12 +357,12 @@ end;
 function TTelegramBotApi.CreateChatInviteLink(ACreateChatInviteLink: TtgCreateChatInviteLinkArgument)
   : ItgResponse<TtgChatInviteLink>;
 begin
-  Result := InternalExecute<TtgCreateChatInviteLinkArgument, TtgChatInviteLink>(ACreateChatInviteLink);
+  TryInternalExecute<TtgCreateChatInviteLinkArgument, TtgChatInviteLink>(ACreateChatInviteLink, Result);
 end;
 
 function TTelegramBotApi.DeleteMessage(ADeleteMessageeArgument: TtgDeleteMessageArgument): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgDeleteMessageArgument, Boolean>(ADeleteMessageeArgument);
+  TryInternalExecute<TtgDeleteMessageArgument, Boolean>(ADeleteMessageeArgument, Result);
 end;
 
 function TTelegramBotApi.DeleteWebhook(ADeleteWebhook: TtgDeleteWebhookArgument): Boolean;
@@ -378,7 +379,7 @@ end;
 function TTelegramBotApi.AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument)
   : ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgAnswerCallbackQueryArgument, Boolean>(AAnswerCallbackQuery);
+  TryInternalExecute<TtgAnswerCallbackQueryArgument, Boolean>(AAnswerCallbackQuery, Result);
 end;
 
 function TTelegramBotApi.Close: ItgResponse<Boolean>;
@@ -388,7 +389,7 @@ var
 begin
   lClose := TtgCloseArgunent.Create;
   try
-    Result := InternalExecute<TtgCloseArgunent, Boolean>(lClose);
+    TryInternalExecute<TtgCloseArgunent, Boolean>(lClose, Result);
   finally
     lClose.Free;
   end;
@@ -396,36 +397,36 @@ end;
 
 function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
 begin
-  Result := InternalExecute<TtgCopyMessageArgument, Int64>(ACopyMessageArgument);
+  TryInternalExecute<TtgCopyMessageArgument, Int64>(ACopyMessageArgument, Result);
 end;
 
 function TTelegramBotApi.EditChatInviteLink(AEditChatInviteLink: TtgEditChatInviteLinkArgument)
   : ItgResponse<TtgChatInviteLink>;
 begin
-  Result := InternalExecute<TtgEditChatInviteLinkArgument, TtgChatInviteLink>(AEditChatInviteLink);
+  TryInternalExecute<TtgEditChatInviteLinkArgument, TtgChatInviteLink>(AEditChatInviteLink, Result);
 end;
 
 function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument: TtgEditMessageLiveLocationArgument)
   : ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgEditMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument);
+  TryInternalExecute<TtgEditMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument, Result);
 end;
 
 function TTelegramBotApi.EditMessageLiveLocation(AEditMessageLiveLocationArgument
   : TtgEditMessageLiveLocationHaveInlineMessageIDArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgEditMessageLiveLocationHaveInlineMessageIDArgument, TtgMessage>
-    (AEditMessageLiveLocationArgument);
+  TryInternalExecute<TtgEditMessageLiveLocationHaveInlineMessageIDArgument, TtgMessage>
+    (AEditMessageLiveLocationArgument, Result);
 end;
 
 function TTelegramBotApi.ExportChatInviteLink(AChatID: TtgExportChatInviteLinkArgument): ItgResponse<string>;
 begin
-  Result := InternalExecute<TtgExportChatInviteLinkArgument, string>(AChatID);
+  TryInternalExecute<TtgExportChatInviteLinkArgument, string>(AChatID, Result);
 end;
 
 function TTelegramBotApi.ForwardMessage(AForwardMessageArgument: TtgForwardMessageArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgForwardMessageArgument, TtgMessage>(AForwardMessageArgument);
+  TryInternalExecute<TtgForwardMessageArgument, TtgMessage>(AForwardMessageArgument, Result);
 end;
 
 function TTelegramBotApi.GetBotToken: string;
@@ -435,7 +436,7 @@ end;
 
 function TTelegramBotApi.getChat(AGetChatArgument: TtgGetChatArgument): ItgResponse<TtgChat>;
 begin
-  Result := InternalExecute<TtgGetChatArgument, TtgChat>(AGetChatArgument);
+  TryInternalExecute<TtgGetChatArgument, TtgChat>(AGetChatArgument, Result);
 end;
 
 function TTelegramBotApi.GetChatMemberCount(AGetChatMemberCount: TtgGetChatMemberCountArgument): ItgResponse<Integer>;
@@ -444,7 +445,7 @@ var
 begin
   lGetChatMemberCount := TtgGetChatMemberCountArgument.Create;
   try
-    Result := InternalExecute<TtgGetChatMemberCountArgument, Integer>(lGetChatMemberCount);
+    TryInternalExecute<TtgGetChatMemberCountArgument, Integer>(lGetChatMemberCount, Result);
   finally
     lGetChatMemberCount.Free;
   end;
@@ -452,7 +453,7 @@ end;
 
 function TTelegramBotApi.GetFile(AGetFile: TtgGetFileArgument): ItgResponse<TtgFile>;
 begin
-  Result := InternalExecute<TtgGetFileArgument, TtgFile>(AGetFile);
+  TryInternalExecute<TtgGetFileArgument, TtgFile>(AGetFile, Result);
 end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;
@@ -461,7 +462,7 @@ var
 begin
   lGetMe := TtgGetMeArgunent.Create;
   try
-    Result := InternalExecute<TtgGetMeArgunent, TtgUser>(lGetMe);
+    TryInternalExecute<TtgGetMeArgunent, TtgUser>(lGetMe, Result);
   finally
     lGetMe.Free;
   end;
@@ -469,12 +470,12 @@ end;
 
 function TTelegramBotApi.GetMyCommands(AGetMyCommands: TtgGetMyCommandsArgument): ItgResponse<TArray<TtgBotCommand>>;
 begin
-  Result := InternalExecute < TtgGetMyCommandsArgument, TArray < TtgBotCommand >> (AGetMyCommands);
+  TryInternalExecute < TtgGetMyCommandsArgument, TArray < TtgBotCommand >> (AGetMyCommands, Result);
 end;
 
 function TTelegramBotApi.GetUpdates(AGetUpdatesArgument: TtgGetUpdatesArgument): ItgResponse<TArray<TtgUpdate>>;
 begin
-  Result := InternalExecute < TtgGetUpdatesArgument, TArray < TtgUpdate >> (AGetUpdatesArgument);
+  TryInternalExecute < TtgGetUpdatesArgument, TArray < TtgUpdate >> (AGetUpdatesArgument, Result);
 end;
 
 class function TTelegramBotApi.GetUpdates(const AJson: string): ItgResponse<TArray<TtgUpdate>>;
@@ -492,54 +493,58 @@ end;
 
 function TTelegramBotApi.GetWebhookInfo: ItgResponse<TtgWebhookInfo>;
 begin
-  Result := InternalExecute<TtgGetWebhookInfoArgument, TtgWebhookInfo>(TtgGetWebhookInfoArgument.Default);
+  TryInternalExecute<TtgGetWebhookInfoArgument, TtgWebhookInfo>(TtgGetWebhookInfoArgument.Default, Result);
 end;
 
-function TTelegramBotApi.InternalExecute<TArgument, TResult>(AArgument: TArgument): ItgResponse<TResult>;
+function TTelegramBotApi.TryInternalExecute<TArgument, TResult>(AArgument: TArgument;
+  var AResp: ItgResponse<TResult>): Boolean;
 var
   LReq: IcaRequest;
 begin
   LReq := TcaRequestArgument.Current.ObjToRequest<TArgument>(AArgument);
-  Result := InternalExecute<TResult>(LReq);
+  Result := TryInternalExecute<TResult>(LReq, AResp);
 end;
 
-function TTelegramBotApi.InternalExecute<TResult>(ARequest: IcaRequest): ItgResponse<TResult>;
-
+function TTelegramBotApi.TryInternalExecute<TResult>(ARequest: IcaRequest; var AResp: ItgResponse<TResult>): Boolean;
 var
   LCloudResponse: IcaResponse<TtgResponse<TResult>>;
 begin
-  LCloudResponse := FCloudApi.Execute < TtgResponse < TResult >> (ARequest);
-  Result := LCloudResponse.Data;
-  if Assigned(Result) then
-    Result.CloudResponse := LCloudResponse;
+  if FCloudApi.TryExecute < TtgResponse < TResult >> (ARequest, LCloudResponse) then
+  begin
+    AResp := LCloudResponse.Data;
+    if Assigned(AResp) then
+      AResp.CloudResponse := LCloudResponse;
+  end;
 end;
 
 function TTelegramBotApi.InternalExecuteCustom<TArgument, TResult>(AArgument: TArgument): TResult;
-
 var
   LReq: IcaRequest;
 begin
   LReq := TcaRequestArgument.Current.ObjToRequest<TArgument>(AArgument);
-  Result := InternalExecuteCustom<TResult>(LReq);
+  TryInternalExecuteCustom<TResult>(LReq, Result);
 end;
 
-function TTelegramBotApi.InternalExecuteCustom<TResult>(ARequest: IcaRequest): TResult;
-
+function TTelegramBotApi.TryInternalExecuteCustom<TResult>(ARequest: IcaRequest; var AResult: TResult): Boolean;
 var
   LCloudResponse: IcaResponse<TResult>;
 begin
-  LCloudResponse := FCloudApi.Execute<TResult>(ARequest);
-  Result := LCloudResponse.Data;
+  Result := False;
+  if FCloudApi.TryExecute<TResult>(ARequest, LCloudResponse) then
+  begin
+    AResult := LCloudResponse.Data;
+    Result := True;
+  end;
 end;
 
 function TTelegramBotApi.BanChatMember(ABanChatMember: TtgBanChatMember): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgBanChatMember, Boolean>(ABanChatMember);
+  TryInternalExecute<TtgBanChatMember, Boolean>(ABanChatMember, Result);
 end;
 
 function TTelegramBotApi.EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgEditMessageTextArgument, TtgMessage>(AEditMessageArgument);
+  TryInternalExecute<TtgEditMessageTextArgument, TtgMessage>(AEditMessageArgument, Result);
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;
@@ -549,7 +554,7 @@ var
 begin
   lLogOut := TtgLogOutArgunent.Create;
   try
-    Result := InternalExecute<TtgLogOutArgunent, Boolean>(lLogOut);
+    TryInternalExecute<TtgLogOutArgunent, Boolean>(lLogOut, Result);
   finally
     lLogOut.Free;
   end;
@@ -557,53 +562,53 @@ end;
 
 function TTelegramBotApi.PromoteChatMember(PromoteChatMember: TtgPromoteChatMemberArgument): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgPromoteChatMemberArgument, Boolean>(PromoteChatMember);
+  TryInternalExecute<TtgPromoteChatMemberArgument, Boolean>(PromoteChatMember, Result);
 end;
 
 function TTelegramBotApi.RevokeChatInviteLink(ARevokeChatInviteLink: TtgRevokeChatInviteLinkArgument)
   : ItgResponse<TtgChatInviteLink>;
 begin
-  Result := InternalExecute<TtgRevokeChatInviteLinkArgument, TtgChatInviteLink>(ARevokeChatInviteLink);
+  TryInternalExecute<TtgRevokeChatInviteLinkArgument, TtgChatInviteLink>(ARevokeChatInviteLink, Result);
 end;
 
 function TTelegramBotApi.SendAnimation(ASendAnimationArgument: TtgSendAnimationArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendAnimationArgument, TtgMessage>(ASendAnimationArgument);
+  TryInternalExecute<TtgSendAnimationArgument, TtgMessage>(ASendAnimationArgument, Result);
 end;
 
 function TTelegramBotApi.SendAudio(ASendAudioArgument: TtgSendAudioArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendAudioArgument, TtgMessage>(ASendAudioArgument);
+  TryInternalExecute<TtgSendAudioArgument, TtgMessage>(ASendAudioArgument, Result);
 end;
 
 function TTelegramBotApi.SendChatAction(AChatAction: TtgSendChatActionArgument): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgSendChatActionArgument, Boolean>(AChatAction);
+  TryInternalExecute<TtgSendChatActionArgument, Boolean>(AChatAction, Result);
 end;
 
 function TTelegramBotApi.SendContact(ASendContactArgument: TtgSendContactArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendContactArgument, TtgMessage>(ASendContactArgument);
+  TryInternalExecute<TtgSendContactArgument, TtgMessage>(ASendContactArgument, Result);
 end;
 
 function TTelegramBotApi.SendDice(ASendDice: TtgSendDiceArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendDiceArgument, TtgMessage>(ASendDice);
+  TryInternalExecute<TtgSendDiceArgument, TtgMessage>(ASendDice, Result);
 end;
 
 function TTelegramBotApi.SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument);
+  TryInternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument, Result);
 end;
 
 function TTelegramBotApi.SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendInvoiceArgument, TtgMessage>(ASendInvoiceArgument);
+  TryInternalExecute<TtgSendInvoiceArgument, TtgMessage>(ASendInvoiceArgument, Result);
 end;
 
 function TTelegramBotApi.SendLocation(ASendLocationArgument: TtgSendLocationArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendLocationArgument, TtgMessage>(ASendLocationArgument);
+  TryInternalExecute<TtgSendLocationArgument, TtgMessage>(ASendLocationArgument, Result);
 end;
 
 function TTelegramBotApi.SendMediaGroup(ASendMediaGroupArgument: TtgSendMediaGroupArgument)
@@ -621,42 +626,42 @@ begin
         LRequest.AddFile(LMedia.GetFileToSend);
     end;
   end;
-  Result := InternalExecute < TArray < TtgMessage >> (LRequest);
+  TryInternalExecute < TArray < TtgMessage >> (LRequest, Result);
 end;
 
 function TTelegramBotApi.SendMessage(ASendMessageArgument: TtgSendMessageArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendMessageArgument, TtgMessage>(ASendMessageArgument);
+  TryInternalExecute<TtgSendMessageArgument, TtgMessage>(ASendMessageArgument, Result);
 end;
 
 function TTelegramBotApi.SendPhoto(ASendPhotoArgument: TtgSendPhotoArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendPhotoArgument, TtgMessage>(ASendPhotoArgument);
+  TryInternalExecute<TtgSendPhotoArgument, TtgMessage>(ASendPhotoArgument, Result);
 end;
 
 function TTelegramBotApi.SendPool(ASendPollArgument: TtgSendPollArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendPollArgument, TtgMessage>(ASendPollArgument);
+  TryInternalExecute<TtgSendPollArgument, TtgMessage>(ASendPollArgument, Result);
 end;
 
 function TTelegramBotApi.SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendVenueArgument, TtgMessage>(ASendVenueArgument);
+  TryInternalExecute<TtgSendVenueArgument, TtgMessage>(ASendVenueArgument, Result);
 end;
 
 function TTelegramBotApi.SendVideo(ASendVideoArgument: TtgSendVideoArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendVideoArgument, TtgMessage>(ASendVideoArgument);
+  TryInternalExecute<TtgSendVideoArgument, TtgMessage>(ASendVideoArgument, Result);
 end;
 
 function TTelegramBotApi.SendVideoNote(ASendVideoNoteArgument: TtgSendVideoNoteArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendVideoNoteArgument, TtgMessage>(ASendVideoNoteArgument);
+  TryInternalExecute<TtgSendVideoNoteArgument, TtgMessage>(ASendVideoNoteArgument, Result);
 end;
 
 function TTelegramBotApi.SendVoice(ASendVoiceArgument: TtgSendVoiceArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgSendVoiceArgument, TtgMessage>(ASendVoiceArgument);
+  TryInternalExecute<TtgSendVoiceArgument, TtgMessage>(ASendVoiceArgument, Result);
 end;
 
 procedure TTelegramBotApi.SetBotToken(const Value: string);
@@ -670,7 +675,7 @@ end;
 
 function TTelegramBotApi.SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgSetMyCommandsArgument, Boolean>(ASetMyCommands);
+  TryInternalExecute<TtgSetMyCommandsArgument, Boolean>(ASetMyCommands, Result);
 end;
 
 function TTelegramBotApi.SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
@@ -681,30 +686,30 @@ end;
 function TTelegramBotApi.StopMessageLiveLocation(AEditMessageLiveLocationArgument
   : TtgStopMessageLiveLocationHaveInlineMessageIDArgument): ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgStopMessageLiveLocationHaveInlineMessageIDArgument, TtgMessage>
-    (AEditMessageLiveLocationArgument);
+  TryInternalExecute<TtgStopMessageLiveLocationHaveInlineMessageIDArgument, TtgMessage>
+    (AEditMessageLiveLocationArgument, Result);
 end;
 
 function TTelegramBotApi.StopMessageLiveLocation(AEditMessageLiveLocationArgument: TtgStopMessageLiveLocationArgument)
   : ItgResponse<TtgMessage>;
 begin
-  Result := InternalExecute<TtgStopMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument);
+  TryInternalExecute<TtgStopMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument, Result);
 end;
 
 function TTelegramBotApi.UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgUnbanChatMemberArgument, Boolean>(AUnbanChatMember);
+  TryInternalExecute<TtgUnbanChatMemberArgument, Boolean>(AUnbanChatMember, Result);
 end;
 
 function TTelegramBotApi.UnpinAllChatMessages(AUnpinAllChatMessages: TtgUnpinAllChatMessagesArgument)
   : ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgUnpinAllChatMessagesArgument, Boolean>(AUnpinAllChatMessages);
+  TryInternalExecute<TtgUnpinAllChatMessagesArgument, Boolean>(AUnpinAllChatMessages, Result);
 end;
 
 function TTelegramBotApi.UnpinChatMessage(AUnpinChatMessage: TtgUnpinChatMessageArgument): ItgResponse<Boolean>;
 begin
-  Result := InternalExecute<TtgUnpinChatMessageArgument, Boolean>(AUnpinChatMessage);
+  TryInternalExecute<TtgUnpinChatMessageArgument, Boolean>(AUnpinChatMessage, Result);
 end;
 
 end.

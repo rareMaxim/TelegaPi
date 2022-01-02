@@ -5,6 +5,8 @@
 
 uses
   TelegaPi,
+  TelegramBotApi.Types,
+  CloudAPI.Exceptions,
   System.SysUtils,
   Winapi.Windows,
   Demo.BotBase in '..\Demo.BotBase.pas';
@@ -20,7 +22,12 @@ type
 
 procedure TEchoCore.Main;
 begin
+  Bot.CloudAPI.ExceptionManager.OnAlert := procedure(E: ECloudApiException)
+    begin
+      Writeln(E.ToString);
+    end;
   UpdateConsoleTitle(Bot);
+
   Pooling.OnMessage := procedure(AMsg: TtgMessage)
     begin
       Writeln(AMsg.Text);
@@ -41,7 +48,7 @@ begin
     lMsg.Text := 'Календарь';
     lMsg.ReplyMarkup := lCalendar.Keyboard;
     Bot.SendMessage(lMsg);
-    Writeln(Bot.CloudApi.ResponsePrinter.AsJson);
+    Writeln(Bot.CloudAPI.ResponsePrinter.AsJson);
   finally
     lMsg.Free;
     lCalendar.Free;
@@ -51,13 +58,16 @@ end;
 
 procedure TEchoCore.UpdateConsoleTitle(ABot: TTelegramBotApi);
 var
-  lUser: TtgUser;
+  lUser: ItgResponse<TtgUser>;
 begin
-  lUser := ABot.GetMe.Result;
+  lUser := ABot.GetMe;
   try
     if lUser = nil then
-      raise Exception.Create('Check bot token');
-    SetConsoleTitle(pwideChar(lUser.Username));
+    begin
+     raise Exception.Create('Check bot token')
+    end
+    else
+      SetConsoleTitle(pwideChar(lUser.Result.Username));
   finally
     // lUser.Free; <-- Autofree in TelegaPi core
   end;

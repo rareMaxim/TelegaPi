@@ -63,7 +63,7 @@ procedure TtgPollingBase.Go(const AToken: string);
 var
   LUpdateArg: TtgGetUpdatesArgument;
   LBot: TTelegramBotApi;
-  LUpdates: TArray<TtgUpdate>;
+  LUpdates: ItgResponse<TArray<TtgUpdate>>;
   i: Integer;
 begin
   LUpdateArg := TtgGetUpdatesArgument.Default;
@@ -72,13 +72,13 @@ begin
   LUpdateArg.Limit := FLimit;
   LBot := TTelegramBotApi.Create(AToken);
   try
-    LUpdates := LBot.GetUpdates(LUpdateArg).Result;
-    if Length(LUpdates) > 0 then
+    LUpdates := LBot.GetUpdates(LUpdateArg);
+    if Assigned(LUpdates) and (Length(LUpdates.Result) > 0) then
     begin
-      EventParser(LUpdates);
-      FMessageOffset := LUpdates[High(LUpdates)].UpdateID + 1;
-      for i := Low(LUpdates) to High(LUpdates) do
-        LUpdates[i].Free;
+      EventParser(LUpdates.Result);
+      FMessageOffset := LUpdates.Result[High(LUpdates.Result)].UpdateID + 1;
+      for i := Low(LUpdates.Result) to High(LUpdates.Result) do
+        LUpdates.Result[i].Free;
     end;
   finally
     LBot.Free;
