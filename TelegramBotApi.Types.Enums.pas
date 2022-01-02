@@ -135,7 +135,12 @@ type
     /// <summary>
     /// Strikethrough text
     /// </summary>
-    Strikethrough);
+    Strikethrough,
+    /// <summary>
+    /// Spoiler message
+    /// </summary>
+    Spoiler);
+
   /// <summary>
   /// Type of action the Bot is performing
   /// </summary>

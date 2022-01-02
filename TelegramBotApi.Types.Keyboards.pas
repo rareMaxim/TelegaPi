@@ -19,6 +19,7 @@ type
     function GetKeyboard: TArray<TArray<TtgButton>>; virtual; abstract;
     procedure SetKeyboard(AKeyboard: TArray < TArray < TtgButton >> ); virtual; abstract;
   public
+    procedure Clear;
     function RowCount: Integer; virtual;
     function ButtonsCount(const ARow: Integer): Integer; virtual;
     function AddButton: TtgButton; overload;
@@ -485,6 +486,19 @@ begin
     Result := Length(GetKeyboard[ARow])
   else
     Result := 0;
+end;
+
+procedure TtgKeyboardAbstract<TtgButton>.Clear;
+var
+  lKb: TArray<TArray<TtgButton>>;
+  I, J: Integer;
+begin
+  lKb := GetKeyboard;
+  for I := High(lKb) downto Low(lKb) do
+    for J := High(lKb) to Low(lKb) do
+      lKb[I, J].Free;
+  lKb := nil;
+  SetKeyboard(lKb);
 end;
 
 function TtgKeyboardAbstract<TtgButton>.GetButton(const ARow, ACol: Integer): TtgButton;
