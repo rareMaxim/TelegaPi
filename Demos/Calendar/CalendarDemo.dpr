@@ -7,6 +7,7 @@ uses
   TelegaPi,
   TelegramBotApi.Types,
   CloudAPI.Exceptions,
+  CloudAPI.Response,
   System.SysUtils,
   Winapi.Windows,
   Demo.BotBase in '..\Demo.BotBase.pas';
@@ -26,6 +27,10 @@ begin
     begin
       Writeln(E.ToString);
     end;
+  Bot.CloudAPI.OnExcecute := procedure(AResp: IcaResponseBase)
+    begin
+      Writeln(AResp.HttpResponse.StatusCode, ' ', AResp.HttpResponse.StatusText);
+    end;
   UpdateConsoleTitle(Bot);
 
   Pooling.OnMessage := procedure(AMsg: TtgMessage)
@@ -44,9 +49,9 @@ begin
   lMsg := TtgSendMessageArgument.Create;
   lCalendar := TtgCalendarControl.Create;
   try
-//    lCalendar.Day := 1;
-//    lCalendar.Month := 1;
-//    lCalendar.Year := 2022;
+    // lCalendar.Day := 1;
+    // lCalendar.Month := 1;
+    // lCalendar.Year := 2022;
     lMsg.ChatId := UserLink;
     lMsg.Text := 'Календарь';
     lMsg.ReplyMarkup := lCalendar.Keyboard;
