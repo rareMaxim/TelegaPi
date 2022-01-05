@@ -1886,6 +1886,8 @@ type
     [JsonName('edit_date')]
     [JsonConverter(TJsonUnixTimeConverter)]
     FEditDate: TDateTime;
+    [JsonName('has_protected_content')]
+    FHasProtectedContent: Boolean;
     [JsonName('author_signature')]
     FAuthorSignature: string;
     [JsonName('sticker')]
@@ -2011,6 +2013,10 @@ type
     /// Optional. Date the message was last edited in Unix time
     /// </summary>
     property EditDate: TDateTime read FEditDate write FEditDate;
+    /// <summary>
+    /// Optional. True, if the message can't be forwarded
+    /// </summary>
+    property HasProtectedContent: Boolean read FHasProtectedContent write FHasProtectedContent;
     /// <summary>
     /// Optional. The unique identifier of a media message group this message belongs to
     /// </summary>
