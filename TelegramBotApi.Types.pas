@@ -3080,6 +3080,8 @@ begin
     Exit(TtgMessageType.Poll)
   else if Assigned(Location) then
     Exit(TtgMessageType.Location)
+  else if Assigned(Sticker) then
+    Exit(TtgMessageType.Sticker)
   else
   begin
     Result := TtgMessageType.Unknown;
@@ -3117,7 +3119,8 @@ begin
         if Assigned(FAnimation) then
           FAnimation.Free;
       end;
-    // TtgMessageType.Sticker:
+    TtgMessageType.Sticker:
+      FSticker.Free;
     // TtgMessageType.Game:
     // TtgMessageType.Location:
     TtgMessageType.Contact:
