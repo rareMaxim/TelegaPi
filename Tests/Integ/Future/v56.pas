@@ -29,6 +29,8 @@ type
     procedure Should_protect_content_sendVideoNote;
     [Test]
     procedure Should_protect_content_sendVoice;
+    [Test]
+    procedure Should_protect_content_sendLocation;
   end;
 
 implementation
@@ -105,6 +107,28 @@ begin
     Assert.AreEqual(LDocArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
     LDocArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendLocation;
+var
+  LLocationArgument: TtgSendLocationArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LLocationArgument := TtgSendLocationArgument.Default;
+  try
+    // блок отправки сообщения
+    LLocationArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LLocationArgument.Latitude := 1;
+    LLocationArgument.Longitude := 2;
+    LLocationArgument.ProtectContent := True;
+    LResult := Bot.SendLocation(LLocationArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LLocationArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+
   end;
 end;
 
@@ -214,7 +238,6 @@ begin
   finally
 
   end;
-
 end;
 
 procedure TtgFutureTest_v56.Should_protect_content_sendVoice;

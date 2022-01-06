@@ -3122,7 +3122,8 @@ begin
     TtgMessageType.Sticker:
       FSticker.Free;
     // TtgMessageType.Game:
-    // TtgMessageType.Location:
+    TtgMessageType.Location:
+      FLocation.Free;
     TtgMessageType.Contact:
       FContact.Free;
     // TtgMessageType.Service:

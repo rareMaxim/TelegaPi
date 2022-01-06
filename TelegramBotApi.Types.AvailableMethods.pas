@@ -524,6 +524,51 @@ type
     class function Default: TtgSendVideoNoteArgument; static;
   end;
 
+  /// <summary> Use this method to send point on the map. On success, the sent
+  /// Message is returned.
+  /// </summary>
+  [caName('sendLocation')]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendLocationArgument = record
+  private
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    [caName('latitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0.0)]
+    /// <summary> Latitude of the location</summary>
+    Latitude: Single;
+    [caName('longitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0.0)]
+    /// <summary> Longitude of the location</summary>
+    Longitude: Single;
+    /// <summary>Period in seconds for which the location will be updated (see Live
+    /// Locations, should be between 60 and 86400.</summary>
+    [caName('live_period')]
+    [caDefaultValueInt64(0)]
+    LivePeriod: Int64;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    DisableNotification: Boolean;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    ReplyToMessageId: Int64;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+    class function Default: TtgSendLocationArgument; static;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -628,6 +673,17 @@ begin
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
   Result.ProtectContent := False;
+end;
+{ TtgSendLocationArgument }
+
+class function TtgSendLocationArgument.Default: TtgSendLocationArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
+  Result.Latitude := 0.0;
+  Result.Longitude := 0.0;
+  Result.LivePeriod := 0;
+  Result.DisableNotification := False;
+  Result.ReplyToMessageId := 0;
 end;
 
 end.
