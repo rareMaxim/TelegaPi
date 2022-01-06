@@ -23,6 +23,8 @@ type
     procedure Should_protect_content_sendAudio;
     [Test]
     procedure Should_protect_content_sendDocument;
+    [Test]
+    procedure Should_protect_content_sendSticker;
   end;
 
 implementation
@@ -143,6 +145,27 @@ begin
     Assert.AreEqual(LphotoArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
     LphotoArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendSticker;
+var
+  LStickerArgument: TtgSendStickerArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LStickerArgument := TtgSendStickerArgument.Create;
+  try
+    // блок отправки сообщения
+    LStickerArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LStickerArgument.Sticker := 'https://www.gstatic.com/webp/gallery/1.webp';
+    LStickerArgument.ProtectContent := True;
+    LResult := Bot.SendSticker(LStickerArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LStickerArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    LStickerArgument.Free;
   end;
 end;
 

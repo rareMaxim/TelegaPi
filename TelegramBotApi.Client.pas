@@ -317,6 +317,10 @@ type
     /// that open your bot with a parameter.
     /// </remarks>
     function AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned.
+    /// </summary>
+    function SendSticker(ASticker: TtgSendStickerArgument): ItgResponse<TtgMessage>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -648,6 +652,11 @@ end;
 function TTelegramBotApi.SendPool(ASendPollArgument: TtgSendPollArgument): ItgResponse<TtgMessage>;
 begin
   TryInternalExecute<TtgSendPollArgument, TtgMessage>(ASendPollArgument, Result);
+end;
+
+function TTelegramBotApi.SendSticker(ASticker: TtgSendStickerArgument): ItgResponse<TtgMessage>;
+begin
+  TryInternalExecute<TtgSendStickerArgument, TtgMessage>(ASticker, Result);
 end;
 
 function TTelegramBotApi.SendVenue(ASendVenueArgument: TtgSendVenueArgument): ItgResponse<TtgMessage>;

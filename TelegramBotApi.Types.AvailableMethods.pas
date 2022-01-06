@@ -404,6 +404,56 @@ type
     property ProtectContent: Boolean read FProtectContent write FProtectContent;
   end;
 
+  /// <summary>
+  /// Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned.
+  /// </summary>
+  [caName('sendSticker')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendStickerArgument = class(TtgSendMessageBase)
+  private
+    [caName('sticker')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    fSticker: TcaFileToSend;
+    [caName('disable_content_type_detection')]
+    [caDefaultValueBoolean(False)]
+    FDisableContentTypeDetection: Boolean;
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    constructor Create; override;
+    /// <summary>
+    /// Unique identifier for the target chat or username of the target channel (in
+    /// the format @channelusername)
+    /// </summary>
+    property ChatId;
+    /// <summary>Sticker to send. Pass a file_id as String to send a file that exists on
+    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
+    /// to get a file from the Internet, or upload a new one using multipart/form-data..
+    /// More info on Sending Files »</summary>
+    property Sticker: TcaFileToSend read fSticker write fSticker;
+    /// <summary>
+    /// Disables automatic server-side content type detection for files uploaded using
+    /// multipart/form-data
+    /// </summary>
+    property DisableContentTypeDetection: Boolean read FDisableContentTypeDetection write FDisableContentTypeDetection;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+    /// <summary>
+    /// Pass True, if the message should be sent even if the specified replied-to
+    /// message is not found
+    /// </summary>
+    property AllowSendingWithoutReply;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -478,6 +528,15 @@ begin
   inherited Create();
   fDocument := TcaFileToSend.Empty;
   Thumb := TcaFileToSend.Empty;
+  FDisableContentTypeDetection := False;
+end;
+
+{ TtgSendStickerArgument }
+
+constructor TtgSendStickerArgument.Create;
+begin
+  inherited Create();
+  fSticker := TcaFileToSend.Empty;
   FDisableContentTypeDetection := False;
 end;
 
