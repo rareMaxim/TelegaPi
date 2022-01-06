@@ -25,6 +25,8 @@ type
     procedure Should_protect_content_sendDocument;
     [Test]
     procedure Should_protect_content_sendSticker;
+    [Test]
+    procedure Should_protect_content_sendVideoNote;
   end;
 
 implementation
@@ -189,6 +191,28 @@ begin
   finally
     LVideoArgument.Free;
   end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendVideoNote;
+var
+  LVideoArgument: TtgSendVideoNoteArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LVideoArgument := TtgSendVideoNoteArgument.Default;
+  try
+    // блок отправки сообщения
+    LVideoArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LVideoArgument.VideoNote := 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4';
+    LVideoArgument.ProtectContent := True;
+    LResult := Bot.SendVideoNote(LVideoArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LVideoArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+
+  end;
+
 end;
 
 initialization

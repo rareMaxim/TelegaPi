@@ -454,6 +454,70 @@ type
     property ProtectContent: Boolean read FProtectContent write FProtectContent;
   end;
 
+  /// <summary> Use this method to send audio files, if you want Telegram clients to
+  /// display the file as a playable voice message. For this to work, your audio must
+  /// be in an .OGG file encoded with OPUS (other formats may be sent as Audio or
+  /// Document). On success, the sent Message is returned. Bots can currently send
+  /// voice messages of up to 50 MB in size, this limit may be changed in the future.
+  /// </summary>
+  [caName('sendVideoNote')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendVideoNoteArgument = record
+  private
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    [caName('video_note')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>
+    /// Audio file to send. Pass a file_id as String to send an animation that exists on
+    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
+    /// to get a file from the Internet, or upload a new one using
+    /// multipart/form-data. More info on Sending Files »
+    /// </summary>
+    VideoNote: TcaFileToSend;
+    /// <summary>Duration of the voice message in seconds</summary>
+    [caName('duration')]
+    [caDefaultValueInt64(0)]
+    Duration: Int64;
+    [caName('length')]
+    [caDefaultValueInt64(0)]
+    Length: Int64;
+    [caName('thumb')]
+    [caDefaultValueString('')]
+    /// <summary>Thumbnail of the file sent; can be ignored if thumbnail generation for
+    /// the file is supported server-side. The thumbnail should be in JPEG format and
+    /// less than 200 kB in size. A thumbnail‘s width and height should not exceed 320.
+    /// Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t
+    /// be reused and can be only uploaded as a new file, so you can pass “attach:
+    /// file_attach_name” if the thumbnail was uploaded using multipart/form-data
+    /// under file_attach_name. More info on Sending Files »</summary>
+    Thumb: TcaFileToSend;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_notification')]
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    DisableNotification: Boolean;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    ReplyToMessageId: Int64;
+  public
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+    class function Default: TtgSendVideoNoteArgument; static;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -482,6 +546,7 @@ begin
   inherited Create();
   fPhoto := TcaFileToSend.Empty;
   FProtectContent := False;
+  ProtectContent := False;
 end;
 
 { TtgSendVideoArgument }
@@ -490,6 +555,7 @@ constructor TtgSendVideoArgument.Create;
 begin
   inherited Create();
   Video := TcaFileToSend.Empty;
+  ProtectContent := False;
 end;
 
 { TtgSendAnimationArgument }
@@ -498,6 +564,7 @@ constructor TtgSendAnimationArgument.Create;
 begin
   inherited Create();
   fAnimation := TcaFileToSend.Empty;
+  ProtectContent := False;
 end;
 
 { TtgSendVoiceArgument }
@@ -519,6 +586,7 @@ begin
   fPerformer := '';
   fTitle := '';
   fThumb := TcaFileToSend.Empty;
+  FProtectContent := False;
 end;
 
 { TtgSendDocumentArgument }
@@ -529,6 +597,7 @@ begin
   fDocument := TcaFileToSend.Empty;
   Thumb := TcaFileToSend.Empty;
   FDisableContentTypeDetection := False;
+  FProtectContent := False;
 end;
 
 { TtgSendStickerArgument }
@@ -538,6 +607,21 @@ begin
   inherited Create();
   fSticker := TcaFileToSend.Empty;
   FDisableContentTypeDetection := False;
+  FProtectContent := False;
+end;
+
+{ TtgSendVideoNoteArgument }
+
+class function TtgSendVideoNoteArgument.Default: TtgSendVideoNoteArgument;
+begin
+  Result.ChatId := 0;
+  Result.VideoNote := TcaFileToSend.Empty;
+  Result.Duration := 0;
+  Result.Length := 0;
+  Result.Thumb := TcaFileToSend.Empty;
+  Result.DisableNotification := False;
+  Result.ReplyToMessageId := 0;
+  Result.ProtectContent := False;
 end;
 
 end.
