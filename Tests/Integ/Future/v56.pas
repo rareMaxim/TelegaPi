@@ -27,6 +27,8 @@ type
     procedure Should_protect_content_sendSticker;
     [Test]
     procedure Should_protect_content_sendVideoNote;
+    [Test]
+    procedure Should_protect_content_sendVoice;
   end;
 
 implementation
@@ -211,6 +213,29 @@ begin
     Assert.AreEqual(LVideoArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
 
+  end;
+
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendVoice;
+var
+  LVoiceArgument: TtgSendVoiceArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LVoiceArgument := TtgSendVoiceArgument.Create;
+  try
+    // блок отправки сообщения
+    LVoiceArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LVoiceArgument.Caption := 'Protected sendVoice';
+    LVoiceArgument.Voice := 'https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.ogg';
+    LVoiceArgument.ProtectContent := True;
+    LResult := Bot.SendVoice(LVoiceArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LVoiceArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    LVoiceArgument.Free;
   end;
 
 end;

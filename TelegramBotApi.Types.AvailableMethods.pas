@@ -220,6 +220,8 @@ type
     [caName('duration')]
     [caDefaultValueInt64Attribute(0)]
     fDuration: Int64;
+    [caName('protect_content')]
+    FProtectContent: Boolean;
   public
     constructor Create; override;
     /// <summary>
@@ -254,6 +256,10 @@ type
     /// message is not found
     /// </summary>
     property AllowSendingWithoutReply;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
   end;
 
   [caName('sendAudio')]

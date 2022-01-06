@@ -25,6 +25,7 @@ type
   TtgSendVideoNoteArgument = TelegramBotApi.Types.AvailableMethods.TtgSendVideoNoteArgument;
   TtgSendAnimationArgument = TelegramBotApi.Types.AvailableMethods.TtgSendAnimationArgument;
   TtgSendAudioArgument = TelegramBotApi.Types.AvailableMethods.TtgSendAudioArgument;
+  TtgSendVoiceArgument = TelegramBotApi.Types.AvailableMethods.TtgSendVoiceArgument;
   TtgSendDocumentArgument = TelegramBotApi.Types.AvailableMethods.TtgSendDocumentArgument;
   TtgSendStickerArgument = TelegramBotApi.Types.AvailableMethods.TtgSendStickerArgument;
 {$ENDREGION}
