@@ -444,47 +444,6 @@ type
     property FileId: string read FFileId write FFileId;
   end;
 
-  /// <summary>
-  /// Use this method to send an animated emoji that will display a random value. On
-  /// success, the sent Message is returned.
-  /// </summary>
-  [caName('sendDice')]
-  [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
-  TtgSendDiceArgument = class
-  private
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    FChatId: TtgUserLink;
-    [caName('emoji')]
-    [caDefaultValueString('🎲')]
-    FEmoji: string;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
-    FDisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
-    FReplyToMessageId: Int64;
-  public
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    property ChatId: TtgUserLink read FChatId write FChatId;
-    /// <summary> Emoji on which the dice throw animation is based. Currently, must be
-    /// one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”,
-    /// “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults
-    /// to “🎲”
-    /// </summary>
-    property Emoji: string read FEmoji write FEmoji;
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.
-    /// </summary>
-    property DisableNotification: Boolean read FDisableNotification write FDisableNotification;
-    /// <summary>If the message is a reply, ID of the original message</summary>
-    property ReplyToMessageId: Int64 read FReplyToMessageId write FReplyToMessageId;
-    constructor Create;
-  end;
-
   /// <summary> Use this method to unban a previously kicked user in a supergroup or
   /// channel. The user will not return to the group or channel automatically, but
   /// will be able to join via link, etc. The bot must be an administrator for this
@@ -1243,16 +1202,6 @@ class function TtgStopMessageLiveLocationHaveInlineMessageIDArgument.Default
   : TtgStopMessageLiveLocationHaveInlineMessageIDArgument;
 begin
   Result.InlineMessageId := 0;
-end;
-
-{ TtgSendDiceArgument }
-
-constructor TtgSendDiceArgument.Create;
-begin
-  FChatId := TtgUserLink.Empty;
-  FEmoji := '🎲';
-  FDisableNotification := False;
-  FReplyToMessageId := 0;
 end;
 
 { TtgExportChatInviteLinkArgument }

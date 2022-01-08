@@ -37,6 +37,8 @@ type
     procedure Should_protect_content_sendContact;
     [Test]
     procedure Should_protect_content_sendPoll;
+    [Test]
+    procedure Should_protect_content_sendDice;
   end;
 
 implementation
@@ -114,6 +116,27 @@ begin
     Assert.AreEqual(LContactArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
     // LContactArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendDice;
+var
+  LDiceArgument: TtgSendDiceArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LDiceArgument := TtgSendDiceArgument.Create;
+  try
+    // блок отправки сообщения
+    LDiceArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LDiceArgument.Emoji := '🎰';
+    LDiceArgument.ProtectContent := True;
+    LResult := Bot.SendDice(LDiceArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LDiceArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    LDiceArgument.Free;
   end;
 end;
 

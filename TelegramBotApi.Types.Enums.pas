@@ -1,4 +1,4 @@
-unit TelegramBotApi.Types.Enums;
+﻿unit TelegramBotApi.Types.Enums;
 
 interface
 
@@ -8,7 +8,7 @@ type
   /// The type of a Message
   /// </summary>
   TtgMessageType = (Unknown = 0, Text, Photo, Audio, Video, VideoNote, Voice, Document, Sticker, Game, Location,
-    Contact, Service, Venue, Poll);
+    Contact, Service, Venue, Poll, Dice);
 
   TtgParseMode = (Default, Markdown, MarkdownV2, HTML);
 

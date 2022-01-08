@@ -798,6 +798,53 @@ type
     class function Default: TtgSendPollArgument; static;
   end;
 
+  /// <summary>
+  /// Use this method to send an animated emoji that will display a random value. On
+  /// success, the sent Message is returned.
+  /// </summary>
+  [caName('sendDice')]
+  [caMethod(TcaMethod.GET)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendDiceArgument = class
+  private
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('emoji')]
+    [caDefaultValueString('🎲')]
+    FEmoji: string;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_notification')]
+    FDisableNotification: Boolean;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    FReplyToMessageId: Int64;
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary> Emoji on which the dice throw animation is based. Currently, must be
+    /// one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”,
+    /// “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults
+    /// to “🎲”
+    /// </summary>
+    property Emoji: string read FEmoji write FEmoji;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.
+    /// </summary>
+    property DisableNotification: Boolean read FDisableNotification write FDisableNotification;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId: Int64 read FReplyToMessageId write FReplyToMessageId;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+    constructor Create;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -854,6 +901,7 @@ begin
   inherited Create();
   fVoice := TcaFileToSend.Empty;
   fDuration := 0;
+  FProtectContent := False;
 end;
 
 { TtgSendAudioArgument }
@@ -913,6 +961,7 @@ begin
   Result.LivePeriod := 0;
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
+  Result.ProtectContent := False;
 end;
 
 { TtgSendVenueArgument }
@@ -942,6 +991,7 @@ begin
   Result.VCard := '';
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
+  Result.ProtectContent := False;
 end;
 
 { TtgSendPollArgument }
@@ -962,6 +1012,18 @@ begin
   Result.IsClosed := False;
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
+  Result.ProtectContent := False;
+end;
+
+{ TtgSendDiceArgument }
+
+constructor TtgSendDiceArgument.Create;
+begin
+  FChatId := TtgUserLink.Empty;
+  FEmoji := '🎲';
+  FDisableNotification := False;
+  FReplyToMessageId := 0;
+  FProtectContent := False;
 end;
 
 end.

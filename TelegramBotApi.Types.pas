@@ -3082,6 +3082,8 @@ begin
     Exit(TtgMessageType.Location)
   else if Assigned(Sticker) then
     Exit(TtgMessageType.Sticker)
+  else if Assigned(Dice) then
+    Exit(TtgMessageType.Dice)
   else
   begin
     Result := TtgMessageType.Unknown;
@@ -3134,6 +3136,8 @@ begin
       end;
     TtgMessageType.Poll:
       FPoll.Free;
+    TtgMessageType.Dice:
+      FDice.Free;
   end;
   FCaptionEntities.Free;
   FEntities.Free;
