@@ -8,6 +8,7 @@ uses
   CloudApi.Request,
   TelegramBotApi.Types,
   TelegramBotApi.Types.AvailableMethods,
+  TelegramBotApi.Types.Games,
   TelegramBotApi.Types.Payments,
   TelegramBotApi.Types.Request,
   TelegramBotApi.Types.UpdatingMessages,
@@ -36,6 +37,12 @@ type
     function SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;
     function DeleteWebhook(ADeleteWebhook: TtgDeleteWebhookArgument): Boolean;
     function GetWebhookInfo(): ItgResponse<TtgWebhookInfo>; overload;
+{$ENDREGION}
+{$REGION 'Games'}
+    /// <summary>
+    /// Use this method to send a game. On success, the sent Message is returned.
+    /// </summary>
+    function SendGame(ASendGameArgument: TtgSendGameArgument): ItgResponse<TtgMessage>;
 {$ENDREGION}
 {$REGION 'Available methods'}
     /// <summary>
@@ -611,6 +618,11 @@ end;
 function TTelegramBotApi.SendDocument(ASendDocumentArgument: TtgSendDocumentArgument): ItgResponse<TtgMessage>;
 begin
   TryInternalExecute<TtgSendDocumentArgument, TtgMessage>(ASendDocumentArgument, Result);
+end;
+
+function TTelegramBotApi.SendGame(ASendGameArgument: TtgSendGameArgument): ItgResponse<TtgMessage>;
+begin
+  TryInternalExecute<TtgSendGameArgument, TtgMessage>(ASendGameArgument, Result);
 end;
 
 function TTelegramBotApi.SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;

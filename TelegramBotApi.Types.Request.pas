@@ -125,40 +125,6 @@ type
     property AllowSendingWithoutReply;
   end;
 
-  [caName('SendMediaGroup')]
-  [caMethod(TcaMethod.POST)]
-  [caParameterType(TcaParameterType.QueryString)]
-  TtgSendMediaGroupArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
-    [caName('media')]
-    [caIsRequaired]
-    [caDefaultValueString('')]
-    [caParameterType(TcaParameterType.GetOrPost)]
-    /// <summary>
-    /// Audio file to send. Pass a file_id as String to send an animation that exists on
-    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
-    /// to get a file from the Internet, or upload a new one using
-    /// multipart/form-data. More info on Sending Files »
-    /// </summary>
-    Media: TArray<TtgInputMedia>;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.</summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
-    /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendMediaGroupArgument; static;
-  end;
-
   [caName('editMessageLiveLocation')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to edit live location messages. A location can be
@@ -927,13 +893,6 @@ begin
   Result.Limit := 100;
   Result.Timeout := 0;
   Result.AllowedUpdates := UPDATES_ALLOWED_ALL;
-end;
-
-{ TtgSendMediaGroupArgument }
-
-class function TtgSendMediaGroupArgument.Default: TtgSendMediaGroupArgument;
-begin
-
 end;
 
 { TtgGetChatArgument }

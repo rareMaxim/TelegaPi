@@ -12,35 +12,39 @@ type
   TtgFutureTest_v56 = class(TTestsFixture)
   public
     [Test]
-    procedure Should_protect_content_sendMessage;
+    procedure protect_content_sendMessage;
     [Test]
-    procedure Should_protect_content_sendPhoto;
+    procedure protect_content_sendPhoto;
     [Test]
-    procedure Should_protect_content_sendVideo;
+    procedure protect_content_sendVideo;
     [Test]
-    procedure Should_protect_content_sendAnimation;
+    procedure protect_content_sendAnimation;
     [Test]
-    procedure Should_protect_content_sendAudio;
+    procedure protect_content_sendAudio;
     [Test]
-    procedure Should_protect_content_sendDocument;
+    procedure protect_content_sendDocument;
     [Test]
-    procedure Should_protect_content_sendSticker;
+    procedure protect_content_sendSticker;
     [Test]
-    procedure Should_protect_content_sendVideoNote;
+    procedure protect_content_sendVideoNote;
     [Test]
-    procedure Should_protect_content_sendVoice;
+    procedure protect_content_sendVoice;
     [Test]
-    procedure Should_protect_content_sendLocation;
+    procedure protect_content_sendLocation;
     [Test]
-    procedure Should_protect_content_sendVenue;
+    procedure protect_content_sendVenue;
     [Test]
-    procedure Should_protect_content_sendContact;
+    procedure protect_content_sendContact;
     [Test]
-    procedure Should_protect_content_sendPoll;
+    procedure protect_content_sendPoll;
     [Test]
-    procedure Should_protect_content_sendDice;
+    procedure protect_content_sendDice;
     [Test]
-    procedure Should_protect_content_sendInvoice;
+    procedure protect_content_sendInvoice;
+    [Test]
+    procedure protect_content_sendGame;
+    [Test]
+    procedure protect_content_sendMediaGroup;
   end;
 
 implementation
@@ -53,7 +57,7 @@ uses
 
 { TtgFutureTest_v56 }
 
-procedure TtgFutureTest_v56.Should_protect_content_sendAnimation;
+procedure TtgFutureTest_v56.protect_content_sendAnimation;
 var
   LAnimeArgument: TtgSendAnimationArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -76,7 +80,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendAudio;
+procedure TtgFutureTest_v56.protect_content_sendAudio;
 var
   LAudioArgument: TtgSendAudioArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -98,7 +102,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendContact;
+procedure TtgFutureTest_v56.protect_content_sendContact;
 var
   LContactArgument: TtgSendContactArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -121,7 +125,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendDice;
+procedure TtgFutureTest_v56.protect_content_sendDice;
 var
   LDiceArgument: TtgSendDiceArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -142,7 +146,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendDocument;
+procedure TtgFutureTest_v56.protect_content_sendDocument;
 var
   LDocArgument: TtgSendDocumentArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -164,7 +168,28 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendInvoice;
+procedure TtgFutureTest_v56.protect_content_sendGame;
+var
+  LGameArgument: TtgSendGameArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LGameArgument := TtgSendGameArgument.Create;
+  try
+    // блок отправки сообщения
+    LGameArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LGameArgument.GameShortName := 'Protected sendDocument';
+    LGameArgument.ProtectContent := True;
+    LResult := Bot.SendGame(LGameArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LGameArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    LGameArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.protect_content_sendInvoice;
 var
   LInvoiceArgument: TtgSendInvoiceArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -182,7 +207,6 @@ begin
     LInvoiceArgument.Prices := [TtgLabeledPrice.Create('Coffee', 2000)];
     LInvoiceArgument.ProtectContent := True;
     LResult := Bot.SendInvoice(LInvoiceArgument);
-    PrintLastRequest;
     Assert.AreEqual(True, LResult.Ok, LResult.Description);
     LMessage := LResult.Result;
     Assert.AreEqual(LInvoiceArgument.ProtectContent, LMessage.HasProtectedContent);
@@ -191,7 +215,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendLocation;
+procedure TtgFutureTest_v56.protect_content_sendLocation;
 var
   LLocationArgument: TtgSendLocationArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -213,7 +237,36 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendMessage;
+procedure TtgFutureTest_v56.protect_content_sendMediaGroup;
+var
+  LMediaGroup: TtgSendMediaGroupArgument;
+  LResult: ItgResponse<TArray<TtgMessage>>;
+  lMessages: TArray<TtgMessage>;
+  i: integer;
+begin
+  LMediaGroup := TtgSendMediaGroupArgument.Create;
+  try
+    LMediaGroup.ChatId := TTestData.Current.SupergroupChat.ID;
+    LMediaGroup.Media := [ //
+      TtgInputMediaPhoto.Create('https://cdn.pixabay.com/photo/2017/06/20/19/22/fuchs-2424369_640.jpg'), //
+      TtgInputMediaPhoto.Create('https://cdn.pixabay.com/photo/2017/04/11/21/34/giraffe-2222908_640.jpg')];
+    LResult := Bot.SendMediaGroup(LMediaGroup);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    lMessages := LResult.Result;
+    for i := Low(lMessages) to High(lMessages) do
+    begin
+      Assert.AreEqual(LMediaGroup.ProtectContent, LResult.Result[i].HasProtectedContent);
+    end;
+  finally
+    for i := Low(lMessages) to High(lMessages) do
+    begin
+      lMessages[i].Free;
+    end;
+    LMediaGroup.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.protect_content_sendMessage;
 var
   LMessageArgument: TtgSendMessageArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -235,7 +288,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendPhoto;
+procedure TtgFutureTest_v56.protect_content_sendPhoto;
 var
   LphotoArgument: TtgSendPhotoArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -257,7 +310,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendPoll;
+procedure TtgFutureTest_v56.protect_content_sendPoll;
 var
   LPoolArgument: TtgSendPollArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -279,7 +332,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendSticker;
+procedure TtgFutureTest_v56.protect_content_sendSticker;
 var
   LStickerArgument: TtgSendStickerArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -300,7 +353,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendVenue;
+procedure TtgFutureTest_v56.protect_content_sendVenue;
 var
   LVenueArgument: TtgSendVenueArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -324,7 +377,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendVideo;
+procedure TtgFutureTest_v56.protect_content_sendVideo;
 var
   LVideoArgument: TtgSendVideoArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -346,7 +399,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendVideoNote;
+procedure TtgFutureTest_v56.protect_content_sendVideoNote;
 var
   LVideoArgument: TtgSendVideoNoteArgument;
   LResult: ItgResponse<TtgMessage>;
@@ -367,7 +420,7 @@ begin
   end;
 end;
 
-procedure TtgFutureTest_v56.Should_protect_content_sendVoice;
+procedure TtgFutureTest_v56.protect_content_sendVoice;
 var
   LVoiceArgument: TtgSendVoiceArgument;
   LResult: ItgResponse<TtgMessage>;

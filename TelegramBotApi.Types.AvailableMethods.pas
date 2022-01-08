@@ -845,6 +845,40 @@ type
     constructor Create;
   end;
 
+  [caName('SendMediaGroup')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendMediaGroupArgument = class(TtgSendMessageBase)
+  private
+    [caName('media')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    [caParameterType(TcaParameterType.GetOrPost)]
+    FMedia: TArray<TtgInputMedia>;
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    property ChatId;
+    /// <summary>
+    /// Audio file to send. Pass a file_id as String to send an animation that exists on
+    /// the Telegram servers (recommended), pass an HTTP URL as a String for Telegram
+    /// to get a file from the Internet, or upload a new one using
+    /// multipart/form-data. More info on Sending Files »
+    /// </summary>
+    property Media: TArray<TtgInputMedia> read FMedia write FMedia;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    property ReplyToMessageId;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -1024,6 +1058,26 @@ begin
   FDisableNotification := False;
   FReplyToMessageId := 0;
   FProtectContent := False;
+end;
+
+{ TtgSendMediaGroupArgument }
+
+constructor TtgSendMediaGroupArgument.Create;
+begin
+  FMedia := [];
+  FProtectContent := False;
+end;
+
+destructor TtgSendMediaGroupArgument.Destroy;
+var
+  I: Integer;
+begin
+  for I := Low(FMedia) to High(FMedia) do
+  begin
+    FMedia[I].Free;
+  end;
+  FMedia := nil;
+  inherited;
 end;
 
 end.
