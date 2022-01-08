@@ -858,7 +858,7 @@ type
     [caName('protect_content')]
     FProtectContent: Boolean;
   public
-    constructor Create;
+    constructor Create; override;
     destructor Destroy; override;
     property ChatId;
     /// <summary>
@@ -1159,6 +1159,7 @@ end;
 
 constructor TtgSendMediaGroupArgument.Create;
 begin
+  inherited;
   FMedia := [];
   FProtectContent := False;
 end;

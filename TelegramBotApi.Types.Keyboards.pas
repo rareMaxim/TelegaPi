@@ -137,6 +137,8 @@ type
     FOneTimeKeyboard: Boolean;
     [JsonName('selective')]
     FSelective: Boolean;
+    [JsonName('input_field_placeholder')]
+    FInputFieldPlaceholder: string;
   protected
     function GetKeyboard: TArray<TArray<TtgKeyboardButton>>; override;
     procedure SetKeyboard(AKeyboard: TArray < TArray < TtgKeyboardButton >> ); override;
@@ -161,6 +163,11 @@ type
     /// input field to see the custom keyboard again. Defaults to false.
     /// </summary>
     property OneTimeKeyboard: Boolean read FOneTimeKeyboard write FOneTimeKeyboard;
+    /// <summary>
+    /// Optional. The placeholder to be shown in the input field when the keyboard is
+    /// active; 1-64 characters
+    /// </summary>
+    property InputFieldPlaceholder: string read FInputFieldPlaceholder write FInputFieldPlaceholder;
     /// <summary>
     /// Optional. Use this parameter if you want to show the keyboard to specific users
     /// only. Targets: 1) users that are @mentioned in the text of the Message object;
