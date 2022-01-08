@@ -33,6 +33,8 @@ type
     procedure Should_protect_content_sendLocation;
     [Test]
     procedure Should_protect_content_sendVenue;
+    [Test]
+    procedure Should_protect_content_sendContact;
   end;
 
 implementation
@@ -87,6 +89,29 @@ begin
     Assert.AreEqual(LAudioArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
     LAudioArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendContact;
+var
+  LContactArgument: TtgSendContactArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LContactArgument := TtgSendContactArgument.Default;
+  try
+    // блок отправки сообщения
+    LContactArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LContactArgument.PhoneNumber := '+380688888888';
+    LContactArgument.FirstName := 'Max';
+    LContactArgument.LastName := 'Rare';
+    LContactArgument.ProtectContent := True;
+    LResult := Bot.SendContact(LContactArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LContactArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    // LContactArgument.Free;
   end;
 end;
 
