@@ -17,7 +17,7 @@ uses
 type
   TTelegramBotApi = class(TPersistent)
   public const
-    LIB_VERSION = '5.1.0';
+    LIB_VERSION = '5.6.1';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
@@ -356,6 +356,7 @@ begin
   FCloudApi.HttpClient.SecureProtocols := [THTTPSecureProtocol.TLS12];
   TtgConverters.TelegramConverter;
   FCloudApi.BaseUrl := 'https://api.telegram.org/bot{token}';
+  FCloudApi.HttpClient.UserAgent := 'TelegaPi v.' + TTelegramBotApi.LIB_VERSION + ', ' + FCloudApi.HttpClient.UserAgent;
   FAutoFreeRequestArgument := False;
 end;
 
