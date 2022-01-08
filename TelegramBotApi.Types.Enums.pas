@@ -7,8 +7,8 @@ type
   /// <summary>
   /// The type of a Message
   /// </summary>
-  TtgMessageType = (Unknown = 0, Text, Photo, Audio, Video, VideoNote, Voice, Document, Sticker, Game, Location,
-    Contact, Service, Venue, Poll, Dice);
+  TtgMessageType = (Unknown = 0, Text, Photo, Audio, Video, Voice, Document, Sticker, Location, Contact, Venue, Game,
+    VideoNote, Invoice, Poll, Dice, Service);
 
   TtgParseMode = (Default, Markdown, MarkdownV2, HTML);
 

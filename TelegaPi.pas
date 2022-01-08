@@ -11,6 +11,7 @@ uses
   TelegramBotApi.Types.AvailableMethods,
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Keyboards,
+  TelegramBotApi.Types.Payments,
   TelegramBotApi.Types.UpdatingMessages;
 
 type
@@ -33,6 +34,10 @@ type
   TtgSendContactArgument = TelegramBotApi.Types.AvailableMethods.TtgSendContactArgument;
   TtgSendPollArgument = TelegramBotApi.Types.AvailableMethods.TtgSendPollArgument;
   TtgSendDiceArgument = TelegramBotApi.Types.AvailableMethods.TtgSendDiceArgument;
+{$ENDREGION}
+{$REGION 'TelegramBotApi.Types.AvailableMethods'}
+  TtgSendInvoiceArgument = TelegramBotApi.Types.Payments.TtgSendInvoiceArgument;
+  TtgLabeledPrice = TelegramBotApi.Types.Payments.TtgLabeledPrice;
 {$ENDREGION}
 {$REGION 'Types.Request.UpdatingMessages'}
   TtgEditMessageTextArgument = TelegramBotApi.Types.UpdatingMessages.TtgEditMessageTextArgument;

@@ -14,6 +14,8 @@ type
   TTestsFixture = class
   private
     FBot: TTelegramBotApi;
+  protected
+    procedure PrintLastRequest;
   public
     [Setup]
     procedure Setup;
@@ -28,6 +30,15 @@ uses
   System.SysUtils;
 
 { TTestsFixture }
+
+procedure TTestsFixture.PrintLastRequest;
+var
+  lReqAsJson: string;
+begin
+  lReqAsJson := Bot.CloudApi.ResponsePrinter.AsJson;
+  System.Writeln(lReqAsJson);
+  Readln;
+end;
 
 procedure TTestsFixture.Setup;
 begin

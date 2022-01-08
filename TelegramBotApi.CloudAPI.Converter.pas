@@ -26,7 +26,8 @@ uses
   TelegramBotApi.Types,
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Helpers,
-  TelegramBotApi.Types.Keyboards;
+  TelegramBotApi.Types.Keyboards,
+  TelegramBotApi.Types.Payments;
 { TtgConverters }
 
 class procedure TtgConverters.TtgAllowedUpdatesConverter;
@@ -68,6 +69,7 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardMarkup>;
   TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardRemove>;
   TcaRequestArgument.Current.RegisterToJson<TtgForceReply>;
+  TcaRequestArgument.Current.RegisterToJson<TArray<TtgLabeledPrice>>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;

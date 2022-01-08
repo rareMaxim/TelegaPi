@@ -3,13 +3,14 @@
 interface
 
 uses
-  TelegramBotApi.Types,
-  TelegramBotApi.Types.Request,
-  TelegramBotApi.Types.AvailableMethods,
-  TelegramBotApi.Types.UpdatingMessages,
+  CloudApi.Client.Sync,
   CloudApi.IAuthenticator,
   CloudApi.Request,
-  CloudApi.Client.Sync,
+  TelegramBotApi.Types,
+  TelegramBotApi.Types.AvailableMethods,
+  TelegramBotApi.Types.Payments,
+  TelegramBotApi.Types.Request,
+  TelegramBotApi.Types.UpdatingMessages,
   System.Classes;
 
 type

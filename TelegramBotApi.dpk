@@ -51,7 +51,8 @@ contains
   TelegaPi in 'TelegaPi.pas',
   TelegramBotApi.Types.UpdatingMessages in 'TelegramBotApi.Types.UpdatingMessages.pas',
   TelegramBotApi.Types.AvailableMethods in 'TelegramBotApi.Types.AvailableMethods.pas',
-  TelegramBotApi.Types.Abstract in 'TelegramBotApi.Types.Abstract.pas';
+  TelegramBotApi.Types.Abstract in 'TelegramBotApi.Types.Abstract.pas',
+  TelegramBotApi.Types.Payments in 'TelegramBotApi.Types.Payments.pas';
 
 end.
 

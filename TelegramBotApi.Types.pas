@@ -2781,29 +2781,6 @@ type
   end;
 
   /// <summary>
-  /// This object represents a portion of the price for goods or services.
-  /// </summary>
-  TtgLabeledPrice = class
-  private
-    [JsonName('label')]
-    FLabel: string;
-    [JsonName('amount')]
-    FAmount: Integer;
-  public
-    /// <summary>
-    /// Portion label
-    /// </summary>
-    property &Label: string read FLabel write FLabel;
-    /// <summary>
-    /// Price of the product in the smallest units of the currency (integer, not
-    /// float/double). For example, for a price of US$ 1.45 pass amount = 145. See the
-    /// exp parameter in currencies.json, it shows the number of digits past the
-    /// decimal point for each currency (2 for the majority of currencies).
-    /// </summary>
-    property Amount: Integer read FAmount write FAmount;
-  end;
-
-  /// <summary>
   /// This object represents the scope to which bot commands are applied.
   /// </summary>
   TtgBotCommandScope = class abstract
@@ -3084,6 +3061,8 @@ begin
     Exit(TtgMessageType.Sticker)
   else if Assigned(Dice) then
     Exit(TtgMessageType.Dice)
+  else if Assigned(Invoice) then
+    Exit(TtgMessageType.Invoice)
   else
   begin
     Result := TtgMessageType.Unknown;
@@ -3138,6 +3117,11 @@ begin
       FPoll.Free;
     TtgMessageType.Dice:
       FDice.Free;
+    TtgMessageType.Invoice:
+      begin
+        FInvoice.Free;
+        FReplyMarkup.Free;
+      end;
   end;
   FCaptionEntities.Free;
   FEntities.Free;

@@ -39,6 +39,8 @@ type
     procedure Should_protect_content_sendPoll;
     [Test]
     procedure Should_protect_content_sendDice;
+    [Test]
+    procedure Should_protect_content_sendInvoice;
   end;
 
 implementation
@@ -159,6 +161,33 @@ begin
     Assert.AreEqual(LDocArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
     LDocArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendInvoice;
+var
+  LInvoiceArgument: TtgSendInvoiceArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LInvoiceArgument := TtgSendInvoiceArgument.Create;
+  try
+    // блок отправки сообщения
+    LInvoiceArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LInvoiceArgument.Title := 'TelegaPi';
+    LInvoiceArgument.Description := 'buy me coffee';
+    LInvoiceArgument.Payload := TGUID.NewGuid.ToString;
+    LInvoiceArgument.ProviderToken := '410694247:TEST:51494eb1-29d8-4c3e-8259-7ef26d0eaeb4';
+    LInvoiceArgument.Currency := 'UAH';
+    LInvoiceArgument.Prices := [TtgLabeledPrice.Create('Coffee', 2000)];
+    LInvoiceArgument.ProtectContent := True;
+    LResult := Bot.SendInvoice(LInvoiceArgument);
+    PrintLastRequest;
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LInvoiceArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    LInvoiceArgument.Free;
   end;
 end;
 
