@@ -80,7 +80,7 @@ type
     /// to the method forwardMessages, but the copied message doesn't have a link to
     /// the original message. Returns the MessageId of the sent message on success.
     /// </summary>
-    function CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
+    function CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<TtgMessageId>;
     /// <summary>
     /// Use this method to send photos. On success, the sent Message is returned.
     /// </summary>
@@ -405,9 +405,9 @@ begin
   end;
 end;
 
-function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<Int64>;
+function TTelegramBotApi.CopyMessage(ACopyMessageArgument: TtgCopyMessageArgument): ItgResponse<TtgMessageId>;
 begin
-  TryInternalExecute<TtgCopyMessageArgument, Int64>(ACopyMessageArgument, Result);
+  TryInternalExecute<TtgCopyMessageArgument, TtgMessageId>(ACopyMessageArgument, Result);
 end;
 
 function TTelegramBotApi.EditChatInviteLink(AEditChatInviteLink: TtgEditChatInviteLinkArgument)

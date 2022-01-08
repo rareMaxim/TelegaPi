@@ -45,6 +45,8 @@ type
     procedure protect_content_sendGame;
     [Test]
     procedure protect_content_sendMediaGroup;
+    [Test]
+    procedure protect_content_copyMessage;
   end;
 
 implementation
@@ -56,6 +58,39 @@ uses
   System.SysUtils;
 
 { TtgFutureTest_v56 }
+
+procedure TtgFutureTest_v56.protect_content_copyMessage;
+var
+  LOrigArg: TtgSendMessageArgument;
+  lCopyArg: TtgCopyMessageArgument;
+  LOrigMsg: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+  lCopyResult: ItgResponse<TtgMessageId>;
+begin
+  LOrigArg := TtgSendMessageArgument.Create;
+  lCopyArg := TtgCopyMessageArgument.Create;
+  try
+    // блок отправки сообщения
+    LOrigArg.ChatId := TTestData.Current.SupergroupChat.ID;
+    LOrigArg.Text := 'Original message';
+    LOrigMsg := Bot.SendMessage(LOrigArg);
+    Assert.AreEqual(True, LOrigMsg.Ok, LOrigMsg.Description);
+    LMessage := LOrigMsg.Result;
+    Assert.AreEqual(LOrigArg.Text, LMessage.Text);
+    // блок отправки измененного сообщения
+    lCopyArg.ChatId := LOrigArg.ChatId;
+    lCopyArg.FromChatId := LOrigMsg.Result.Chat.ID;
+    lCopyArg.MessageID := LOrigMsg.Result.MessageID;
+    lCopyArg.ProtectContent := True;
+    lCopyResult := Bot.CopyMessage(lCopyArg);
+    Assert.AreEqual(True, lCopyResult.Ok, lCopyResult.Description);
+
+  finally
+    LOrigArg.Free;
+    lCopyArg.Free;
+  end;
+
+end;
 
 procedure TtgFutureTest_v56.protect_content_sendAnimation;
 var

@@ -71,60 +71,6 @@ type
     destructor Destroy; override;
   end;
 
-  [caName('copyMessage')]
-  [caParameterType(TcaParameterType.QueryString)]
-  /// <summary>Use this method to send text messages.
-  /// On success, the sent Message is returned.
-  /// </summary>
-  TtgCopyMessageArgument = class(TtgSendMessageBaseWithParseMode)
-  private
-    [caName('from_chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    FFromChatId: TtgUserLink;
-    [caName('message_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    FMessageID: Int64;
-    [caName('caption')]
-    [caDefaultValueStringAttribute('')]
-    FCaption: string;
-    [caName('caption_entities')]
-    [caDefaultValueString('[]')]
-    FCaptionEntities: TArray<TtgMessageEntity>;
-  public
-    constructor Create; override;
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    property ChatId;
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    property FromChatId: TtgUserLink read FFromChatId write FFromChatId;
-    /// <summary>Message identifier in the chat specified in from_chat_id</summary>
-    property MessageID: Int64 read FMessageID write FMessageID;
-    /// <summary>New caption for media, 0-1024 characters after entities parsing. If
-    /// not specified, the original caption is kept
-    /// </summary>
-    property Caption: string read FCaption write FCaption;
-    /// <summary>Send Markdown or HTML, if you want Telegram apps to show bold, italic,
-    /// fixed-width text or inline URLs in your bot's message.   </summary>
-    property ParseMode;
-    /// <summary> List of special entities that appear in the new caption, which can be
-    /// specified instead of parse_mode
-    /// </summary>
-    property CaptionEntities: TArray<TtgMessageEntity> read FCaptionEntities write FCaptionEntities;
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.</summary>
-    property DisableNotification;
-    /// <summary>If the message is a reply, ID of the original message</summary>
-    property ReplyToMessageId;
-    /// <summary>
-    /// Pass True, if the message should be sent even if the specified replied-to
-    /// message is not found
-    /// </summary>
-    property AllowSendingWithoutReply;
-  end;
-
   [caName('editMessageLiveLocation')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to edit live location messages. A location can be
@@ -969,17 +915,6 @@ end;
 class function TtgExportChatInviteLinkArgument.Default: TtgExportChatInviteLinkArgument;
 begin
   Result.ChatId := TtgUserLink.Empty;
-end;
-
-{ TtgCopyMessageArgument }
-
-constructor TtgCopyMessageArgument.Create;
-begin
-  inherited Create();
-  FFromChatId := TtgUserLink.Empty;
-  FMessageID := 0;
-  FCaption := '';
-  FCaptionEntities := nil;
 end;
 
 { TtgUnbanChatMemberArgument }
