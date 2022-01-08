@@ -29,6 +29,7 @@ type
   TtgSendDocumentArgument = TelegramBotApi.Types.AvailableMethods.TtgSendDocumentArgument;
   TtgSendStickerArgument = TelegramBotApi.Types.AvailableMethods.TtgSendStickerArgument;
   TtgSendLocationArgument = TelegramBotApi.Types.AvailableMethods.TtgSendLocationArgument;
+  TtgSendVenueArgument = TelegramBotApi.Types.AvailableMethods.TtgSendVenueArgument;
 {$ENDREGION}
 {$REGION 'Types.Request.UpdatingMessages'}
   TtgEditMessageTextArgument = TelegramBotApi.Types.UpdatingMessages.TtgEditMessageTextArgument;

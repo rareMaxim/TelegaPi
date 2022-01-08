@@ -3128,7 +3128,10 @@ begin
       FContact.Free;
     // TtgMessageType.Service:
     TtgMessageType.Venue:
-      FVenue.Free;
+      begin
+        FLocation.Free;
+        FVenue.Free;
+      end;
     TtgMessageType.Poll:
       FPoll.Free;
   end;

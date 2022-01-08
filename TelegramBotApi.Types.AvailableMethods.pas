@@ -569,6 +569,84 @@ type
     class function Default: TtgSendLocationArgument; static;
   end;
 
+  /// <summary>
+  /// </summary>
+  [caName('sendVenue')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.QueryString)]
+  TtgSendVenueArgument = record
+  private
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    [caName('chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    ChatId: TtgUserLink;
+    [caName('latitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0)]
+    /// <summary>
+    /// Latitude of the venue
+    /// </summary>
+    Latitude: Single;
+    [caName('longitude')]
+    [caIsRequaired]
+    [caDefaultValueSingle(0)]
+    /// <summary>
+    /// Longitude of the venue
+    /// </summary>
+    Longitude: Single;
+
+    [caName('title')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>
+    /// Name of the venue
+    /// </summary>
+    Title: string;
+
+    [caName('address')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    /// <summary>
+    /// Address of the venue
+    /// </summary>
+    Address: string;
+
+    [caName('foursquare_id')]
+    [caDefaultValueString('')]
+    /// <summary>
+    /// Foursquare identifier of the venue
+    /// </summary>
+    FoursquareId: string;
+
+    [caName('foursquare_type')]
+    [caDefaultValueString('')]
+    /// <summary>
+    /// Foursquare type of the venue, if known.
+    /// (For example, “arts_entertainment/default”, “arts_entertainment/aquarium”
+    /// or “food/icecream”.)
+    /// </summary>
+    FoursquareType: string;
+    [caDefaultValueBoolean(False)]
+    [caName('disable_notification')]
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    DisableNotification: Boolean;
+    [caName('reply_to_message_id')]
+    [caDefaultValueInt64(0)]
+    /// <summary>If the message is a reply, ID of the original message</summary>
+    ReplyToMessageId: Int64;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+    class function Default: TtgSendVenueArgument; static;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -684,6 +762,22 @@ begin
   Result.LivePeriod := 0;
   Result.DisableNotification := False;
   Result.ReplyToMessageId := 0;
+end;
+
+{ TtgSendVenueArgument }
+
+class function TtgSendVenueArgument.Default: TtgSendVenueArgument;
+begin
+  Result.ChatId := TtgUserLink.Empty;
+  Result.Latitude := 0;
+  Result.Longitude := 0;
+  Result.Title := '';
+  Result.Address := '';
+  Result.FoursquareId := '';
+  Result.FoursquareType := '';
+  Result.DisableNotification := False;
+  Result.ReplyToMessageId := 0;
+  Result.ProtectContent := False;
 end;
 
 end.
