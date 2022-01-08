@@ -444,99 +444,6 @@ type
     property FileId: string read FFileId write FFileId;
   end;
 
-  [caName('sendPoll')]
-  [caMethod(TcaMethod.GET)]
-  [caParameterType(TcaParameterType.QueryString)]
-  TtgSendPollArgument = record
-  public
-    [caName('chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    ChatId: TtgUserLink;
-    [caName('question')]
-    [caIsRequaired]
-    [caDefaultValueString('')]
-    /// <summary>
-    /// Poll question, 1-255 characters
-    /// </summary>
-    Question: string;
-    [caName('options')]
-    [caIsRequaired]
-    [caDefaultValueString('[]')]
-    /// <summary>
-    /// A JSON-serialized list of answer options, 2-10 strings 1-100 characters each
-    /// </summary>
-    Options: TArray<string>;
-    [caName('is_anonymous')]
-    [caDefaultValueBoolean(True)]
-    /// <summary>
-    /// True, if the poll needs to be anonymous, defaults to True
-    /// </summary>
-    IsAnonymous: Boolean;
-    [caName('type')]
-    [caDefaultValueString('regular')]
-    /// <summary>
-    /// Poll type, “quiz” or “regular”, defaults to “regular”
-    /// </summary>
-    &Type: string;
-    [caName('allows_multiple_answers')]
-    [caDefaultValueBoolean(False)]
-    /// <summary>
-    /// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
-    /// </summary>
-    AllowsMultipleAnswers: Boolean;
-    [caName('correct_option_id')]
-    [caDefaultValueInt64(0)]
-    /// <summary>
-    /// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
-    /// </summary>
-    CorrectOptionId: Integer;
-    [caName('explanation')]
-    [caDefaultValueString('')]
-    /// <summary>
-    /// Text that is shown when a user chooses an incorrect answer
-    /// or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing
-    /// </summary>
-    Explanation: string;
-    [caName('explanation_parse_mode')]
-    [caDefaultValueString('')]
-    /// <summary>Mode for parsing entities in the explanation. See formatting options for more details.</summary>
-    ExplanationParseMode: TtgParseMode;
-    [caName('open_period')]
-    [caDefaultValueInt64(0)]
-    /// <summary>
-    /// Amount of time in seconds the poll will be active after creation, 5-600. Can't
-    /// be used together with close_date.
-    /// </summary>
-    OpenPeriod: Integer;
-    [caName('close_date')]
-    [caDefaultValueInt64(0)]
-    /// <summary>
-    /// Point in time (Unix timestamp) when the poll will be automatically closed.
-    /// Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
-    /// </summary>
-    CloseDate: Integer;
-    [caDefaultValueBoolean(False)]
-    [caName('is_closed')]
-    /// <summary>
-    /// Pass True, if the poll needs to be immediately closed. This can be useful for poll preview.
-    /// </summary>
-    IsClosed: Boolean;
-    [caDefaultValueBoolean(False)]
-    [caName('disable_notification')]
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.
-    /// </summary>
-    DisableNotification: Boolean;
-    [caName('reply_to_message_id')]
-    [caDefaultValueInt64(0)]
-    /// <summary>If the message is a reply, ID of the original message</summary>
-    ReplyToMessageId: Int64;
-    class function Default: TtgSendPollArgument; static;
-  end;
-
   /// <summary>
   /// Use this method to send an animated emoji that will display a random value. On
   /// success, the sent Message is returned.
@@ -1274,26 +1181,6 @@ end;
 class function TtgGetChatArgument.Default: TtgGetChatArgument;
 begin
   Result.ChatId := 0;
-end;
-
-{ TtgSendPollArgument }
-
-class function TtgSendPollArgument.Default: TtgSendPollArgument;
-begin
-  Result.ChatId := TtgUserLink.Empty;
-  Result.Question := '';
-  Result.Options := [];
-  Result.IsAnonymous := True;
-  Result.&Type := 'regular';
-  Result.AllowsMultipleAnswers := False;
-  Result.CorrectOptionId := 0;
-  Result.Explanation := '';
-  Result.ExplanationParseMode := TtgParseMode.Default;
-  Result.OpenPeriod := 0;
-  Result.CloseDate := 0;
-  Result.IsClosed := False;
-  Result.DisableNotification := False;
-  Result.ReplyToMessageId := 0;
 end;
 
 { TtgSetWebhookArgument }

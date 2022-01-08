@@ -35,6 +35,8 @@ type
     procedure Should_protect_content_sendVenue;
     [Test]
     procedure Should_protect_content_sendContact;
+    [Test]
+    procedure Should_protect_content_sendPoll;
   end;
 
 implementation
@@ -200,6 +202,28 @@ begin
     Assert.AreEqual(LphotoArgument.ProtectContent, LMessage.HasProtectedContent);
   finally
     LphotoArgument.Free;
+  end;
+end;
+
+procedure TtgFutureTest_v56.Should_protect_content_sendPoll;
+var
+  LPoolArgument: TtgSendPollArgument;
+  LResult: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+begin
+  LPoolArgument := TtgSendPollArgument.Default;
+  try
+    // блок отправки сообщения
+    LPoolArgument.ChatId := TTestData.Current.SupergroupChat.ID;
+    LPoolArgument.Question := 'protect_content_sendPoll';
+    LPoolArgument.Options := ['a', 'b', 'c', 'd'];
+    LPoolArgument.ProtectContent := True;
+    LResult := Bot.SendPool(LPoolArgument);
+    Assert.AreEqual(True, LResult.Ok, LResult.Description);
+    LMessage := LResult.Result;
+    Assert.AreEqual(LPoolArgument.ProtectContent, LMessage.HasProtectedContent);
+  finally
+    // LPoolArgument.Free;
   end;
 end;
 
