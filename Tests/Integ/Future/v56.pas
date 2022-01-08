@@ -47,6 +47,8 @@ type
     procedure protect_content_sendMediaGroup;
     [Test]
     procedure protect_content_copyMessage;
+    [Test]
+    procedure protect_content_forwardMessage;
   end;
 
 implementation
@@ -84,12 +86,41 @@ begin
     lCopyArg.ProtectContent := True;
     lCopyResult := Bot.CopyMessage(lCopyArg);
     Assert.AreEqual(True, lCopyResult.Ok, lCopyResult.Description);
-
   finally
     LOrigArg.Free;
     lCopyArg.Free;
   end;
+end;
 
+procedure TtgFutureTest_v56.protect_content_forwardMessage;
+var
+  LOrigArg: TtgSendMessageArgument;
+  lFrwArg: TtgForwardMessageArgument;
+  LOrigMsg: ItgResponse<TtgMessage>;
+  LMessage: TtgMessage;
+  lFrwResult: ItgResponse<TtgMessage>;
+begin
+  LOrigArg := TtgSendMessageArgument.Create;
+  lFrwArg := TtgForwardMessageArgument.Create;
+  try
+    // блок отправки сообщения
+    LOrigArg.ChatId := TTestData.Current.SupergroupChat.ID;
+    LOrigArg.Text := 'Original message';
+    LOrigMsg := Bot.SendMessage(LOrigArg);
+    Assert.AreEqual(True, LOrigMsg.Ok, LOrigMsg.Description);
+    LMessage := LOrigMsg.Result;
+    Assert.AreEqual(LOrigArg.Text, LMessage.Text);
+    // блок отправки измененного сообщения
+    lFrwArg.ChatId := LOrigArg.ChatId;
+    lFrwArg.FromChatId := LOrigMsg.Result.Chat.ID;
+    lFrwArg.MessageID := LOrigMsg.Result.MessageID;
+    lFrwArg.ProtectContent := True;
+    lFrwResult := Bot.ForwardMessage(lFrwArg);
+    Assert.AreEqual(True, lFrwResult.Ok, lFrwResult.Description);
+  finally
+    LOrigArg.Free;
+    lFrwArg.Free;
+  end;
 end;
 
 procedure TtgFutureTest_v56.protect_content_sendAnimation;

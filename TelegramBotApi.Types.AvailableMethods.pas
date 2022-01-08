@@ -939,6 +939,41 @@ type
     property ProtectContent: Boolean read FProtectContent write FProtectContent;
   end;
 
+  [caName('forwardMessage')]
+  [caParameterType(TcaParameterType.QueryString)]
+  /// <summary>Use this method to forward messages of any kind. On success, the sent
+  /// Message is returned.</summary>
+  TtgForwardMessageArgument = class(TtgMessageAbstract)
+  private
+    [caName('from_chat_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FFromChatId: TtgUserLink;
+    [caName('message_id')]
+    [caIsRequaired]
+    [caDefaultValueInt64(0)]
+    FMessageID: Int64;
+    [caName('protect_content')]
+    FProtectContent: Boolean;
+  public
+    /// <summary>Unique identifier for the target chat or username of the target
+    /// channel (in the format @channelusername)</summary>
+    property ChatId;
+    /// <summary>Unique identifier for the chat where the original message was sent (or
+    /// channel username in the format @channelusername)</summary>
+    property FromChatId: TtgUserLink read FFromChatId write FFromChatId;
+    /// <summary>Sends the message silently. Users will receive a notification with no
+    /// sound.</summary>
+    property DisableNotification;
+    /// <summary>Message identifier in the chat specified in from_chat_id</summary>
+    property MessageID: Int64 read FMessageID write FMessageID;
+    /// <summary>
+    /// Protects the contents of the sent message from forwarding and saving
+    /// </summary>
+    property ProtectContent: Boolean read FProtectContent write FProtectContent;
+    constructor Create; override;
+  end;
+
 implementation
 
 { TtgSendMessageArgument }
@@ -1149,6 +1184,17 @@ begin
   FMessageID := 0;
   FCaption := '';
   FCaptionEntities := nil;
+end;
+
+{ TtgForwardMessageArgument }
+
+constructor TtgForwardMessageArgument.Create;
+begin
+  inherited;
+  ChatId := TtgUserLink.Empty;
+  FromChatId := TtgUserLink.Empty;
+  DisableNotification := False;
+  FMessageID := 0;
 end;
 
 end.

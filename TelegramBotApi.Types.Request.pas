@@ -41,36 +41,6 @@ type
   [caParameterType(TcaParameterType.QueryString)]
   TtgCloseArgunent = class(TtgEmptyArgument);
 
-  [caName('forwardMessage')]
-  [caParameterType(TcaParameterType.QueryString)]
-  /// <summary>Use this method to forward messages of any kind. On success, the sent
-  /// Message is returned.</summary>
-  TtgForwardMessageArgument = class(TtgMessageAbstract)
-  private
-    [caName('from_chat_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    FFromChatId: TtgUserLink;
-    [caName('message_id')]
-    [caIsRequaired]
-    [caDefaultValueInt64(0)]
-    FMessageID: Int64;
-  public
-    /// <summary>Unique identifier for the target chat or username of the target
-    /// channel (in the format @channelusername)</summary>
-    property ChatId;
-    /// <summary>Unique identifier for the chat where the original message was sent (or
-    /// channel username in the format @channelusername)</summary>
-    property FromChatId: TtgUserLink read FFromChatId write FFromChatId;
-    /// <summary>Sends the message silently. Users will receive a notification with no
-    /// sound.</summary>
-    property DisableNotification;
-    /// <summary>Message identifier in the chat specified in from_chat_id</summary>
-    property MessageID: Int64 read FMessageID write FMessageID;
-    constructor Create; override;
-    destructor Destroy; override;
-  end;
-
   [caName('editMessageLiveLocation')]
   [caParameterType(TcaParameterType.QueryString)]
   /// <summary>Use this method to edit live location messages. A location can be
@@ -813,23 +783,6 @@ type
 implementation
 
 uses System.SysUtils;
-
-{ TtgForwardMessageArgument }
-
-constructor TtgForwardMessageArgument.Create;
-begin
-  inherited Create;
-  ChatId := TtgUserLink.Empty;
-  FromChatId := TtgUserLink.Empty;
-  DisableNotification := False;
-  FMessageID := 0;
-end;
-
-destructor TtgForwardMessageArgument.Destroy;
-begin
-
-  inherited;
-end;
 
 { TtgGetUpdatesArgument }
 

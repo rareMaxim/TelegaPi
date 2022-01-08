@@ -37,6 +37,7 @@ type
   TtgSendDiceArgument = TelegramBotApi.Types.AvailableMethods.TtgSendDiceArgument;
   TtgSendMediaGroupArgument = TelegramBotApi.Types.AvailableMethods.TtgSendMediaGroupArgument;
   TtgCopyMessageArgument = TelegramBotApi.Types.AvailableMethods.TtgCopyMessageArgument;
+  TtgForwardMessageArgument = TelegramBotApi.Types.AvailableMethods.TtgForwardMessageArgument;
 {$ENDREGION}
 {$REGION 'TelegramBotApi.Types.Payments'}
   TtgSendInvoiceArgument = TelegramBotApi.Types.Payments.TtgSendInvoiceArgument;
