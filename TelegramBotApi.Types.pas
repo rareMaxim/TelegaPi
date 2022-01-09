@@ -988,8 +988,48 @@ type
 
   end;
 
+  /// <summary>
+  /// This object represents a shipping address.
+  /// </summary>
   TtgShippingAddress = class
-
+  private
+    [JsonName('country_code')]
+    FCountryCode: string;
+    [JsonName('state')]
+    FState: string;
+    [JsonName('city')]
+    FCity: string;
+    [JsonName('street_line1')]
+    FStreetLine1: string;
+    [JsonName('street_line2')]
+    FStreetLine2: string;
+    [JsonName('post_code')]
+    FPostCode: string;
+  public
+    /// <summary>
+    /// ISO 3166-1 alpha-2 country code
+    /// </summary>
+    property CountryCode: string read FCountryCode write FCountryCode;
+    /// <summary>
+    /// State, if applicable
+    /// </summary>
+    property State: string read FState write FState;
+    /// <summary>
+    /// City
+    /// </summary>
+    property City: string read FCity write FCity;
+    /// <summary>
+    /// First line for the address
+    /// </summary>
+    property StreetLine1: string read FStreetLine1 write FStreetLine1;
+    /// <summary>
+    /// Second line for the address
+    /// </summary>
+    property StreetLine2: string read FStreetLine2 write FStreetLine2;
+    /// <summary>
+    /// Address post code
+    /// </summary>
+    property PostCode: string read FPostCode write FPostCode;
   end;
 
   /// <summary>
@@ -999,11 +1039,11 @@ type
   private
     [JsonName('name')]
     FName: string;
-    [JsonName('shipping_address')]
     [JsonName('phone_number')]
     FPhoneNumber: string;
     [JsonName('email')]
     FEmail: string;
+    [JsonName('shipping_address')]
     FShippingAddress: TtgShippingAddress;
   public
     /// <summary>
