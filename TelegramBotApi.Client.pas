@@ -272,6 +272,12 @@ type
     /// Use this method to send invoices. On success, the sent Message is returned.
     /// </summary>
     function SendInvoice(ASendInvoiceArgument: TtgSendInvoiceArgument): ItgResponse<TtgMessage>;
+    /// <summary> If you sent an invoice requesting a shipping address and the
+    /// parameter is_flexible was specified, the Bot API will send an Update with a
+    /// shipping_query field to the bot. Use this method to reply to shipping queries.
+    /// On success, True is returned.
+    /// </summary>
+    function AnswerShippingQuery(AAnswerShippingQuery: TtgAnswerShippingQuery): ItgResponse<Boolean>;
 {$ENDREGION}
 {$REGION 'Updating messages'}
     /// <summary>
@@ -392,6 +398,11 @@ function TTelegramBotApi.AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCall
   : ItgResponse<Boolean>;
 begin
   TryInternalExecute<TtgAnswerCallbackQueryArgument, Boolean>(AAnswerCallbackQuery, Result);
+end;
+
+function TTelegramBotApi.AnswerShippingQuery(AAnswerShippingQuery: TtgAnswerShippingQuery): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgAnswerShippingQuery, Boolean>(AAnswerShippingQuery, Result);
 end;
 
 function TTelegramBotApi.Close: ItgResponse<Boolean>;

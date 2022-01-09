@@ -34,6 +34,32 @@ type
   end;
 
   /// <summary>
+  /// This object represents one shipping option.
+  /// </summary>
+  TtgShippingOption = class
+  private
+    [JsonName('title')]
+    FId: string;
+    [JsonName('title')]
+    FTitle: string;
+    [JsonName('prices')]
+    FPrices: TArray<TtgLabeledPrice>;
+  public
+    /// <summary>
+    /// Shipping option identifier
+    /// </summary>
+    property Id: string read FId write FId;
+    /// <summary>
+    /// Option title
+    /// </summary>
+    property Title: string read FTitle write FTitle;
+    /// <summary>
+    /// List of price portions
+    /// </summary>
+    property Prices: TArray<TtgLabeledPrice> read FPrices write FPrices;
+  end;
+
+  /// <summary>
   /// Use this method to send invoices. On success, the sent Message is returned.
   /// </summary>
   [caName('sendInvoice')]
@@ -44,7 +70,7 @@ type
     [caName('title')]
     [caIsRequaired]
     [caDefaultValueString('')]
-    fTitle: string;
+    FTitle: string;
     [caName('description')]
     [caIsRequaired]
     [caDefaultValueString('')]
@@ -119,7 +145,7 @@ type
     /// <summary>
     /// Product name, 1-32 characters
     /// </summary>
-    property Title: string read fTitle write fTitle;
+    property Title: string read FTitle write FTitle;
     /// <summary>
     /// Product description, 1-255 characters
     /// </summary>
@@ -239,6 +265,53 @@ type
     /// Protects the contents of the sent message from forwarding and saving
     /// </summary>
     property ProtectContent: Boolean read FProtectContent write FProtectContent;
+  end;
+
+  /// <summary> If you sent an invoice requesting a shipping address and the
+  /// parameter is_flexible was specified, the Bot API will send an Update with a
+  /// shipping_query field to the bot. Use this method to reply to shipping queries.
+  /// On success, True is returned.
+  /// </summary>
+  [caName('answerShippingQuery')]
+  [caMethod(TcaMethod.POST)]
+  [caParameterType(TcaParameterType.GetOrPost)]
+  TtgAnswerShippingQuery = class
+  private
+    [caName('shipping_query_id')]
+    [caIsRequaired]
+    [caDefaultValueString('')]
+    FShippingQueryId: string;
+    [caName('ok')]
+    [caIsRequaired]
+    [caDefaultValueBoolean(False)]
+    FOk: Boolean;
+    [caName('shipping_options')]
+    [caDefaultValueString('[]')]
+    FShippingOptions: TArray<TtgShippingOption>;
+    [caName('error_message')]
+    [caDefaultValueString('')]
+    FErrorMessage: string;
+  public
+    /// <summary>
+    /// Unique identifier for the query to be answered
+    /// </summary>
+    property ShippingQueryId: string read FShippingQueryId write FShippingQueryId;
+    /// <summary>
+    /// Specify True if delivery to the specified address is possible and False if
+    /// there are any problems (for example, if delivery to the specified address is
+    /// not possible)
+    /// </summary>
+    property Ok: Boolean read FOk write FOk;
+    /// <summary>
+    /// Required if ok is True. A JSON-serialized array of available shipping options.
+    /// </summary>
+    property ShippingOptions: TArray<TtgShippingOption> read FShippingOptions write FShippingOptions;
+    /// <summary>
+    /// Required if ok is False. Error message in human readable form that explains why
+    /// it is impossible to complete the order (e.g. "Sorry, delivery to your desired
+    /// address is unavailable'). Telegram will display this message to the user.
+    /// </summary>
+    property ErrorMessage: string read FErrorMessage write FErrorMessage;
   end;
 
 implementation
