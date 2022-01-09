@@ -988,8 +988,65 @@ type
 
   end;
 
-  TtgPreCheckoutQuery = class
+  /// <summary>
+  /// This object represents information about an order.
+  /// </summary>
+  TtgOrderInfo = class
+  private
+  public
+  end;
 
+  /// <summary>
+  /// This object contains information about an incoming pre-checkout query.
+  /// </summary>
+  TtgPreCheckoutQuery = class
+  private
+    [JsonName('id')]
+    FID: string;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('currency')]
+    FCurrency: string;
+    [JsonName('total_amount')]
+    FTotalAmount: Integer;
+    [JsonName('invoice_payload')]
+    FInvoicePayload: string;
+    [JsonName('shipping_option_id')]
+    FShippingOptionId: string;
+    [JsonName('order_info')]
+    FOrderInfo: TtgOrderInfo;
+  public
+    /// <summary>
+    /// Unique query identifier
+    /// </summary>
+    property ID: string read FID write FID;
+    /// <summary>
+    /// User who sent the query
+    /// </summary>
+    property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Three-letter ISO 4217 currency code
+    /// </summary>
+    property Currency: string read FCurrency write FCurrency;
+    /// <summary>
+    /// Total price in the smallest units of the currency (integer, not float/double).
+    /// For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter
+    /// in currencies.json, it shows the number of digits past the decimal point for
+    /// each currency (2 for the majority of currencies).
+    /// </summary>
+    property TotalAmount: Integer read FTotalAmount write FTotalAmount;
+    /// <summary>
+    /// Bot specified invoice payload
+    /// </summary>
+    property InvoicePayload: string read FInvoicePayload write FInvoicePayload;
+    /// <summary>
+    /// Optional. Identifier of the shipping option chosen by the user
+    /// </summary>
+    property ShippingOptionId: string read FShippingOptionId write FShippingOptionId;
+    /// <summary>
+    /// Optional. Order info provided by the user
+    /// </summary>
+    property OrderInfo: TtgOrderInfo read FOrderInfo write FOrderInfo;
   end;
 
   /// <summary>
