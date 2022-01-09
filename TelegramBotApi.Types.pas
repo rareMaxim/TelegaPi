@@ -988,12 +988,40 @@ type
 
   end;
 
+  TtgShippingAddress = class
+
+  end;
+
   /// <summary>
   /// This object represents information about an order.
   /// </summary>
   TtgOrderInfo = class
   private
+    [JsonName('name')]
+    FName: string;
+    [JsonName('shipping_address')]
+    [JsonName('phone_number')]
+    FPhoneNumber: string;
+    [JsonName('email')]
+    FEmail: string;
+    FShippingAddress: TtgShippingAddress;
   public
+    /// <summary>
+    /// Optional. User name
+    /// </summary>
+    property Name: string read FName write FName;
+    /// <summary>
+    /// Optional. User's phone number
+    /// </summary>
+    property PhoneNumber: string read FPhoneNumber write FPhoneNumber;
+    /// <summary>
+    /// Optional. User email
+    /// </summary>
+    property Email: string read FEmail write FEmail;
+    /// <summary>
+    /// Optional. User shipping address
+    /// </summary>
+    property ShippingAddress: TtgShippingAddress read FShippingAddress write FShippingAddress;
   end;
 
   /// <summary>
