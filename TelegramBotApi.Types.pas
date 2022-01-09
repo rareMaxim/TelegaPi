@@ -984,10 +984,6 @@ type
     property GameShortName: string read FGameShortName write FGameShortName;
   end;
 
-  TtgShippingQuery = class
-
-  end;
-
   /// <summary>
   /// This object represents a shipping address.
   /// </summary>
@@ -1030,6 +1026,38 @@ type
     /// Address post code
     /// </summary>
     property PostCode: string read FPostCode write FPostCode;
+  end;
+
+  /// <summary>
+  /// This object contains information about an incoming shipping query.
+  /// </summary>
+  TtgShippingQuery = class
+  private
+    [JsonName('id')]
+    FID: string;
+    [JsonName('from')]
+    FFrom: TtgUser;
+    [JsonName('invoice_payload')]
+    FInvoicePayload: string;
+    [JsonName('shipping_address')]
+    FShippingAddress: TtgShippingAddress;
+  public
+    /// <summary>
+    /// Unique query identifier
+    /// </summary>
+    property ID: string read FID write FID;
+    /// <summary>
+    /// User who sent the query
+    /// </summary>
+    property From: TtgUser read FFrom write FFrom;
+    /// <summary>
+    /// Bot specified invoice payload
+    /// </summary>
+    property InvoicePayload: string read FInvoicePayload write FInvoicePayload;
+    /// <summary>
+    /// User specified shipping address
+    /// </summary>
+    property ShippingAddress: TtgShippingAddress read FShippingAddress write FShippingAddress;
   end;
 
   /// <summary>
