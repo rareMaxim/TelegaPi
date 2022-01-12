@@ -6,7 +6,9 @@ uses
   System.Rtti,
   System.Generics.Collections,
   System.SysUtils,
-  TelegramBotApi.Types;
+  System.Json,
+  TelegramBotApi.Types,
+  TelegramBotApi.Client;
 
 type
   // Управление текущим состоянием пользователя
@@ -17,7 +19,7 @@ type
     FDefaultName: string;
   protected
     function DoGetUserState(const AUserID: Int64): string; virtual;
-    procedure DoSetUserState(const AIndex: Int64; const Value: string); virtual;
+    procedure DoSetUserState(const AUserID: Int64; const Value: string); virtual;
   public
     constructor Create; virtual;
     // имя "нулевого" маршрута
@@ -38,7 +40,20 @@ type
     FRouteUserStates: TDictionary<Int64, string>;
   protected
     function DoGetUserState(const AUserID: Int64): string; override;
-    procedure DoSetUserState(const AIndex: Int64; const Value: string); override;
+    procedure DoSetUserState(const AUserID: Int64; const Value: string); override;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+  end;
+
+  TtgRouteUserStateManagerJson = class(TtgRouteUserStateManagerAbstract)
+  const
+    DEFAULT_FILE = 'tg_routes.json';
+  private
+    FJson: TJSONValue;
+  protected
+    function DoGetUserState(const AUserID: Int64): string; override;
+    procedure DoSetUserState(const AUserID: Int64; const Value: string); override;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -54,6 +69,7 @@ type
     FTagInteger: Integer;
     FTagValue: TValue;
     FOnStopCallback: TProc<Int64>;
+    FBot: TTelegramBotApi;
     // protected
     procedure RouteStart(const AUserID: Int64);
     procedure RouteStop(const AUserID: Int64);
@@ -61,6 +77,7 @@ type
   public
     class function Create(const AName: string): TtgRoute; static;
     class function Empty: TtgRoute; static;
+
     function IsEmpty: Boolean;
     property TagString: string read FTagString write FTagString;
     property TagInteger: Integer read FTagInteger write FTagInteger;
@@ -74,6 +91,7 @@ type
     property OnMessageCallback: TProc<TtgMessage> read FOnMessageCallback write FOnMessageCallback;
     // вызывается при перемещении на следующую точку маршрута. Возможно, лишний колбек.
     property OnStopCallback: TProc<Int64> read FOnStopCallback write FOnStopCallback;
+    property Bot: TTelegramBotApi read FBot write FBot;
   end;
 
   // Управление маршрутами
@@ -84,12 +102,13 @@ type
     FOnRouteNotFound: TProc<Int64, string>;
     FCurrentRoute: TtgRoute;
     fOnRouteMove: TProc<Int64, TtgRoute, TtgRoute>;
+    FBot: TTelegramBotApi;
   protected
     procedure DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
     procedure DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
     procedure DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRoute);
   public
-    constructor Create(ARouteUserState: TtgRouteUserStateManagerAbstract);
+    constructor Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
     destructor Destroy; override;
     procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
     // регистрируем точку
@@ -105,9 +124,13 @@ type
     property OnRouteNotFound: TProc<Int64, string> read FOnRouteNotFound write FOnRouteNotFound;
     // при перемещении точки  UserID, From, To
     property OnRouteMove: TProc<Int64, TtgRoute, TtgRoute> read fOnRouteMove write fOnRouteMove;
+    property Bot: TTelegramBotApi read FBot;
   end;
 
 implementation
+
+uses
+  System.IOUtils;
 
 { TtgRouteUserStateManagerAbstract }
 
@@ -124,10 +147,10 @@ begin
   // Result := FDefaultName;
 end;
 
-procedure TtgRouteUserStateManagerAbstract.DoSetUserState(const AIndex: Int64; const Value: string);
+procedure TtgRouteUserStateManagerAbstract.DoSetUserState(const AUserID: Int64; const Value: string);
 begin
   if Assigned(OnSetUserStateCallback) then
-    OnSetUserStateCallback(AIndex, Value);
+    OnSetUserStateCallback(AUserID, Value);
 end;
 
 { TtgRouteUserStateManagerRAM }
@@ -152,10 +175,10 @@ begin
 
 end;
 
-procedure TtgRouteUserStateManagerRAM.DoSetUserState(const AIndex: Int64; const Value: string);
+procedure TtgRouteUserStateManagerRAM.DoSetUserState(const AUserID: Int64; const Value: string);
 begin
-  inherited DoSetUserState(AIndex, Value);
-  FRouteUserStates.AddOrSetValue(AIndex, Value);
+  inherited DoSetUserState(AUserID, Value);
+  FRouteUserStates.AddOrSetValue(AUserID, Value);
 end;
 
 { TtgRoute }
@@ -195,7 +218,7 @@ end;
 
 { TtgRouteManager }
 
-constructor TtgRouter.Create(ARouteUserState: TtgRouteUserStateManagerAbstract);
+constructor TtgRouter.Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
 begin
   FRoutes := TDictionary<string, TtgRoute>.Create;
   FRouteUserState := ARouteUserState;
@@ -244,6 +267,8 @@ end;
 
 procedure TtgRouter.RegisterRoute(ARoute: TtgRoute);
 begin
+  if ARoute.Bot = nil then
+    ARoute.Bot := FBot;
   FRoutes.AddOrSetValue(ARoute.Name, ARoute);
 end;
 
@@ -277,6 +302,51 @@ begin
     // raise Exception.Create('TtgRouteManager.SendMessage');
   end;
 
+end;
+
+{ TtgRouteUserStateManagerJson }
+
+constructor TtgRouteUserStateManagerJson.Create;
+var
+  LJsonValue: string;
+begin
+  inherited;
+  if TFile.Exists(DEFAULT_FILE) then
+    LJsonValue := TFile.ReadAllText(DEFAULT_FILE, TEncoding.UTF8)
+  else
+    LJsonValue := '{}';
+  FJson := TJSONObject.ParseJSONValue(LJsonValue) as TJSONValue;
+end;
+
+destructor TtgRouteUserStateManagerJson.Destroy;
+var
+  LJsonValue: string;
+begin
+  LJsonValue := FJson.Format();
+  TFile.WriteAllText(DEFAULT_FILE, LJsonValue, TEncoding.UTF8);
+  FJson.Free;
+  inherited;
+end;
+
+function TtgRouteUserStateManagerJson.DoGetUserState(const AUserID: Int64): string;
+var
+  LJsonValue: TJSONValue;
+begin
+  Result := FDefaultName;
+  LJsonValue := FJson.FindValue(AUserID.ToString);
+  if LJsonValue <> nil then
+    Result := LJsonValue.Value;
+end;
+
+procedure TtgRouteUserStateManagerJson.DoSetUserState(const AUserID: Int64; const Value: string);
+var
+  LJsonValue: TJSONValue;
+begin
+  inherited;
+  LJsonValue := FJson.FindValue(AUserID.ToString);
+  if LJsonValue <> nil then
+    (FJson as TJSONObject).RemovePair(AUserID.ToString);
+  (FJson as TJSONObject).AddPair(AUserID.ToString, Value)
 end;
 
 end.
