@@ -54,6 +54,8 @@ type
   protected
     function DoGetUserState(const AUserID: Int64): string; override;
     procedure DoSetUserState(const AUserID: Int64; const Value: string); override;
+    function LoadData: string;
+    procedure SaveState;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -63,6 +65,7 @@ type
   TtgRoute = record
   private
     FName: string;
+    FAutorunTriggers: TArray<string>;
     FOnStartCallback: TProc<Int64>;
     FOnMessageCallback: TProc<TtgMessage>;
     FTagString: string;
@@ -75,7 +78,7 @@ type
     procedure RouteStop(const AUserID: Int64);
     procedure SendMessage(AMessage: TtgMessage);
   public
-    class function Create(const AName: string): TtgRoute; static;
+    class function Create(const AName: string; AAutorunTriggers: TArray<string> = []): TtgRoute; static;
     class function Empty: TtgRoute; static;
 
     function IsEmpty: Boolean;
@@ -85,6 +88,7 @@ type
     // Имя точки.
     // Возможно, по имени точки будет происходить переход на нужныый маршрут
     property Name: string read FName write FName;
+    property AutorunTriggers: TArray<string> read FAutorunTriggers write FAutorunTriggers;
     // Отправляем побуждение к действию
     property OnStartCallback: TProc<Int64> read FOnStartCallback write FOnStartCallback;
     // Обрабатывапем ответ от пользователя
@@ -99,6 +103,7 @@ type
   private
     FRouteUserState: TtgRouteUserStateManagerAbstract;
     FRoutes: TDictionary<string, TtgRoute>;
+    FTriggerToRouteMap: TDictionary<string, string>;
     FOnRouteNotFound: TProc<Int64, string>;
     FCurrentRoute: TtgRoute;
     fOnRouteMove: TProc<Int64, TtgRoute, TtgRoute>;
@@ -107,10 +112,12 @@ type
     procedure DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
     procedure DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
     procedure DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRoute);
+    function DoCheckTriggerAndGotoIfFindThisFuckingTag(const AUserID: Int64; AMsg: string): Boolean;
   public
     constructor Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
     destructor Destroy; override;
-    procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
+    procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute); overload;
+    procedure MoveTo(const AUserID: Int64; const ARouteName: string); overload;
     // регистрируем точку
     procedure RegisterRoute(ARoute: TtgRoute);
     // регистрируем точки
@@ -172,7 +179,6 @@ begin
   // inherited DoGetUserState(AUserID);
   if not FRouteUserStates.TryGetValue(AUserID, Result) then
     Result := FDefaultName;
-
 end;
 
 procedure TtgRouteUserStateManagerRAM.DoSetUserState(const AUserID: Int64; const Value: string);
@@ -183,9 +189,10 @@ end;
 
 { TtgRoute }
 
-class function TtgRoute.Create(const AName: string): TtgRoute;
+class function TtgRoute.Create(const AName: string; AAutorunTriggers: TArray<string> = []): TtgRoute;
 begin
   Result.Name := AName;
+  Result.AutorunTriggers := AAutorunTriggers;
 end;
 
 class function TtgRoute.Empty: TtgRoute;
@@ -221,6 +228,7 @@ end;
 constructor TtgRouter.Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
 begin
   FRoutes := TDictionary<string, TtgRoute>.Create;
+  FTriggerToRouteMap := TDictionary<string, string>.Create;
   FRouteUserState := ARouteUserState;
   FCurrentRoute := TtgRoute.Empty;
 end;
@@ -228,6 +236,7 @@ end;
 destructor TtgRouter.Destroy;
 begin
   FRoutes.Free;
+  FTriggerToRouteMap.Free;
   inherited;
 end;
 
@@ -235,6 +244,22 @@ procedure TtgRouter.DoCheckRouteIsExist(const AId: Int64; const ARouteName: stri
 begin
   if not FRoutes.ContainsKey(ARouteName) then
     DoNotifyRouteNotFound(AId, ARouteName);
+end;
+
+function TtgRouter.DoCheckTriggerAndGotoIfFindThisFuckingTag(const AUserID: Int64; AMsg: string): Boolean;
+var
+  lRouteName: string;
+  lRoute: TtgRoute;
+begin
+  Result := FRoutes.TryGetValue(AMsg, lRoute);
+  if Result then
+  begin
+    MoveTo(AUserID, lRoute);
+    Exit;
+  end;
+  Result := FTriggerToRouteMap.TryGetValue(AMsg, lRouteName);
+  if Result then
+    MoveTo(AUserID, lRouteName);
 end;
 
 procedure TtgRouter.DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
@@ -249,6 +274,16 @@ procedure TtgRouter.DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRou
 begin
   if Assigned(OnRouteMove) then
     OnRouteMove(AUserID, AFrom, ATo);
+end;
+
+procedure TtgRouter.MoveTo(const AUserID: Int64; const ARouteName: string);
+var
+  lRoute: TtgRoute;
+begin
+  if FRoutes.TryGetValue(ARouteName, lRoute) then
+    MoveTo(AUserID, lRoute)
+  else
+    raise EArgumentNilException.CreateFmt('Route [%s] not found', [ARouteName]);
 end;
 
 procedure TtgRouter.MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
@@ -266,10 +301,14 @@ begin
 end;
 
 procedure TtgRouter.RegisterRoute(ARoute: TtgRoute);
+var
+  LTrigger: string;
 begin
   if ARoute.Bot = nil then
     ARoute.Bot := FBot;
   FRoutes.AddOrSetValue(ARoute.Name, ARoute);
+  for LTrigger in ARoute.AutorunTriggers do
+    FTriggerToRouteMap.AddOrSetValue(LTrigger, ARoute.Name);
 end;
 
 procedure TtgRouter.RegisterRoutes(ARoutes: TArray<TtgRoute>);
@@ -282,26 +321,19 @@ end;
 
 procedure TtgRouter.SendMessage(AMessage: TtgMessage);
 var
-  LRoute: TtgRoute;
+  lRoute: TtgRoute;
   lCurrentUserID: Int64;
   LCurrentState: string;
 begin
   lCurrentUserID := AMessage.From.ID;
+
+  if DoCheckTriggerAndGotoIfFindThisFuckingTag(lCurrentUserID, AMessage.Text) then;
   LCurrentState := FRouteUserState.UserState[lCurrentUserID];
   DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
-  if FRoutes.TryGetValue(LCurrentState, LRoute) then
+  if FRoutes.TryGetValue(LCurrentState, lRoute) then
   begin
-    // if LRoute.Name <> FCurrentRoute.Name then
-    // begin
-    // FCurrentRoute := LRoute;
-    // FCurrentRoute.RouteStart(AMessage)
-    // end
-    // else if LRoute.Name = FCurrentRoute.Name then
-    LRoute.SendMessage(AMessage)
-    // else
-    // raise Exception.Create('TtgRouteManager.SendMessage');
+    lRoute.SendMessage(AMessage)
   end;
-
 end;
 
 { TtgRouteUserStateManagerJson }
@@ -311,19 +343,13 @@ var
   LJsonValue: string;
 begin
   inherited;
-  if TFile.Exists(DEFAULT_FILE) then
-    LJsonValue := TFile.ReadAllText(DEFAULT_FILE, TEncoding.UTF8)
-  else
-    LJsonValue := '{}';
+  LJsonValue := LoadData;
   FJson := TJSONObject.ParseJSONValue(LJsonValue) as TJSONValue;
 end;
 
 destructor TtgRouteUserStateManagerJson.Destroy;
-var
-  LJsonValue: string;
 begin
-  LJsonValue := FJson.Format();
-  TFile.WriteAllText(DEFAULT_FILE, LJsonValue, TEncoding.UTF8);
+  SaveState;
   FJson.Free;
   inherited;
 end;
@@ -346,7 +372,24 @@ begin
   LJsonValue := FJson.FindValue(AUserID.ToString);
   if LJsonValue <> nil then
     (FJson as TJSONObject).RemovePair(AUserID.ToString);
-  (FJson as TJSONObject).AddPair(AUserID.ToString, Value)
+  (FJson as TJSONObject).AddPair(AUserID.ToString, Value);
+  SaveState;
+end;
+
+function TtgRouteUserStateManagerJson.LoadData: string;
+begin
+  if TFile.Exists(DEFAULT_FILE) then
+    Result := TFile.ReadAllText(DEFAULT_FILE, TEncoding.UTF8)
+  else
+    Result := '{}';
+end;
+
+procedure TtgRouteUserStateManagerJson.SaveState;
+var
+  LJsonValue: string;
+begin
+  LJsonValue := FJson.Format();
+  TFile.WriteAllText(DEFAULT_FILE, LJsonValue, TEncoding.UTF8);
 end;
 
 end.

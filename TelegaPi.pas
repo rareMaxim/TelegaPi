@@ -53,6 +53,7 @@ type
 {$ENDREGION}
 {$REGION 'TelegramBotApi.Types'}
   TtgMessage = TelegramBotApi.Types.TtgMessage;
+  TtgUpdate = TelegramBotApi.Types.TtgUpdate;
 {$ENDREGION}
   TtgParseMode = TelegramBotApi.Types.Enums.TtgParseMode;
   TtgMessageType = TelegramBotApi.Types.Enums.TtgMessageType;
