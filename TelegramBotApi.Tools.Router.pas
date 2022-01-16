@@ -66,21 +66,22 @@ type
   private
     FName: string;
     FAutorunTriggers: TArray<string>;
-    FOnStartCallback: TProc<Int64>;
+    FOnStartCallback: TProc<Int64, TtgMessage>;
     FOnMessageCallback: TProc<TtgMessage>;
     FTagString: string;
     FTagInteger: Integer;
     FTagValue: TValue;
     FOnStopCallback: TProc<Int64>;
     FBot: TTelegramBotApi;
+    FMessage: TtgMessage;
     // protected
-    procedure RouteStart(const AUserID: Int64);
+    procedure RouteStart(const AUserID: Int64; AMessage: TtgMessage);
     procedure RouteStop(const AUserID: Int64);
     procedure SendMessage(AMessage: TtgMessage);
   public
     class function Create(const AName: string; AAutorunTriggers: TArray<string> = []): TtgRoute; static;
     class function Empty: TtgRoute; static;
-
+    property Message: TtgMessage read FMessage write FMessage;
     function IsEmpty: Boolean;
     property TagString: string read FTagString write FTagString;
     property TagInteger: Integer read FTagInteger write FTagInteger;
@@ -90,7 +91,7 @@ type
     property Name: string read FName write FName;
     property AutorunTriggers: TArray<string> read FAutorunTriggers write FAutorunTriggers;
     // Отправляем побуждение к действию
-    property OnStartCallback: TProc<Int64> read FOnStartCallback write FOnStartCallback;
+    property OnStartCallback: TProc<Int64, TtgMessage> read FOnStartCallback write FOnStartCallback;
     // Обрабатывапем ответ от пользователя
     property OnMessageCallback: TProc<TtgMessage> read FOnMessageCallback write FOnMessageCallback;
     // вызывается при перемещении на следующую точку маршрута. Возможно, лишний колбек.
@@ -112,12 +113,12 @@ type
     procedure DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
     procedure DoCheckRouteIsExist(const AId: Int64; const ARouteName: string);
     procedure DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRoute);
-    function DoCheckTriggerAndGotoIfFindThisFuckingTag(const AUserID: Int64; AMsg: string): Boolean;
+    function DoCheckTrigger(const AUserID: Int64; AMsg: TtgMessage; var ARouteName: string): Boolean;
   public
     constructor Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
     destructor Destroy; override;
-    procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute); overload;
-    procedure MoveTo(const AUserID: Int64; const ARouteName: string); overload;
+    procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute; AMessage: TtgMessage); overload;
+    procedure MoveTo(const AUserID: Int64; const ARouteName: string; AMessage: TtgMessage); overload;
     // регистрируем точку
     procedure RegisterRoute(ARoute: TtgRoute);
     // регистрируем точки
@@ -205,10 +206,10 @@ begin
   Result := FName.IsEmpty;
 end;
 
-procedure TtgRoute.RouteStart(const AUserID: Int64);
+procedure TtgRoute.RouteStart(const AUserID: Int64; AMessage: TtgMessage);
 begin
   if Assigned(OnStartCallback) then
-    OnStartCallback(AUserID);
+    OnStartCallback(AUserID, AMessage);
 end;
 
 procedure TtgRoute.RouteStop(const AUserID: Int64);
@@ -246,20 +247,17 @@ begin
     DoNotifyRouteNotFound(AId, ARouteName);
 end;
 
-function TtgRouter.DoCheckTriggerAndGotoIfFindThisFuckingTag(const AUserID: Int64; AMsg: string): Boolean;
+function TtgRouter.DoCheckTrigger(const AUserID: Int64; AMsg: TtgMessage; var ARouteName: string): Boolean;
 var
-  lRouteName: string;
   lRoute: TtgRoute;
 begin
-  Result := FRoutes.TryGetValue(AMsg, lRoute);
+  Result := FRoutes.TryGetValue(AMsg.Text, lRoute);
   if Result then
   begin
-    MoveTo(AUserID, lRoute);
+    ARouteName := lRoute.Name;
     Exit;
   end;
-  Result := FTriggerToRouteMap.TryGetValue(AMsg, lRouteName);
-  if Result then
-    MoveTo(AUserID, lRouteName);
+  Result := FTriggerToRouteMap.TryGetValue(AMsg.Text, ARouteName);
 end;
 
 procedure TtgRouter.DoNotifyRouteNotFound(const AId: Int64; const ARouteName: string);
@@ -276,17 +274,17 @@ begin
     OnRouteMove(AUserID, AFrom, ATo);
 end;
 
-procedure TtgRouter.MoveTo(const AUserID: Int64; const ARouteName: string);
+procedure TtgRouter.MoveTo(const AUserID: Int64; const ARouteName: string; AMessage: TtgMessage);
 var
   lRoute: TtgRoute;
 begin
   if FRoutes.TryGetValue(ARouteName, lRoute) then
-    MoveTo(AUserID, lRoute)
+    MoveTo(AUserID, lRoute, AMessage)
   else
     raise EArgumentNilException.CreateFmt('Route [%s] not found', [ARouteName]);
 end;
 
-procedure TtgRouter.MoveTo(const AUserID: Int64; const ARoute: TtgRoute);
+procedure TtgRouter.MoveTo(const AUserID: Int64; const ARoute: TtgRoute; AMessage: TtgMessage);
 var
   LCurrentRoute: TtgRoute;
 begin
@@ -296,7 +294,7 @@ begin
       LCurrentRoute.RouteStop(AUserID);
   end;
   FRouteUserState.UserState[AUserID] := ARoute.Name;
-  ARoute.RouteStart(AUserID);
+  ARoute.RouteStart(AUserID, AMessage);
   DoOnRouteMove(AUserID, LCurrentRoute, ARoute);
 end;
 
@@ -322,12 +320,16 @@ end;
 procedure TtgRouter.SendMessage(AMessage: TtgMessage);
 var
   lRoute: TtgRoute;
+  lRouteName: string;
   lCurrentUserID: Int64;
   LCurrentState: string;
 begin
   lCurrentUserID := AMessage.From.ID;
-
-  if DoCheckTriggerAndGotoIfFindThisFuckingTag(lCurrentUserID, AMessage.Text) then;
+  if DoCheckTrigger(lCurrentUserID, AMessage, lRouteName) then
+  begin
+    MoveTo(lCurrentUserID, lRouteName, AMessage);
+    Exit;
+  end;
   LCurrentState := FRouteUserState.UserState[lCurrentUserID];
   DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
   if FRoutes.TryGetValue(LCurrentState, lRoute) then
