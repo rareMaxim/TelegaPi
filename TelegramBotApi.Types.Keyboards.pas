@@ -19,6 +19,7 @@ type
     function GetKeyboard: TArray<TArray<TtgButton>>; virtual; abstract;
     procedure SetKeyboard(AKeyboard: TArray < TArray < TtgButton >> ); virtual; abstract;
   public
+    constructor Create; virtual;
     procedure Clear;
     function RowCount: Integer; virtual;
     function ButtonsCount(const ARow: Integer): Integer; virtual;
@@ -143,7 +144,7 @@ type
     function GetKeyboard: TArray<TArray<TtgKeyboardButton>>; override;
     procedure SetKeyboard(AKeyboard: TArray < TArray < TtgKeyboardButton >> ); override;
   public
-    constructor Create;
+    constructor Create; override;
     function AddButtonPool: TtgKeyboardButtonPool;
     /// <summary>
     /// Array of button rows, each represented by an Array of KeyboardButton objects
@@ -445,6 +446,7 @@ end;
 
 constructor TtgReplyKeyboardMarkup.Create;
 begin
+  inherited Create;
   FResizeKeyboard := True;
 end;
 
@@ -506,6 +508,11 @@ begin
       lKb[I, J].Free;
   lKb := nil;
   SetKeyboard(lKb);
+end;
+
+constructor TtgKeyboardAbstract<TtgButton>.Create;
+begin
+  AddRow;
 end;
 
 function TtgKeyboardAbstract<TtgButton>.GetButton(const ARow, ACol: Integer): TtgButton;
