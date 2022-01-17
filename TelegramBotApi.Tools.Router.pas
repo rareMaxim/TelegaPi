@@ -8,7 +8,8 @@ uses
   System.SysUtils,
   System.Json,
   TelegramBotApi.Types,
-  TelegramBotApi.Client;
+  TelegramBotApi.Client,
+  TelegramBotApi.Tools.UserDataStorage;
 
 type
   // Управление текущим состоянием пользователя
@@ -37,7 +38,7 @@ type
   // Потом написать класс для хранения состояний в БД что бы не переживать за аварийное завершение бота
   TtgRouteUserStateManagerRAM = class(TtgRouteUserStateManagerAbstract)
   private
-    FRouteUserStates: TDictionary<Int64, string>;
+    FRouteUserStates: TtgUserDataStorageRAM;
   protected
     function DoGetUserState(const AUserID: Int64): string; override;
     procedure DoSetUserState(const AUserID: Int64; const Value: string); override;
@@ -74,10 +75,12 @@ type
     FOnStopCallback: TProc<Int64>;
     FBot: TTelegramBotApi;
     FMessage: TtgMessage;
+    FOnCallbackQuery: TProc<TtgCallbackQuery>;
     // protected
     procedure RouteStart(const AUserID: Int64; AMessage: TtgMessage);
     procedure RouteStop(const AUserID: Int64);
     procedure SendMessage(AMessage: TtgMessage);
+    procedure SendCallbackQuery(AQuery: TtgCallbackQuery);
   public
     class function Create(const AName: string; AAutorunTriggers: TArray<string> = []): TtgRoute; static;
     class function Empty: TtgRoute; static;
@@ -94,6 +97,7 @@ type
     property OnStartCallback: TProc<Int64, TtgMessage> read FOnStartCallback write FOnStartCallback;
     // Обрабатывапем ответ от пользователя
     property OnMessageCallback: TProc<TtgMessage> read FOnMessageCallback write FOnMessageCallback;
+    property OnCallbackQuery: TProc<TtgCallbackQuery> read FOnCallbackQuery write FOnCallbackQuery;
     // вызывается при перемещении на следующую точку маршрута. Возможно, лишний колбек.
     property OnStopCallback: TProc<Int64> read FOnStopCallback write FOnStopCallback;
     property Bot: TTelegramBotApi read FBot write FBot;
@@ -125,6 +129,8 @@ type
     procedure RegisterRoutes(ARoutes: TArray<TtgRoute>);
     // Уведомляем маршрутизатор о новом сообщении
     procedure SendMessage(AMessage: TtgMessage);
+    procedure SendCallbackQuery(AQuery: TtgCallbackQuery);
+
     // property Routes: TDictionary<string, TtgRoute> read FRoutes write FRoutes;
     // Доступ к состояниям пользователей
     property RouteUserState: TtgRouteUserStateManagerAbstract read FRouteUserState write FRouteUserState;
@@ -166,7 +172,7 @@ end;
 constructor TtgRouteUserStateManagerRAM.Create;
 begin
   inherited Create();
-  FRouteUserStates := TDictionary<Int64, string>.Create;
+  FRouteUserStates := TtgUserDataStorageRAM.Create;
 end;
 
 destructor TtgRouteUserStateManagerRAM.Destroy;
@@ -178,14 +184,15 @@ end;
 function TtgRouteUserStateManagerRAM.DoGetUserState(const AUserID: Int64): string;
 begin
   // inherited DoGetUserState(AUserID);
-  if not FRouteUserStates.TryGetValue(AUserID, Result) then
+  Result := FRouteUserStates[AUserID, 'state'];
+  if Result.IsEmpty then
     Result := FDefaultName;
 end;
 
 procedure TtgRouteUserStateManagerRAM.DoSetUserState(const AUserID: Int64; const Value: string);
 begin
   inherited DoSetUserState(AUserID, Value);
-  FRouteUserStates.AddOrSetValue(AUserID, Value);
+  FRouteUserStates[AUserID, 'state'] := Value;
 end;
 
 { TtgRoute }
@@ -216,6 +223,12 @@ procedure TtgRoute.RouteStop(const AUserID: Int64);
 begin
   if Assigned(OnStopCallback) then
     OnStopCallback(AUserID);
+end;
+
+procedure TtgRoute.SendCallbackQuery(AQuery: TtgCallbackQuery);
+begin
+  if Assigned(OnCallbackQuery) then
+    OnCallbackQuery(AQuery);
 end;
 
 procedure TtgRoute.SendMessage(AMessage: TtgMessage);
@@ -315,6 +328,21 @@ var
 begin
   for I := Low(ARoutes) to High(ARoutes) do
     RegisterRoute(ARoutes[I]);
+end;
+
+procedure TtgRouter.SendCallbackQuery(AQuery: TtgCallbackQuery);
+var
+  lRoute: TtgRoute;
+  lCurrentUserID: Int64;
+  LCurrentState: string;
+begin
+  lCurrentUserID := AQuery.From.ID;
+  LCurrentState := FRouteUserState.UserState[lCurrentUserID];
+  DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
+  if FRoutes.TryGetValue(LCurrentState, lRoute) then
+  begin
+    lRoute.SendCallbackQuery(AQuery)
+  end;
 end;
 
 procedure TtgRouter.SendMessage(AMessage: TtgMessage);

@@ -22,7 +22,8 @@ type
   protected
     procedure Go;
   public
-    constructor Create;
+    constructor Create; overload;
+    constructor Create(ABot: TTelegramBotApi); overload;
     procedure Start; virtual;
     procedure Stop;
     destructor Destroy; override;
@@ -50,6 +51,12 @@ begin
   FAllowedUpdates := UPDATES_ALLOWED_ALL;
   FLimit := 100;
   FPollingInterval := 1000;
+end;
+
+constructor TtgPollingBase.Create(ABot: TTelegramBotApi);
+begin
+  Self.Create;
+  FBot := ABot;
 end;
 
 destructor TtgPollingBase.Destroy;
