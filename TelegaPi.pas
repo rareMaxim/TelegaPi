@@ -68,7 +68,6 @@ type
   TtgKeyboardBuilder = TelegramBotApi.Types.Keyboards.TtgKeyboardBuilder;
   TtgRoute = TelegramBotApi.Tools.Router.TtgRoute;
   TtgRouter = TelegramBotApi.Tools.Router.TtgRouter;
-  TtgRouteUserStateManagerRAM = TelegramBotApi.Tools.Router.TtgRouteUserStateManagerRAM;
   TtgCalendarControl = TelegramBotApi.Ext.Calendar.TtgCalendarControl;
 
 implementation

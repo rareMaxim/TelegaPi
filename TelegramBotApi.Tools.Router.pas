@@ -9,59 +9,10 @@ uses
   System.Json,
   TelegramBotApi.Types,
   TelegramBotApi.Client,
-  TelegramBotApi.Tools.UserDataStorage;
+  TelegramBotApi.Tools.UserDataStorage.Json,
+  TelegramBotApi.Tools.UserDataStorage.Abstract;
 
 type
-  // Управление текущим состоянием пользователя
-  TtgRouteUserStateManagerAbstract = class abstract
-  private
-    FOnGetUserStateCallback: TFunc<Int64, string>;
-    FOnSetUserStateCallback: TProc<Int64, string>;
-    FDefaultName: string;
-  protected
-    function DoGetUserState(const AUserID: Int64): string; virtual;
-    procedure DoSetUserState(const AUserID: Int64; const Value: string); virtual;
-  public
-    constructor Create; virtual;
-    // имя "нулевого" маршрута
-    property DefaultName: string read FDefaultName write FDefaultName;
-    // Класс запрашивает из сторонего хранилища состояние пользователя по ИД пользователя
-    property OnGetUserStateCallback: TFunc<Int64, string> read FOnGetUserStateCallback write FOnGetUserStateCallback;
-    // класс сообщает что для пользователя установлено новое состояние
-    property OnSetUserStateCallback: TProc<Int64, string> read FOnSetUserStateCallback write FOnSetUserStateCallback;
-    // Чтение/Запись состояний
-    property UserState[const AIndex: Int64]: string read DoGetUserState write DoSetUserState;
-  end;
-
-  // Хранение состояний в ОЗУ. Для начала неплохой вариант.
-  // Не забывать сохранять/загружать актуальные состояния в постоянную память (на диск)
-  // Потом написать класс для хранения состояний в БД что бы не переживать за аварийное завершение бота
-  TtgRouteUserStateManagerRAM = class(TtgRouteUserStateManagerAbstract)
-  private
-    FRouteUserStates: TtgUserDataStorageRAM;
-  protected
-    function DoGetUserState(const AUserID: Int64): string; override;
-    procedure DoSetUserState(const AUserID: Int64; const Value: string); override;
-  public
-    constructor Create; override;
-    destructor Destroy; override;
-  end;
-
-  TtgRouteUserStateManagerJson = class(TtgRouteUserStateManagerAbstract)
-  const
-    DEFAULT_FILE = 'tg_routes.json';
-  private
-    FJson: TJSONValue;
-  protected
-    function DoGetUserState(const AUserID: Int64): string; override;
-    procedure DoSetUserState(const AUserID: Int64; const Value: string); override;
-    function LoadData: string;
-    procedure SaveState;
-  public
-    constructor Create; override;
-    destructor Destroy; override;
-  end;
-
   // Точка маршрута
   TtgRoute = record
   private
@@ -105,8 +56,10 @@ type
 
   // Управление маршрутами
   TtgRouter = class
+  private const
+    ROUTE_NAME = 'route_name';
   private
-    FRouteUserState: TtgRouteUserStateManagerAbstract;
+    FRouteUserState: TtgUserDataStorageAbstract;
     FRoutes: TDictionary<string, TtgRoute>;
     FTriggerToRouteMap: TDictionary<string, string>;
     FOnRouteNotFound: TProc<Int64, string>;
@@ -119,7 +72,7 @@ type
     procedure DoOnRouteMove(const AUserID: Int64; const AFrom, ATo: TtgRoute);
     function DoCheckTrigger(const AUserID: Int64; AMsg: TtgMessage; var ARouteName: string): Boolean;
   public
-    constructor Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
+    constructor Create(ARouteUserState: TtgUserDataStorageAbstract; ABot: TTelegramBotApi);
     destructor Destroy; override;
     procedure MoveTo(const AUserID: Int64; const ARoute: TtgRoute; AMessage: TtgMessage); overload;
     procedure MoveTo(const AUserID: Int64; const ARouteName: string; AMessage: TtgMessage); overload;
@@ -133,7 +86,7 @@ type
 
     // property Routes: TDictionary<string, TtgRoute> read FRoutes write FRoutes;
     // Доступ к состояниям пользователей
-    property RouteUserState: TtgRouteUserStateManagerAbstract read FRouteUserState write FRouteUserState;
+    property RouteUserState: TtgUserDataStorageAbstract read FRouteUserState write FRouteUserState;
     // Колбек перехода на несуществующий маршрут
     property OnRouteNotFound: TProc<Int64, string> read FOnRouteNotFound write FOnRouteNotFound;
     // при перемещении точки  UserID, From, To
@@ -145,55 +98,6 @@ implementation
 
 uses
   System.IOUtils;
-
-{ TtgRouteUserStateManagerAbstract }
-
-constructor TtgRouteUserStateManagerAbstract.Create;
-begin
-  FDefaultName := '/start';
-end;
-
-function TtgRouteUserStateManagerAbstract.DoGetUserState(const AUserID: Int64): string;
-begin
-  if Assigned(FOnGetUserStateCallback) then
-    Result := FOnGetUserStateCallback(AUserID);
-  // if Result.IsEmpty then
-  // Result := FDefaultName;
-end;
-
-procedure TtgRouteUserStateManagerAbstract.DoSetUserState(const AUserID: Int64; const Value: string);
-begin
-  if Assigned(OnSetUserStateCallback) then
-    OnSetUserStateCallback(AUserID, Value);
-end;
-
-{ TtgRouteUserStateManagerRAM }
-
-constructor TtgRouteUserStateManagerRAM.Create;
-begin
-  inherited Create();
-  FRouteUserStates := TtgUserDataStorageRAM.Create;
-end;
-
-destructor TtgRouteUserStateManagerRAM.Destroy;
-begin
-  FRouteUserStates.Free;
-  inherited Destroy;
-end;
-
-function TtgRouteUserStateManagerRAM.DoGetUserState(const AUserID: Int64): string;
-begin
-  // inherited DoGetUserState(AUserID);
-  Result := FRouteUserStates[AUserID, 'state'];
-  if Result.IsEmpty then
-    Result := FDefaultName;
-end;
-
-procedure TtgRouteUserStateManagerRAM.DoSetUserState(const AUserID: Int64; const Value: string);
-begin
-  inherited DoSetUserState(AUserID, Value);
-  FRouteUserStates[AUserID, 'state'] := Value;
-end;
 
 { TtgRoute }
 
@@ -239,7 +143,7 @@ end;
 
 { TtgRouteManager }
 
-constructor TtgRouter.Create(ARouteUserState: TtgRouteUserStateManagerAbstract; ABot: TTelegramBotApi);
+constructor TtgRouter.Create(ARouteUserState: TtgUserDataStorageAbstract; ABot: TTelegramBotApi);
 begin
   FRoutes := TDictionary<string, TtgRoute>.Create;
   FTriggerToRouteMap := TDictionary<string, string>.Create;
@@ -301,12 +205,12 @@ procedure TtgRouter.MoveTo(const AUserID: Int64; const ARoute: TtgRoute; AMessag
 var
   LCurrentRoute: TtgRoute;
 begin
-  if FRouteUserState.UserState[AUserID] <> ARoute.Name then
+  if FRouteUserState[AUserID, ROUTE_NAME] <> ARoute.Name then
   begin
-    if FRoutes.TryGetValue(FRouteUserState.UserState[AUserID], LCurrentRoute) then
+    if FRoutes.TryGetValue(FRouteUserState[AUserID, ROUTE_NAME], LCurrentRoute) then
       LCurrentRoute.RouteStop(AUserID);
   end;
-  FRouteUserState.UserState[AUserID] := ARoute.Name;
+  FRouteUserState[AUserID, ROUTE_NAME] := ARoute.Name;
   ARoute.RouteStart(AUserID, AMessage);
   DoOnRouteMove(AUserID, LCurrentRoute, ARoute);
 end;
@@ -337,7 +241,7 @@ var
   LCurrentState: string;
 begin
   lCurrentUserID := AQuery.From.ID;
-  LCurrentState := FRouteUserState.UserState[lCurrentUserID];
+  LCurrentState := FRouteUserState[lCurrentUserID, ROUTE_NAME];
   DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
   if FRoutes.TryGetValue(LCurrentState, lRoute) then
   begin
@@ -358,68 +262,12 @@ begin
     MoveTo(lCurrentUserID, lRouteName, AMessage);
     Exit;
   end;
-  LCurrentState := FRouteUserState.UserState[lCurrentUserID];
+  LCurrentState := FRouteUserState[lCurrentUserID, ROUTE_NAME];
   DoCheckRouteIsExist(lCurrentUserID, LCurrentState);
   if FRoutes.TryGetValue(LCurrentState, lRoute) then
   begin
     lRoute.SendMessage(AMessage)
   end;
-end;
-
-{ TtgRouteUserStateManagerJson }
-
-constructor TtgRouteUserStateManagerJson.Create;
-var
-  LJsonValue: string;
-begin
-  inherited;
-  LJsonValue := LoadData;
-  FJson := TJSONObject.ParseJSONValue(LJsonValue) as TJSONValue;
-end;
-
-destructor TtgRouteUserStateManagerJson.Destroy;
-begin
-  SaveState;
-  FJson.Free;
-  inherited;
-end;
-
-function TtgRouteUserStateManagerJson.DoGetUserState(const AUserID: Int64): string;
-var
-  LJsonValue: TJSONValue;
-begin
-  Result := FDefaultName;
-  LJsonValue := FJson.FindValue(AUserID.ToString);
-  if LJsonValue <> nil then
-    Result := LJsonValue.Value;
-end;
-
-procedure TtgRouteUserStateManagerJson.DoSetUserState(const AUserID: Int64; const Value: string);
-var
-  LJsonValue: TJSONValue;
-begin
-  inherited;
-  LJsonValue := FJson.FindValue(AUserID.ToString);
-  if LJsonValue <> nil then
-    (FJson as TJSONObject).RemovePair(AUserID.ToString);
-  (FJson as TJSONObject).AddPair(AUserID.ToString, Value);
-  SaveState;
-end;
-
-function TtgRouteUserStateManagerJson.LoadData: string;
-begin
-  if TFile.Exists(DEFAULT_FILE) then
-    Result := TFile.ReadAllText(DEFAULT_FILE, TEncoding.UTF8)
-  else
-    Result := '{}';
-end;
-
-procedure TtgRouteUserStateManagerJson.SaveState;
-var
-  LJsonValue: string;
-begin
-  LJsonValue := FJson.Format();
-  TFile.WriteAllText(DEFAULT_FILE, LJsonValue, TEncoding.UTF8);
 end;
 
 end.

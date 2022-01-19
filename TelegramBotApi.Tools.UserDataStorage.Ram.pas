@@ -1,27 +1,22 @@
-unit TelegramBotApi.Tools.UserDataStorage;
+unit TelegramBotApi.Tools.UserDataStorage.Ram;
 
 interface
 
 uses
-  System.Generics.Collections;
+  System.Generics.Collections,
+  TelegramBotApi.Tools.UserDataStorage.Abstract;
 
 type
-  TtgUserDataStorageAbstract = class abstract
-  protected
-    function GetData(const AID: Int64; const AKey: string): string; virtual; abstract;
-    procedure SetData(const AID: Int64; const AKey, Value: string); virtual; abstract;
-  public
-    property Data[const AID: Int64; const AKey: string]: string read GetData write SetData; default;
-  end;
 
-  TtgUserDataStorageRAM = class(TtgUserDataStorageAbstract)
-  private
-    FData: TDictionary<Int64, TDictionary<string, string>>;
+  TtgUserDataStorage = class(TtgUserDataStorageAbstract)
+  protected type
+    TData = TDictionary<Int64, TDictionary<string, string>>;
   protected
+    FData: TData;
     function GetData(const AID: Int64; const AKey: string): string; override;
     procedure SetData(const AID: Int64; const AKey: string; const Value: string); override;
   public
-    constructor Create;
+    constructor Create; virtual;
     destructor Destroy; override;
   end;
 
@@ -29,18 +24,18 @@ implementation
 
 { TtgUserDataStorageRAM }
 
-constructor TtgUserDataStorageRAM.Create;
+constructor TtgUserDataStorage.Create;
 begin
   FData := TObjectDictionary < Int64, TDictionary < string, string >>.Create;
 end;
 
-destructor TtgUserDataStorageRAM.Destroy;
+destructor TtgUserDataStorage.Destroy;
 begin
   FData.Free;
   inherited;
 end;
 
-function TtgUserDataStorageRAM.GetData(const AID: Int64; const AKey: string): string;
+function TtgUserDataStorage.GetData(const AID: Int64; const AKey: string): string;
 var
   LData: TDictionary<string, string>;
 begin
@@ -56,7 +51,7 @@ begin
   end;
 end;
 
-procedure TtgUserDataStorageRAM.SetData(const AID: Int64; const AKey, Value: string);
+procedure TtgUserDataStorage.SetData(const AID: Int64; const AKey, Value: string);
 var
   LData: TDictionary<string, string>;
 begin
