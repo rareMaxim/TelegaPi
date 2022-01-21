@@ -16,13 +16,20 @@ type
     function GetData(const AID: Int64; const AKey: string): string; override;
     procedure SetData(const AID: Int64; const AKey: string; const Value: string); override;
   public
+    function Count: Integer;
     constructor Create; virtual;
     destructor Destroy; override;
+    function GetUsers: TArray<Int64>;
   end;
 
 implementation
 
 { TtgUserDataStorageRAM }
+
+function TtgUserDataStorage.Count: Integer;
+begin
+  Result := FData.Count;
+end;
 
 constructor TtgUserDataStorage.Create;
 begin
@@ -49,6 +56,12 @@ begin
   begin
     LData.AddOrSetValue(AKey, Result);
   end;
+end;
+
+function TtgUserDataStorage.GetUsers: TArray<Int64>;
+begin
+  for var LUser in FData do
+    Result := Result + [LUser.Key];
 end;
 
 procedure TtgUserDataStorage.SetData(const AID: Int64; const AKey, Value: string);
