@@ -671,11 +671,73 @@ type
     property OptionIDs: TArray<Integer> read FOptionIDs write FOptionIDs;
   end;
 
+  TtgMaskPosition = class
+
+  end;
+
   /// <summary>
   /// This object represents a sticker.
   /// </summary>
-  TtgSticker = class
-    { TODO -oOwner -cGeneral : Заполнить }
+  TtgSticker = class(TtgPhotoSize)
+  private
+    [JsonName('mask_position')]
+    [JsonName('is_animated')]
+    FIsAnimated: Boolean;
+    [JsonName('is_video')]
+    FIsVideo: Boolean;
+    [JsonName('thumb')]
+    FThumb: TtgPhotoSize;
+    [JsonName('emoji')]
+    FEmoji: string;
+    [JsonName('set_name')]
+    FSetName: string;
+    FMaskPosition: TtgMaskPosition;
+  public
+    /// <summary>
+    /// Identifier for this file, which can be used to download or reuse the file
+    /// </summary>
+    property FileId;
+    /// <summary>
+    /// Unique identifier for this file, which is supposed to be the same over time and
+    /// for different bots. Can't be used to download or reuse the file.
+    /// </summary>
+    property FileUniqueId;
+    /// <summary>
+    /// Sticker width
+    /// </summary>
+    property Width;
+    /// <summary>
+    /// Sticker height
+    /// </summary>
+    property Height;
+    /// <summary>
+    /// True, if the sticker is animated
+    /// </summary>
+    property IsAnimated: Boolean read FIsAnimated write FIsAnimated;
+    /// <summary>
+    /// True, if the sticker is a video sticker
+    /// </summary>
+    property IsVideo: Boolean read FIsVideo write FIsVideo;
+    /// <summary>
+    /// Optional. Sticker thumbnail in the .WEBP or .JPG format
+    /// </summary>
+    property Thumb: TtgPhotoSize read FThumb write FThumb;
+    /// <summary>
+    /// Optional. Sticker thumbnail in the .WEBP or .JPG format
+    /// </summary>
+    property Emoji: string read FEmoji write FEmoji;
+    /// <summary>
+    /// Optional. Name of the sticker set to which the sticker belongs
+    /// </summary>
+    property SetName: string read FSetName write FSetName;
+    /// <summary>
+    /// Optional. For mask stickers, the position where the mask should be placed
+    /// </summary>
+    property MaskPosition: TtgMaskPosition read FMaskPosition write FMaskPosition;
+    /// <summary>
+    /// Optional. For mask stickers, the position where the mask should be placed
+    /// </summary>
+    property FileSize;
   end;
 
   /// <summary>
