@@ -7,13 +7,14 @@ uses
   System.SysUtils,
   TelegaPi,
   Demo.BotBase in '..\Demo.BotBase.pas',
-  Winapi.Windows;
+  Winapi.Windows,
+  TelegramBotApi.Tools.UserDataStorage.Ram;
 
 type
   TPoolBot = class(TDemoBotBase)
   private
     FRouteManager: TtgRouter;
-    FUserStates: TtgRouteUserStateManagerRAM;
+    FUserStates: TtgUserDataStorage;
 
   protected
     procedure UpdateConsoleTitle(ABot: TTelegramBotApi);
@@ -30,8 +31,8 @@ type
 constructor TPoolBot.Create;
 begin
   inherited;
-  FUserStates := TtgRouteUserStateManagerRAM.Create;
-  FRouteManager := TtgRouter.Create(FUserStates);
+  FUserStates := TtgUserDataStorage.Create;
+  FRouteManager := TtgRouter.Create(FUserStates, Bot);
   SetupRoutes;
 end;
 
@@ -62,10 +63,10 @@ var
   lStart: TtgRoute;
 begin
   lStart := TtgRoute.Create('/start');
-  lStart.OnStartCallback := procedure(AUserID: Int64)
-    begin
-      Writeln(TimeToStr(NOW) + ':"' + lStart.Name + '" start');
-    end;
+//  lStart.OnStartCallback := procedure(AUserID: Int64)
+//    begin
+//      Writeln(TimeToStr(NOW) + ':"' + lStart.Name + '" start');
+//    end;
   lStart.OnMessageCallback := procedure(AMsg: TtgMessage)
     var
       lPoolKb: TtgReplyKeyboardMarkup;

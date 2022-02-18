@@ -6,6 +6,7 @@ uses
   CloudApi.Client.Sync,
   CloudApi.IAuthenticator,
   CloudApi.Request,
+  TelegramBotApi.Request.Stickers,
   TelegramBotApi.Types,
   TelegramBotApi.Types.AvailableMethods,
   TelegramBotApi.Types.Games,
@@ -17,7 +18,7 @@ uses
 type
   TTelegramBotApi = class(TPersistent)
   public const
-    LIB_VERSION = '5.6.1';
+    LIB_VERSION = '5.6.2';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
@@ -335,6 +336,7 @@ type
     /// Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned.
     /// </summary>
     function SendSticker(ASticker: TtgSendStickerArgument): ItgResponse<TtgMessage>;
+    function CreateNewStickerSet(AStickerSet: TtgCreateNewStickerSet): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -376,6 +378,11 @@ function TTelegramBotApi.CreateChatInviteLink(ACreateChatInviteLink: TtgCreateCh
   : ItgResponse<TtgChatInviteLink>;
 begin
   TryInternalExecute<TtgCreateChatInviteLinkArgument, TtgChatInviteLink>(ACreateChatInviteLink, Result);
+end;
+
+function TTelegramBotApi.CreateNewStickerSet(AStickerSet: TtgCreateNewStickerSet): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgCreateNewStickerSet, Boolean>(AStickerSet, Result);
 end;
 
 function TTelegramBotApi.DeleteMessage(ADeleteMessageeArgument: TtgDeleteMessageArgument): ItgResponse<Boolean>;
