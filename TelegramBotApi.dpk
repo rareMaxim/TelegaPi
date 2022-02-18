@@ -1,0 +1,62 @@
+package TelegramBotApi;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  CloudApi,
+  rtl;
+
+contains
+  TelegramBotApi.Client in 'TelegramBotApi.Client.pas',
+  TelegramBotApi.CloudAPI.Authenticator in 'TelegramBotApi.CloudAPI.Authenticator.pas',
+  TelegramBotApi.Types in 'TelegramBotApi.Types.pas',
+  TelegramBotApi.Types.Request in 'TelegramBotApi.Types.Request.pas',
+  TelegramBotApi.CloudAPI.Converter in 'TelegramBotApi.CloudAPI.Converter.pas',
+  TelegramBotApi.Types.Keyboards in 'TelegramBotApi.Types.Keyboards.pas',
+  TelegramBotApi.Types.Enums in 'TelegramBotApi.Types.Enums.pas',
+  TelegramBotApi.UpdateParser in 'TelegramBotApi.UpdateParser.pas',
+  TelegramBotApi.Types.Helpers in 'TelegramBotApi.Types.Helpers.pas',
+  TelegramBotApi.Types.Intf in 'TelegramBotApi.Types.Intf.pas',
+  TelegramBotApi.Json.Converter in 'TelegramBotApi.Json.Converter.pas',
+  TelegramBotApi.Polling.Base in 'TelegramBotApi.Polling.Base.pas',
+  TelegramBotApi.Polling.Console in 'TelegramBotApi.Polling.Console.pas',
+  TelegramBotApi.Ext.Calendar in 'TelegramBotApi.Ext.Calendar.pas',
+  TelegaPi in 'TelegaPi.pas',
+  TelegramBotApi.Types.UpdatingMessages in 'TelegramBotApi.Types.UpdatingMessages.pas',
+  TelegramBotApi.Types.AvailableMethods in 'TelegramBotApi.Types.AvailableMethods.pas',
+  TelegramBotApi.Types.Abstract in 'TelegramBotApi.Types.Abstract.pas',
+  TelegramBotApi.Types.Payments in 'TelegramBotApi.Types.Payments.pas',
+  TelegramBotApi.Types.Games in 'TelegramBotApi.Types.Games.pas',
+  TelegramBotApi.Request.Stickers in 'TelegramBotApi.Request.Stickers.pas',
+  TelegramBotApi.Tools.Router in 'TelegramBotApi.Tools.Router.pas',
+  TelegramBotApi.Tools.UserDataStorage.Abstract in 'TelegramBotApi.Tools.UserDataStorage.Abstract.pas',
+  TelegramBotApi.Tools.UserDataStorage.Json in 'TelegramBotApi.Tools.UserDataStorage.Json.pas',
+  TelegramBotApi.Tools.UserDataStorage.Ram in 'TelegramBotApi.Tools.UserDataStorage.Ram.pas';
+
+end.
+

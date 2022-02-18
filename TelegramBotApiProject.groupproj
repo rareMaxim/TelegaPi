@@ -1,0 +1,120 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D0227AFC-C5B8-42BE-9844-C605CC45BE61}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="CloudAPI\CloudAPI.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="CloudAPI\Tests\CloudApiTest.dproj">
+            <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
+        </Projects>
+        <Projects Include="TelegramBotApi.dproj">
+            <Dependencies>CloudAPI\CloudAPI.dproj</Dependencies>
+        </Projects>
+        <Projects Include="Tests\TelegramBotApiTests.dproj">
+            <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
+        </Projects>
+        <Projects Include="Demos\Echo\EchoDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Demos\Pooling\Pooling.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Demos\Calendar\CalendarDemo.dproj">
+            <Dependencies>TelegramBotApi.dproj</Dependencies>
+        </Projects>
+        <Projects Include="Demos\PoolBot\h2oBot.dproj">
+            <Dependencies>Tests\TelegramBotApiTests.dproj</Dependencies>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="CloudAPI">
+        <MSBuild Projects="CloudAPI\CloudAPI.dproj"/>
+    </Target>
+    <Target Name="CloudAPI:Clean">
+        <MSBuild Projects="CloudAPI\CloudAPI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CloudAPI:Make">
+        <MSBuild Projects="CloudAPI\CloudAPI.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CloudApiTest" DependsOnTargets="CloudAPI">
+        <MSBuild Projects="CloudAPI\Tests\CloudApiTest.dproj"/>
+    </Target>
+    <Target Name="CloudApiTest:Clean" DependsOnTargets="CloudAPI:Clean">
+        <MSBuild Projects="CloudAPI\Tests\CloudApiTest.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CloudApiTest:Make" DependsOnTargets="CloudAPI:Make">
+        <MSBuild Projects="CloudAPI\Tests\CloudApiTest.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TelegramBotApi" DependsOnTargets="CloudAPI">
+        <MSBuild Projects="TelegramBotApi.dproj"/>
+    </Target>
+    <Target Name="TelegramBotApi:Clean" DependsOnTargets="CloudAPI:Clean">
+        <MSBuild Projects="TelegramBotApi.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TelegramBotApi:Make" DependsOnTargets="CloudAPI:Make">
+        <MSBuild Projects="TelegramBotApi.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TelegramBotApiTests" DependsOnTargets="CloudAPI;TelegramBotApi">
+        <MSBuild Projects="Tests\TelegramBotApiTests.dproj"/>
+    </Target>
+    <Target Name="TelegramBotApiTests:Clean" DependsOnTargets="CloudAPI:Clean;TelegramBotApi:Clean">
+        <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TelegramBotApiTests:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
+        <MSBuild Projects="Tests\TelegramBotApiTests.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="EchoDemo">
+        <MSBuild Projects="Demos\Echo\EchoDemo.dproj"/>
+    </Target>
+    <Target Name="EchoDemo:Clean">
+        <MSBuild Projects="Demos\Echo\EchoDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="EchoDemo:Make">
+        <MSBuild Projects="Demos\Echo\EchoDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Pooling">
+        <MSBuild Projects="Demos\Pooling\Pooling.dproj"/>
+    </Target>
+    <Target Name="Pooling:Clean">
+        <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Pooling:Make">
+        <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CalendarDemo" DependsOnTargets="TelegramBotApi">
+        <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj"/>
+    </Target>
+    <Target Name="CalendarDemo:Clean" DependsOnTargets="TelegramBotApi:Clean">
+        <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CalendarDemo:Make" DependsOnTargets="TelegramBotApi:Make">
+        <MSBuild Projects="Demos\Calendar\CalendarDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="h2oBot" DependsOnTargets="TelegramBotApiTests">
+        <MSBuild Projects="Demos\PoolBot\h2oBot.dproj"/>
+    </Target>
+    <Target Name="h2oBot:Clean" DependsOnTargets="TelegramBotApiTests:Clean">
+        <MSBuild Projects="Demos\PoolBot\h2oBot.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="h2oBot:Make" DependsOnTargets="TelegramBotApiTests:Make">
+        <MSBuild Projects="Demos\PoolBot\h2oBot.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="CloudAPI;CloudApiTest;TelegramBotApi;TelegramBotApiTests;EchoDemo;Pooling;CalendarDemo;h2oBot"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="CloudAPI:Clean;CloudApiTest:Clean;TelegramBotApi:Clean;TelegramBotApiTests:Clean;EchoDemo:Clean;Pooling:Clean;CalendarDemo:Clean;h2oBot:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="CloudAPI:Make;CloudApiTest:Make;TelegramBotApi:Make;TelegramBotApiTests:Make;EchoDemo:Make;Pooling:Make;CalendarDemo:Make;h2oBot:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
