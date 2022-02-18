@@ -134,7 +134,6 @@
         <DCCReference Include="TelegramBotApi.Polling.Base.pas"/>
         <DCCReference Include="TelegramBotApi.Polling.Console.pas"/>
         <DCCReference Include="TelegramBotApi.Ext.Calendar.pas"/>
-        <DCCReference Include="TelegramBotApi.Tools.CommandParser.pas"/>
         <DCCReference Include="TelegaPi.pas"/>
         <DCCReference Include="TelegramBotApi.Types.UpdatingMessages.pas"/>
         <DCCReference Include="TelegramBotApi.Types.AvailableMethods.pas"/>
