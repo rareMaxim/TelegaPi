@@ -336,6 +336,11 @@ type
     /// Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned.
     /// </summary>
     function SendSticker(ASticker: TtgSendStickerArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to create a new sticker set owned by a user. The bot will be
+    /// able to edit the sticker set thus created. You must use exactly one of the
+    /// fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
+    /// </summary>
     function CreateNewStickerSet(AStickerSet: TtgCreateNewStickerSet): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
