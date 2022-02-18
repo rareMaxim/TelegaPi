@@ -342,6 +342,12 @@ type
     /// fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
     /// </summary>
     function CreateNewStickerSet(AStickerSet: TtgCreateNewStickerSet): ItgResponse<Boolean>;
+    /// <summary> Use this method to add a new sticker to a set created by the bot. You
+    /// must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker.
+    /// Animated stickers can be added to animated sticker sets and only to them.
+    /// Animated sticker sets can have up to 50 stickers. Static sticker sets can have
+    /// up to 120 stickers. Returns True on success.</summary>
+    function AddStickerToSet(ASticker: TtgAddStickerToSet): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -404,6 +410,11 @@ destructor TTelegramBotApi.Destroy;
 begin
   FCloudApi.Free;
   inherited Destroy;
+end;
+
+function TTelegramBotApi.AddStickerToSet(ASticker: TtgAddStickerToSet): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgAddStickerToSet, Boolean>(ASticker, Result);
 end;
 
 function TTelegramBotApi.AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument)
