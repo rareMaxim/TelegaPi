@@ -133,15 +133,18 @@
         <DCCReference Include="TelegramBotApi.Json.Converter.pas"/>
         <DCCReference Include="TelegramBotApi.Polling.Base.pas"/>
         <DCCReference Include="TelegramBotApi.Polling.Console.pas"/>
-        <DCCReference Include="TelegramBotApi.Tools.Router.pas"/>
         <DCCReference Include="TelegramBotApi.Ext.Calendar.pas"/>
-        <DCCReference Include="TelegramBotApi.Tools.CommandParser.pas"/>
         <DCCReference Include="TelegaPi.pas"/>
         <DCCReference Include="TelegramBotApi.Types.UpdatingMessages.pas"/>
         <DCCReference Include="TelegramBotApi.Types.AvailableMethods.pas"/>
         <DCCReference Include="TelegramBotApi.Types.Abstract.pas"/>
         <DCCReference Include="TelegramBotApi.Types.Payments.pas"/>
         <DCCReference Include="TelegramBotApi.Types.Games.pas"/>
+        <DCCReference Include="TelegramBotApi.Request.Stickers.pas"/>
+        <DCCReference Include="TelegramBotApi.Tools.Router.pas"/>
+        <DCCReference Include="TelegramBotApi.Tools.UserDataStorage.Abstract.pas"/>
+        <DCCReference Include="TelegramBotApi.Tools.UserDataStorage.Json.pas"/>
+        <DCCReference Include="TelegramBotApi.Tools.UserDataStorage.Ram.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

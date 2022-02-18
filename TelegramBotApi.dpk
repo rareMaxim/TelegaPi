@@ -45,15 +45,18 @@ contains
   TelegramBotApi.Json.Converter in 'TelegramBotApi.Json.Converter.pas',
   TelegramBotApi.Polling.Base in 'TelegramBotApi.Polling.Base.pas',
   TelegramBotApi.Polling.Console in 'TelegramBotApi.Polling.Console.pas',
-  TelegramBotApi.Tools.Router in 'TelegramBotApi.Tools.Router.pas',
   TelegramBotApi.Ext.Calendar in 'TelegramBotApi.Ext.Calendar.pas',
-  TelegramBotApi.Tools.CommandParser in 'TelegramBotApi.Tools.CommandParser.pas',
   TelegaPi in 'TelegaPi.pas',
   TelegramBotApi.Types.UpdatingMessages in 'TelegramBotApi.Types.UpdatingMessages.pas',
   TelegramBotApi.Types.AvailableMethods in 'TelegramBotApi.Types.AvailableMethods.pas',
   TelegramBotApi.Types.Abstract in 'TelegramBotApi.Types.Abstract.pas',
   TelegramBotApi.Types.Payments in 'TelegramBotApi.Types.Payments.pas',
-  TelegramBotApi.Types.Games in 'TelegramBotApi.Types.Games.pas';
+  TelegramBotApi.Types.Games in 'TelegramBotApi.Types.Games.pas',
+  TelegramBotApi.Request.Stickers in 'TelegramBotApi.Request.Stickers.pas',
+  TelegramBotApi.Tools.Router in 'TelegramBotApi.Tools.Router.pas',
+  TelegramBotApi.Tools.UserDataStorage.Abstract in 'TelegramBotApi.Tools.UserDataStorage.Abstract.pas',
+  TelegramBotApi.Tools.UserDataStorage.Json in 'TelegramBotApi.Tools.UserDataStorage.Json.pas',
+  TelegramBotApi.Tools.UserDataStorage.Ram in 'TelegramBotApi.Tools.UserDataStorage.Ram.pas';
 
 end.
 

@@ -1,4 +1,29 @@
-﻿unit TelegramBotApi.Client;
+﻿{***************************************************************************}
+{                                                                           }
+{           TelegaPi                                                        }
+{                                                                           }
+{           Copyright (C) 2021 Maxim Sysoev                                 }
+{                                                                           }
+{           https://t.me/CloudAPI                                           }
+{                                                                           }
+{                                                                           }
+{***************************************************************************}
+{                                                                           }
+{  Licensed under the Apache License, Version 2.0 (the "License");          }
+{  you may not use this file except in compliance with the License.         }
+{  You may obtain a copy of the License at                                  }
+{                                                                           }
+{      http://www.apache.org/licenses/LICENSE-2.0                           }
+{                                                                           }
+{  Unless required by applicable law or agreed to in writing, software      }
+{  distributed under the License is distributed on an "AS IS" BASIS,        }
+{  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. }
+{  See the License for the specific language governing permissions and      }
+{  limitations under the License.                                           }
+{                                                                           }
+{***************************************************************************}
+
+unit TelegramBotApi.Client;
 
 interface
 
@@ -6,6 +31,7 @@ uses
   CloudApi.Client.Sync,
   CloudApi.IAuthenticator,
   CloudApi.Request,
+  TelegramBotApi.Request.Stickers,
   TelegramBotApi.Types,
   TelegramBotApi.Types.AvailableMethods,
   TelegramBotApi.Types.Games,
@@ -17,7 +43,7 @@ uses
 type
   TTelegramBotApi = class(TPersistent)
   public const
-    LIB_VERSION = '5.6.1';
+    LIB_VERSION = '5.7.0';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
@@ -335,6 +361,18 @@ type
     /// Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned.
     /// </summary>
     function SendSticker(ASticker: TtgSendStickerArgument): ItgResponse<TtgMessage>;
+    /// <summary>
+    /// Use this method to create a new sticker set owned by a user. The bot will be
+    /// able to edit the sticker set thus created. You must use exactly one of the
+    /// fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
+    /// </summary>
+    function CreateNewStickerSet(AStickerSet: TtgCreateNewStickerSet): ItgResponse<Boolean>;
+    /// <summary> Use this method to add a new sticker to a set created by the bot. You
+    /// must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker.
+    /// Animated stickers can be added to animated sticker sets and only to them.
+    /// Animated sticker sets can have up to 50 stickers. Static sticker sets can have
+    /// up to 120 stickers. Returns True on success.</summary>
+    function AddStickerToSet(ASticker: TtgAddStickerToSet): ItgResponse<Boolean>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -378,6 +416,11 @@ begin
   TryInternalExecute<TtgCreateChatInviteLinkArgument, TtgChatInviteLink>(ACreateChatInviteLink, Result);
 end;
 
+function TTelegramBotApi.CreateNewStickerSet(AStickerSet: TtgCreateNewStickerSet): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgCreateNewStickerSet, Boolean>(AStickerSet, Result);
+end;
+
 function TTelegramBotApi.DeleteMessage(ADeleteMessageeArgument: TtgDeleteMessageArgument): ItgResponse<Boolean>;
 begin
   TryInternalExecute<TtgDeleteMessageArgument, Boolean>(ADeleteMessageeArgument, Result);
@@ -392,6 +435,11 @@ destructor TTelegramBotApi.Destroy;
 begin
   FCloudApi.Free;
   inherited Destroy;
+end;
+
+function TTelegramBotApi.AddStickerToSet(ASticker: TtgAddStickerToSet): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgAddStickerToSet, Boolean>(ASticker, Result);
 end;
 
 function TTelegramBotApi.AnswerCallbackQuery(AAnswerCallbackQuery: TtgAnswerCallbackQueryArgument)
