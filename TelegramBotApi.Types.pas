@@ -671,8 +671,42 @@ type
     property OptionIDs: TArray<Integer> read FOptionIDs write FOptionIDs;
   end;
 
+  /// <summary>
+  /// This object describes the position on faces where a mask should be placed by
+  /// default.
+  /// </summary>
   TtgMaskPosition = class
-
+  private
+    [JsonName('mask_position')]
+    FPoint: string;
+    [JsonName('x_shift')]
+    Fx_shift: Single;
+    [JsonName('y_shift')]
+    Fy_shift: Single;
+    [JsonName('scale')]
+    FScale: Single;
+  public
+    /// <summary>
+    /// The part of the face relative to which the mask should be placed. One of
+    /// “forehead”, “eyes”, “mouth”, or “chin”.
+    /// </summary>
+    property Point: string read FPoint write FPoint;
+    /// <summary>
+    /// Shift by X-axis measured in widths of the mask scaled to the face size, from
+    /// left to right. For example, choosing -1.0 will place mask just to the left of
+    /// the default mask position.
+    /// </summary>
+    property x_shift: Single read Fx_shift write Fx_shift;
+    /// <summary>
+    /// Shift by Y-axis measured in heights of the mask scaled to the face size, from
+    /// top to bottom. For example, 1.0 will place the mask just below the default mask
+    /// position.
+    /// </summary>
+    property y_shift: Single read Fy_shift write Fy_shift;
+    /// <summary>
+    /// Mask scaling coefficient. For example, 2.0 means double size.
+    /// </summary>
+    property Scale: Single read FScale write FScale;
   end;
 
   /// <summary>
@@ -680,7 +714,6 @@ type
   /// </summary>
   TtgSticker = class(TtgPhotoSize)
   private
-    [JsonName('mask_position')]
     [JsonName('is_animated')]
     FIsAnimated: Boolean;
     [JsonName('is_video')]
