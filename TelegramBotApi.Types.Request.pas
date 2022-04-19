@@ -33,7 +33,8 @@ uses
   TelegramBotApi.Types,
   TelegramBotApi.Types.Abstract,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Keyboards;
+  TelegramBotApi.Types.Keyboards,
+  TelegramBotApi.Types.WebApps;
 
 type
   TtgEmptyArgument = class(TInterfacedObject);
@@ -563,9 +564,9 @@ type
     [caName('can_delete_messages')]
     [caDefaultValueBoolean(False)]
     FCanDeleteMessages: Boolean;
-    [caName('can_manage_voice_chats')]
+    [caName('can_manage_video_chats')]
     [caDefaultValueBoolean(False)]
-    FCanManageVoiceChats: Boolean;
+    FCanManageVideoChats: Boolean;
     [caName('can_restrict_members')]
     [caDefaultValueBoolean(False)]
     FCanRestrictMembers: Boolean;
@@ -607,8 +608,8 @@ type
     /// <summary>Pass True, if the administrator can delete messages of other
     /// users</summary>
     property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
-    /// <summary>Pass True, if the administrator can manage voice chats</summary>
-    property CanManageVoiceChats: Boolean read FCanManageVoiceChats write FCanManageVoiceChats;
+    /// <summary>Pass True, if the administrator can manage video chats</summary>
+    property CanManageVideoChats: Boolean read FCanManageVideoChats write FCanManageVideoChats;
     /// <summary> Pass True, if the administrator can restrict, ban or unban chat
     /// members</summary>
     property CanRestrictMembers: Boolean read FCanRestrictMembers write FCanRestrictMembers;
@@ -803,6 +804,105 @@ type
     /// 14. Defaults to 0.
     /// </summary>
     property CacheTime: Integer read FCacheTime write FCacheTime;
+  end;
+
+  /// <summary> Use this method to get the current default administrator rights of
+  /// the bot. Returns ChatAdministratorRights on success.
+  /// </summary>
+  TtgGetMyDefaultAdministratorRightsArgument = class
+  private
+    [caName('for_channels')]
+    [caDefaultValueBoolean(False)]
+    FForChannels: Boolean;
+  public
+    /// <summary> Pass True to get default administrator rights of the bot in channels.
+    /// Otherwise, default administrator rights of the bot for groups and supergroups
+    /// will be returned.
+    /// </summary>
+    property ForChannels: Boolean read FForChannels write FForChannels;
+  end;
+
+/// <summary>
+  /// Use this method to change the default administrator rights requested by the bot
+  /// when it's added as an administrator to groups or channels. These rights will be
+  /// suggested to users, but they are are free to modify the list before adding the
+  /// bot. Returns True on success.
+  /// </summary>
+  TtgSetMyDefaultAdministratorRightsArgument = class(TtgGetMyDefaultAdministratorRightsArgument)
+  private
+    [caName('rights')]
+    [caDefaultValueString('{}')]
+    FRights: TtgChatAdministratorRights;
+  public
+    /// <summary>
+    /// A JSON-serialized object describing new default administrator rights. If not
+    /// specified, the default administrator rights will be cleared.
+    /// </summary>
+    property Rights: TtgChatAdministratorRights read FRights write FRights;
+    /// <summary>
+    /// Pass True to change the default administrator rights of the bot in channels.
+    /// Otherwise, the default administrator rights of the bot for groups and
+    /// supergroups will be changed.
+    /// </summary>
+    property ForChannels;
+  end;
+
+  /// <summary>
+  /// Use this method to change the bot's menu button in a private chat, or the
+  /// default menu button. Returns True on success.
+  /// </summary>
+  TtgSetChatMenuButtonArgument = record
+  private
+    [caName('chat_id')]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('menu_button')]
+    FMenuButton: TtgMenuButtonAbstract;
+  public
+    /// <summary>Unique identifier for the target private chat. If not specified,
+    /// default bot's menu button will be changed</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// A JSON-serialized object for the new bot's menu button. Defaults to
+    /// MenuButtonDefault
+    /// </summary>
+    property MenuButton: TtgMenuButtonAbstract read FMenuButton write FMenuButton;
+  end;
+
+  /// <summary>Use this method to get the current value of the bot's menu button in a
+  /// private chat, or the default menu button. Returns MenuButton on success.
+  /// </summary>
+  TtgGetChatMenuButtonArgument = record
+  private
+    [caName('chat_id')]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+  public
+    /// <summary>Unique identifier for the target private chat. If not specified,
+    /// default bot's menu button will be returned</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+  end;
+
+  /// <summary>
+  /// Use this method to set the result of an interaction with a Web App and send a
+  /// corresponding message on behalf of the user to the chat from which the query
+  /// originated. On success, a SentWebAppMessage object is returned.
+  /// </summary>
+  TTgAnswerWebAppQueryArgument = record
+  private
+    [caName('result')]
+    [caName('web_app_query_id')]
+    FWebAppQueryId: string;
+    FResult: TtgInlineQueryResult;
+  public
+    /// <summary>
+    /// Unique identifier for the query to be answered
+    /// </summary>
+    property WebAppQueryId: string read FWebAppQueryId write FWebAppQueryId;
+    /// <summary>
+    /// A JSON-serialized object describing the message to be sent
+    /// </summary>
+    property Result: TtgInlineQueryResult read FResult write FResult;
   end;
 
 implementation
