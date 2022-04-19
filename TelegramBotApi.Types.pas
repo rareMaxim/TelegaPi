@@ -2696,8 +2696,8 @@ type
     FCanManageChat: Boolean;
     [JsonName('can_delete_messages')]
     FCanDeleteMessages: Boolean;
-    [JsonName('can_manage_voice_chats')]
-    FCanManageVoiceChats: Boolean;
+    [JsonName('can_manage_video_chats')]
+    FCanManageVideoChats: Boolean;
     [JsonName('can_restrict_members')]
     FCanRestrictMembers: Boolean;
     [JsonName('can_promote_members')]
@@ -2748,7 +2748,7 @@ type
     /// <summary>
     /// True, if the administrator can delete messages of other users
     /// </summary>
-    property CanManageVoiceChats: Boolean read FCanManageVoiceChats write FCanManageVoiceChats;
+    property CanManageVideoChats: Boolean read FCanManageVideoChats write FCanManageVideoChats;
     /// <summary>
     /// True, if the administrator can restrict, ban or
     /// unban chat members
