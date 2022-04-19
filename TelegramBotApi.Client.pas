@@ -31,6 +31,7 @@ uses
   CloudApi.Client.Sync,
   CloudApi.IAuthenticator,
   CloudApi.Request,
+  System.Classes,
   TelegramBotApi.Request.Stickers,
   TelegramBotApi.Types,
   TelegramBotApi.Types.AvailableMethods,
@@ -38,12 +39,12 @@ uses
   TelegramBotApi.Types.Payments,
   TelegramBotApi.Types.Request,
   TelegramBotApi.Types.UpdatingMessages,
-  System.Classes;
+  TelegramBotApi.Types.WebApps;
 
 type
   TTelegramBotApi = class(TPersistent)
   public const
-    LIB_VERSION = '5.7.0';
+    LIB_VERSION = '6.0.0';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
@@ -373,6 +374,38 @@ type
     /// Animated sticker sets can have up to 50 stickers. Static sticker sets can have
     /// up to 120 stickers. Returns True on success.</summary>
     function AddStickerToSet(ASticker: TtgAddStickerToSet): ItgResponse<Boolean>;
+
+    /// <summary>
+    /// Use this method to change the default administrator rights requested by the bot
+    /// when it's added as an administrator to groups or channels. These rights will be
+    /// suggested to users, but they are are free to modify the list before adding the
+    /// bot. Returns True on success.
+    /// </summary>
+    function SetMyDefaultAdministratorRights(ASetMyDefaultAdministratorRightsArgument
+      : TtgSetMyDefaultAdministratorRightsArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to get the current default administrator rights of the bot.
+    /// Returns ChatAdministratorRights on success.
+    /// </summary>
+    function GetMyDefaultAdministratorRights(AGetMyDefaultAdministratorRightsArgument
+      : TtgGetMyDefaultAdministratorRightsArgument): ItgResponse<TtgChatAdministratorRights>;
+    /// <summary>
+    /// Use this method to change the bot's menu button in a private chat, or the
+    /// default menu button. Returns True on success.
+    /// </summary>
+    function SetChatMenuButton(ASetChatMenuButtonArgument: TtgSetChatMenuButtonArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to get the current value of the bot's menu button in a private
+    /// chat, or the default menu button. Returns MenuButton on success.
+    /// </summary>
+    function GetChatMenuButton(AGetChatMenuButtonArgument: TtgGetChatMenuButtonArgument): ItgResponse<TtgMenuButton>;
+    /// <summary>
+    /// Use this method to set the result of an interaction with a Web App and send a
+    /// corresponding message on behalf of the user to the chat from which the query
+    /// originated. On success, a SentWebAppMessage object is returned.
+    /// </summary>
+    function AnswerWebAppQuery(AAnswerWebAppQueryArgument: TTgAnswerWebAppQueryArgument)
+      : ItgResponse<TtgSentWebAppMessage>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -453,6 +486,12 @@ begin
   TryInternalExecute<TtgAnswerShippingQuery, Boolean>(AAnswerShippingQuery, Result);
 end;
 
+function TTelegramBotApi.AnswerWebAppQuery(AAnswerWebAppQueryArgument: TTgAnswerWebAppQueryArgument)
+  : ItgResponse<TtgSentWebAppMessage>;
+begin
+  TryInternalExecute<TTgAnswerWebAppQueryArgument, TtgSentWebAppMessage>(AAnswerWebAppQueryArgument, Result);
+end;
+
 function TTelegramBotApi.Close: ItgResponse<Boolean>;
 var
   lClose: TtgCloseArgunent;
@@ -519,6 +558,12 @@ begin
   finally
     lGetChatMemberCount.Free;
   end;
+end;
+
+function TTelegramBotApi.GetChatMenuButton(AGetChatMenuButtonArgument: TtgGetChatMenuButtonArgument)
+  : ItgResponse<TtgMenuButton>;
+begin
+  TryInternalExecute<TtgGetChatMenuButtonArgument, TtgMenuButton>(AGetChatMenuButtonArgument, Result);
 end;
 
 function TTelegramBotApi.GetFile(AGetFile: TtgGetFileArgument): ItgResponse<TtgFile>;
@@ -625,6 +670,13 @@ end;
 function TTelegramBotApi.EditMessageText(AEditMessageArgument: TtgEditMessageTextArgument): ItgResponse<TtgMessage>;
 begin
   TryInternalExecute<TtgEditMessageTextArgument, TtgMessage>(AEditMessageArgument, Result);
+end;
+
+function TTelegramBotApi.GetMyDefaultAdministratorRights(AGetMyDefaultAdministratorRightsArgument
+  : TtgGetMyDefaultAdministratorRightsArgument): ItgResponse<TtgChatAdministratorRights>;
+begin
+  TryInternalExecute<TtgGetMyDefaultAdministratorRightsArgument, TtgChatAdministratorRights>
+    (AGetMyDefaultAdministratorRightsArgument, Result);
 end;
 
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;
@@ -761,9 +813,22 @@ begin
   end;
 end;
 
+function TTelegramBotApi.SetChatMenuButton(ASetChatMenuButtonArgument: TtgSetChatMenuButtonArgument)
+  : ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgSetChatMenuButtonArgument, Boolean>(ASetChatMenuButtonArgument, Result);
+end;
+
 function TTelegramBotApi.SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
 begin
   TryInternalExecute<TtgSetMyCommandsArgument, Boolean>(ASetMyCommands, Result);
+end;
+
+function TTelegramBotApi.SetMyDefaultAdministratorRights(ASetMyDefaultAdministratorRightsArgument
+  : TtgSetMyDefaultAdministratorRightsArgument): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgSetMyDefaultAdministratorRightsArgument, Boolean>
+    (ASetMyDefaultAdministratorRightsArgument, Result);
 end;
 
 function TTelegramBotApi.SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;

@@ -29,7 +29,8 @@ interface
 
 uses
   System.JSON.Serializers,
-  TelegramBotApi.JSON.Converter;
+  TelegramBotApi.JSON.Converter,
+  TelegramBotApi.Types.WebApps;
 
 type
 {$REGION 'Abstract'}
@@ -71,11 +72,13 @@ type
   TtgKeyboardButton = class(TObject)
   private
     [JsonName('text')]
+    [JsonName('web_app')]
     FText: string;
     [JsonName('request_contact')]
     FRequestContact: Boolean;
     [JsonName('request_location')]
     FRequestLocation: Boolean;
+    FWebApp: TtgWebAppInfo;
     function GetText: string;
     procedure SetText(const Value: string);
   public
@@ -95,6 +98,12 @@ type
     /// pressed. Available in private chats only
     /// </summary>
     property RequestLocation: Boolean read FRequestLocation write FRequestLocation;
+    /// <summary>
+    /// Optional. If specified, the described Web App will be launched when the button
+    /// is pressed. The Web App will be able to send a “web_app_data” service message.
+    /// Available in private chats only.
+    /// </summary>
+    property WebApp: TtgWebAppInfo read FWebApp write FWebApp;
   end;
 
   /// <summary>
@@ -345,6 +354,8 @@ type
     FLoginUrl: TtgLoginUrl;
     [JsonName('callback_data')]
     FCallbackData: string;
+    [JsonName('web_app')]
+    FWebApp: TtgWebAppInfo;
     [JsonName('switch_inline_query')]
     FSwitchInlineQuery: string;
     [JsonName('switch_inline_query_current_chat')]
@@ -353,6 +364,7 @@ type
     FCallbackGame: TtgCallbackGame;
     [JsonName('pay')]
     FPay: Boolean;
+
   public
     /// <summary>
     /// Label text on the button
@@ -372,6 +384,12 @@ type
     /// 1-64 bytes
     /// </summary>
     property CallbackData: string read FCallbackData write FCallbackData;
+    /// <summary> Optional. Description of the Web App that will be launched when the
+    /// user presses the button. The Web App will be able to send an arbitrary message
+    /// on behalf of the user using the method answerWebAppQuery. Available only in
+    /// private chats between a user and the bot.
+    /// </summary>
+    property WebApp: TtgWebAppInfo read FWebApp write FWebApp;
     /// <summary>
     /// Optional. If set, pressing the button will prompt the user to select one of
     /// their chats, open that chat and insert the bot's username and the specified

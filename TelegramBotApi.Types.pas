@@ -1735,7 +1735,6 @@ type
   /// <summary> Contains information about the current status of a webhook.</summary>
   TtgWebhookInfo = class
   private
-    [JsonName('allowed_updates')]
     [JsonName('url')]
     FUrl: string;
     [JsonName('has_custom_certificate')]
@@ -1747,6 +1746,9 @@ type
     FLastErrorDate: TDateTime;
     [JsonName('last_error_message')]
     FLastErrorMessage: string;
+    [JsonName('last_synchronization_error_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FLastSynchronizationErrorDate: TDateTime;
     [JsonName('max_connections')]
     FMaxConnections: Integer;
     [JsonName('allowed_updates')]
@@ -1780,6 +1782,12 @@ type
     /// happened when trying to deliver an update via webhook
     /// </summary>
     property LastErrorMessage: string read FLastErrorMessage write FLastErrorMessage;
+    /// <summary>
+    /// Optional. Unix time of the most recent error that happened when trying to
+    /// synchronize available updates with Telegram datacenters
+    /// </summary>
+    property LastSynchronizationErrorDate: TDateTime read FLastSynchronizationErrorDate
+      write FLastSynchronizationErrorDate;
     /// <summary>
     /// Optional. Maximum allowed number of simultaneous HTTPS connections to the
     /// webhook for update delivery
@@ -2076,14 +2084,14 @@ type
   /// This object represents a service message about a voice chat started in the chat.
   /// Currently holds no information.
   /// </summary>
-  TtgVoiceChatStarted = class
+  TtgVideoChatStarted = class
 
   end;
 
   /// <summary> This object represents a service message about a voice chat ended in
   /// the chat.
   /// </summary>
-  TtgVoiceChatEnded = class
+  TtgVideoChatEnded = class
   private
     [JsonName('duration')]
     FDuration: Integer;
@@ -2095,7 +2103,7 @@ type
   /// This object represents a service message about new members invited to a voice
   /// chat.
   /// </summary>
-  TtgVoiceChatParticipantsInvited = class
+  TtgVideoChatParticipantsInvited = class
   private
     [JsonName('users')]
     FUsers: TArray<TtgUser>;
@@ -2121,24 +2129,43 @@ type
     property MessageAutoDeleteTime: Integer read FMessageAutoDeleteTime write FMessageAutoDeleteTime;
   end;
 
-  /// <summary>
-  /// This object represents a service message about a voice chat scheduled in the
-  /// chat.
-  /// </summary>
-  TtgVoiceChatScheduled = class
+  /// <summary> This object represents a service message about a video chat scheduled
+  /// in the chat.</summary>
+  TtgVideoChatScheduled = class
   private
     [JsonConverter(TJsonUnixTimeConverter)]
     [JsonName('start_date')]
     FStartDate: TDateTime;
   public
     /// <summary>
-    /// Point in time (Unix timestamp) when the voice chat is supposed to be started by
+    /// Point in time (Unix timestamp) when the video chat is supposed to be started by
     /// a chat administrator
     /// </summary>
     property StartDate: TDateTime read FStartDate write FStartDate;
   end;
 
   /// <summary>
+  /// Contains data sent from a Web App to the bot.
+  /// </summary>
+  TtgWebAppData = class
+  private
+    [JsonName('data')]
+    FData: string;
+    [JsonName('button_text')]
+    FButtonText: string;
+  public
+    /// <summary>
+    /// The data. Be aware that a bad client can send arbitrary data in this field.
+    /// </summary>
+    property Data: string read FData write FData;
+    /// <summary>
+    /// Text of the web_app keyboard button, from which the Web App was opened. Be
+    /// aware that a bad client can send arbitrary data in this field.
+    /// </summary>
+    property ButtonText: string read FButtonText write FButtonText;
+  end;
+
+/// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -2146,63 +2173,32 @@ type
     TMessEntConv = class(TJsonListConverter<TtgMessageEntity>);
     TMessPhotoConv = class(TJsonListConverter<TtgPhotoSize>);
   private
-    [JsonName('chat')]
-    FChat: TtgChat;
     [JsonName('message_id')]
     FMessageID: Int64;
     [JsonName('from')]
     FFrom: TtgUser;
-    [JsonName('text')]
-    FText: string;
+    [JsonName('sender_chat')]
+    FSenderChat: TtgChat;
     [JsonName('date')]
     [JsonConverter(TJsonUnixTimeConverter)]
     FDate: TDateTime;
+    [JsonName('chat')]
+    FChat: TtgChat;
+    [JsonName('forward_from')]
+    FForwardFrom: TtgUser;
     [JsonName('forward_from_chat')]
     FForwardFromChat: TtgChat;
     [JsonName('forward_from_message_id')]
     FForwardFromMessageId: Int64;
     [JsonName('forward_signature')]
     FForwardSignature: string;
+    [JsonName('forward_sender_name')]
+    FForwardSenderName: string;
     [JsonName('forward_date')]
     [JsonConverter(TJsonUnixTimeConverter)]
     FForwardDate: TDateTime;
-    [JsonName('entities')]
-    [JsonConverter(TMessEntConv)]
-    FEntities: TObjectList<TtgMessageEntity>;
-    [JsonName('animation')]
-    FAnimation: TtgAnimation;
-    [JsonName('video')]
-    FVideo: TtgVideo;
-    [JsonName('caption')]
-    FCaption: string;
-    [JsonName('video_note')]
-    FVideoNote: TtgVideoNote;
-    [JsonName('venue')]
-    FVenue: TtgVenue;
-    [JsonName('photo')]
-    [JsonConverter(TMessPhotoConv)]
-    FPhoto: TObjectList<TtgPhotoSize>;
-    [JsonName('caption_entities')]
-    [JsonConverter(TMessEntConv)]
-    FCaptionEntities: TObjectList<TtgMessageEntity>;
-    [JsonName('contact')]
-    FContact: TtgContact;
-    [JsonName('document')]
-    FDocument: TtgDocument;
-    [JsonName('audio')]
-    FAudio: TtgAudio;
-    [JsonName('voice')]
-    FVoice: TtgVoice;
-    [JsonName('media_group_id')]
-    FMediaGroupId: string;
-    [JsonName('poll')]
-    FPoll: TtgPoll;
-    [JsonName('sender_chat')]
-    FSenderChat: TtgChat;
-    [JsonName('forward_from')]
-    FForwardFrom: TtgUser;
-    [JsonName('forward_sender_name')]
-    FForwardSenderName: string;
+    [JsonName('is_automatic_forward')]
+    FIsAutomaticForward: Boolean;
     [JsonName('reply_to_message')]
     FReplyToMessage: TtgMessage;
     [JsonName('via_bot')]
@@ -2212,14 +2208,47 @@ type
     FEditDate: TDateTime;
     [JsonName('has_protected_content')]
     FHasProtectedContent: Boolean;
+    [JsonName('media_group_id')]
+    FMediaGroupId: string;
     [JsonName('author_signature')]
     FAuthorSignature: string;
+    [JsonName('text')]
+    FText: string;
+    [JsonName('entities')]
+    [JsonConverter(TMessEntConv)]
+    FEntities: TObjectList<TtgMessageEntity>;
+    [JsonName('animation')]
+    FAnimation: TtgAnimation;
+    [JsonName('audio')]
+    FAudio: TtgAudio;
+    [JsonName('document')]
+    FDocument: TtgDocument;
+    [JsonName('photo')]
+    [JsonConverter(TMessPhotoConv)]
+    FPhoto: TObjectList<TtgPhotoSize>;
     [JsonName('sticker')]
     FSticker: TtgSticker;
+    [JsonName('video')]
+    FVideo: TtgVideo;
+    [JsonName('video_note')]
+    FVideoNote: TtgVideoNote;
+    [JsonName('voice')]
+    FVoice: TtgVoice;
+    [JsonName('caption')]
+    FCaption: string;
+    [JsonName('caption_entities')]
+    [JsonConverter(TMessEntConv)]
+    FCaptionEntities: TObjectList<TtgMessageEntity>;
+    [JsonName('contact')]
+    FContact: TtgContact;
     [JsonName('dice')]
     FDice: TtgDice;
     [JsonName('game')]
     FGame: TtgGame;
+    [JsonName('poll')]
+    FPoll: TtgPoll;
+    [JsonName('venue')]
+    FVenue: TtgVenue;
     [JsonName('location')]
     FLocation: TtgLocation;
     [JsonName('new_chat_members')]
@@ -2238,6 +2267,10 @@ type
     FSupergroupChatCreated: Boolean;
     [JsonName('channel_chat_created')]
     FChannelChatCreated: Boolean;
+    [JsonName('message_auto_delete_timer_changed ')]
+    FMessageAutoDeleteTimerChanged: TtgMessageAutoDeleteTimerChanged;
+    [JsonName('migrate_to_chat_id')]
+    FMigrateToChatId: Int64;
     [JsonName('migrate_from_chat_id')]
     FMigrateFromChatId: Int64;
     [JsonName('pinned_message')]
@@ -2252,20 +2285,18 @@ type
     FPassportData: TtgPassportData;
     [JsonName('proximity_alert_triggered')]
     FProximityAlertTriggered: TtgProximityAlertTriggered;
+    [JsonName('video_chat_started')]
+    FVideoChatStarted: TtgVideoChatStarted;
+    [JsonName('video_chat_ended')]
+    FVideoChatEnded: TtgVideoChatEnded;
+    [JsonName('video_chat_participants_invited ')]
+    FVideoChatParticipantsInvited: TtgVideoChatParticipantsInvited;
+    [JsonName('video_chat_scheduled ')]
+    FVideoChatScheduled: TtgVideoChatScheduled;
+    [JsonName('web_app_data')]
+    FWebAppData: TtgWebAppData;
     [JsonName('reply_markup')]
     FReplyMarkup: TtgInlineKeyboardMarkup;
-    [JsonName('voice_chat_started')]
-    FVoiceChatStarted: TtgVoiceChatStarted;
-    [JsonName('voice_chat_ended')]
-    FVoiceChatEnded: TtgVoiceChatEnded;
-    [JsonName('voice_chat_participants_invited ')]
-    FVoiceChatParticipantsInvited: TtgVoiceChatParticipantsInvited;
-    [JsonName('migrate_to_chat_id')]
-    FMigrateToChatId: Int64;
-    [JsonName('message_auto_delete_timer_changed ')]
-    FMessageAutoDeleteTimerChanged: TtgMessageAutoDeleteTimerChanged;
-    [JsonName('voice_chat_scheduled ')]
-    FVoiceChatScheduled: TtgVoiceChatScheduled;
   public
     constructor Create;
     destructor Destroy; override;
@@ -2323,6 +2354,11 @@ type
     /// time
     /// </summary>
     property ForwardDate: TDateTime read FForwardDate write FForwardDate;
+    /// <summary>
+    /// Optional. True, if the message is a channel post that was automatically
+    /// forwarded to the connected discussion group
+    /// </summary>
+    property IsAutomaticForward: Boolean read FIsAutomaticForward write FIsAutomaticForward;
     /// <summary>
     /// Optional. For replies, the original message. Note that the Message object in
     /// this field will not contain further reply_to_message fields even if it itself
@@ -2516,29 +2552,32 @@ type
     /// </summary>
     property PassportData: TtgPassportData read FPassportData write FPassportData;
     /// <summary>
-    /// Optional. Service message: voice chat scheduled
-    /// </summary>
-    property VoiceChatScheduled: TtgVoiceChatScheduled read FVoiceChatScheduled write FVoiceChatScheduled;
-    /// <summary>
     /// Optional. Service message. A user in the chat triggered another user's
     /// proximity alert while sharing Live Location.
     /// </summary>
     property ProximityAlertTriggered: TtgProximityAlertTriggered read FProximityAlertTriggered
       write FProximityAlertTriggered;
     /// <summary>
-    /// Optional. Service message: voice chat started
+    /// Optional. Service message: video chat scheduled
     /// </summary>
-    property VoiceChatStarted: TtgVoiceChatStarted read FVoiceChatStarted write FVoiceChatStarted;
+    property VideoChatScheduled: TtgVideoChatScheduled read FVideoChatScheduled write FVideoChatScheduled;
     /// <summary>
-    /// Optional. Service message: voice chat ended
+    /// Optional. Service message: video chat started
     /// </summary>
-    property VoiceChatEnded: TtgVoiceChatEnded read FVoiceChatEnded write FVoiceChatEnded;
+    property VideoChatStarted: TtgVideoChatStarted read FVideoChatStarted write FVideoChatStarted;
     /// <summary>
-    /// Optional. Service message: new participants invited to a voice chat
+    /// Optional. Service message: video chat ended
     /// </summary>
-    property VoiceChatParticipantsInvited: TtgVoiceChatParticipantsInvited read FVoiceChatParticipantsInvited
-      write FVoiceChatParticipantsInvited;
-
+    property VideoChatEnded: TtgVideoChatEnded read FVideoChatEnded write FVideoChatEnded;
+    /// <summary>
+    /// Optional. Service message: new participants invited to a video chat
+    /// </summary>
+    property VideoChatParticipantsInvited: TtgVideoChatParticipantsInvited read FVideoChatParticipantsInvited
+      write FVideoChatParticipantsInvited;
+    /// <summary>
+    /// Optional. Service message: data sent by a Web App
+    /// </summary>
+    property WebAppData: TtgWebAppData read FWebAppData write FWebAppData;
     /// <summary>
     /// Optional. Inline keyboard attached to the message. login_url buttons are
     /// represented as ordinary url buttons.
@@ -2692,8 +2731,8 @@ type
     FCanManageChat: Boolean;
     [JsonName('can_delete_messages')]
     FCanDeleteMessages: Boolean;
-    [JsonName('can_manage_voice_chats')]
-    FCanManageVoiceChats: Boolean;
+    [JsonName('can_manage_video_chats')]
+    FCanManageVideoChats: Boolean;
     [JsonName('can_restrict_members')]
     FCanRestrictMembers: Boolean;
     [JsonName('can_promote_members')]
@@ -2744,7 +2783,7 @@ type
     /// <summary>
     /// True, if the administrator can delete messages of other users
     /// </summary>
-    property CanManageVoiceChats: Boolean read FCanManageVoiceChats write FCanManageVoiceChats;
+    property CanManageVideoChats: Boolean read FCanManageVideoChats write FCanManageVideoChats;
     /// <summary>
     /// True, if the administrator can restrict, ban or
     /// unban chat members
@@ -3206,6 +3245,89 @@ type
     /// </summary>
     property UserId: Int64 read FUserId write FUserId;
   end;
+
+  /// <summary>
+  /// Represents the rights of an administrator in a chat.
+  /// </summary>
+  TtgChatAdministratorRights = class
+  private
+    [JsonName('is_anonymous')]
+    FIsAnonymous: Boolean;
+    [JsonName('can_manage_chat')]
+    FCanManageChat: Boolean;
+    [JsonName('can_delete_messages')]
+    FCanDeleteMessages: Boolean;
+    [JsonName('can_manage_video_chats')]
+    FCanManageVideoChats: Boolean;
+    [JsonName('can_restrict_members')]
+    FCanRestrictMembers: Boolean;
+    [JsonName('can_promote_members')]
+    FCanPromoteMembers: Boolean;
+    [JsonName('can_change_info')]
+    FCanChangeInfo: Boolean;
+    [JsonName('can_invite_users')]
+    FCanInviteUsers: Boolean;
+    [JsonName('can_post_messages')]
+    FCanPostMessages: Boolean;
+    [JsonName('can_edit_messages')]
+    FCanEditMessages: Boolean;
+    [JsonName('can_pin_messages')]
+    FCanPinMessages: Boolean;
+  public
+    /// <summary>
+    /// True, if the user's presence in the chat is hidden
+    /// </summary>
+    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
+    /// <summary>
+    /// True, if the administrator can access the chat event log, chat statistics,
+    /// message statistics in channels, see channel members, see anonymous
+    /// administrators in supergroups and ignore slow mode. Implied by any other
+    /// administrator privilege
+    /// </summary>
+    property CanManageChat: Boolean read FCanManageChat write FCanManageChat;
+    /// <summary>
+    /// True, if the administrator can delete messages of other users
+    /// </summary>
+    property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
+    /// <summary>
+    /// True, if the administrator can manage video chats
+    /// </summary>
+    property CanManageVideoChats: Boolean read FCanManageVideoChats write FCanManageVideoChats;
+    /// <summary>
+    /// True, if the administrator can restrict, ban or unban chat members
+    /// </summary>
+    property CanRestrictMembers: Boolean read FCanRestrictMembers write FCanRestrictMembers;
+    /// <summary>
+    /// True, if the administrator can add new administrators with a subset of their
+    /// own privileges or demote administrators that he has promoted, directly or
+    /// indirectly (promoted by administrators that were appointed by the user)
+    /// </summary>
+    property CanPromoteMembers: Boolean read FCanPromoteMembers write FCanPromoteMembers;
+    /// <summary>
+    /// True, if the user is allowed to change the chat title, photo and other settings
+    /// </summary>
+    property CanChangeInfo: Boolean read FCanChangeInfo write FCanChangeInfo;
+    /// <summary>
+    /// True, if the user is allowed to invite new users to the chat
+    /// </summary>
+    property CanInviteUsers: Boolean read FCanInviteUsers write FCanInviteUsers;
+    /// <summary>
+    /// Optional. True, if the administrator can post in the channel; channels only
+    /// </summary>
+    property CanPostMessages: Boolean read FCanPostMessages write FCanPostMessages;
+    /// <summary>
+    /// Optional. True, if the administrator can edit messages of other users and can
+    /// pin messages; channels only
+    /// </summary>
+    property CanEditMessages: Boolean read FCanEditMessages write FCanEditMessages;
+    /// <summary>
+    /// Optional. True, if the user is allowed to pin messages; groups and supergroups
+    /// only
+    /// </summary>
+    property CanPinMessages: Boolean read FCanPinMessages write FCanPinMessages;
+  end;
+
+  TtgInlineQueryResult = class abstract;
 
 implementation
 

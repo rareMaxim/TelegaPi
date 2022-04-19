@@ -52,7 +52,8 @@ uses
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Helpers,
   TelegramBotApi.Types.Keyboards,
-  TelegramBotApi.Types.Payments;
+  TelegramBotApi.Types.Payments,
+  TelegramBotApi.Types.WebApps;
 { TtgConverters }
 
 class procedure TtgConverters.TtgAllowedUpdatesConverter;
@@ -95,6 +96,8 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardRemove>;
   TcaRequestArgument.Current.RegisterToJson<TtgForceReply>;
   TcaRequestArgument.Current.RegisterToJson<TArray<TtgLabeledPrice>>;
+  TcaRequestArgument.Current.RegisterToJson<TtgChatAdministratorRights>;
+  TcaRequestArgument.Current.RegisterToJson<TtgMenuButtonAbstract>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;
@@ -115,9 +118,7 @@ begin
         TtgParseMode.HTML:
           Result := 'HTML';
       else
-        begin
-          raise Exception.Create(TRttiEnumerationType.GetName(lVal));
-        end;
+        raise Exception.Create(TRttiEnumerationType.GetName(lVal));
       end;
     end);
 end;
