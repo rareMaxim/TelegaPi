@@ -563,9 +563,9 @@ type
     [caName('can_delete_messages')]
     [caDefaultValueBoolean(False)]
     FCanDeleteMessages: Boolean;
-    [caName('can_manage_voice_chats')]
+    [caName('can_manage_video_chats')]
     [caDefaultValueBoolean(False)]
-    FCanManageVoiceChats: Boolean;
+    FCanManageVideoChats: Boolean;
     [caName('can_restrict_members')]
     [caDefaultValueBoolean(False)]
     FCanRestrictMembers: Boolean;
@@ -607,8 +607,8 @@ type
     /// <summary>Pass True, if the administrator can delete messages of other
     /// users</summary>
     property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
-    /// <summary>Pass True, if the administrator can manage voice chats</summary>
-    property CanManageVoiceChats: Boolean read FCanManageVoiceChats write FCanManageVoiceChats;
+    /// <summary>Pass True, if the administrator can manage video chats</summary>
+    property CanManageVideoChats: Boolean read FCanManageVideoChats write FCanManageVideoChats;
     /// <summary> Pass True, if the administrator can restrict, ban or unban chat
     /// members</summary>
     property CanRestrictMembers: Boolean read FCanRestrictMembers write FCanRestrictMembers;
