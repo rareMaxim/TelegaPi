@@ -56,7 +56,8 @@ contains
   TelegramBotApi.Tools.Router in 'TelegramBotApi.Tools.Router.pas',
   TelegramBotApi.Tools.UserDataStorage.Abstract in 'TelegramBotApi.Tools.UserDataStorage.Abstract.pas',
   TelegramBotApi.Tools.UserDataStorage.Json in 'TelegramBotApi.Tools.UserDataStorage.Json.pas',
-  TelegramBotApi.Tools.UserDataStorage.Ram in 'TelegramBotApi.Tools.UserDataStorage.Ram.pas';
+  TelegramBotApi.Tools.UserDataStorage.Ram in 'TelegramBotApi.Tools.UserDataStorage.Ram.pas',
+  TelegramBotApi.Types.WebApps in 'TelegramBotApi.Types.WebApps.pas';
 
 end.
 

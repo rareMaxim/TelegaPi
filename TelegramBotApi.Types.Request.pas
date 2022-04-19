@@ -33,7 +33,8 @@ uses
   TelegramBotApi.Types,
   TelegramBotApi.Types.Abstract,
   TelegramBotApi.Types.Enums,
-  TelegramBotApi.Types.Keyboards;
+  TelegramBotApi.Types.Keyboards,
+  TelegramBotApi.Types.WebApps;
 
 type
   TtgEmptyArgument = class(TInterfacedObject);

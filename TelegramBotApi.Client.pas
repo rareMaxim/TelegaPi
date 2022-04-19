@@ -31,6 +31,7 @@ uses
   CloudApi.Client.Sync,
   CloudApi.IAuthenticator,
   CloudApi.Request,
+  System.Classes,
   TelegramBotApi.Request.Stickers,
   TelegramBotApi.Types,
   TelegramBotApi.Types.AvailableMethods,
@@ -38,7 +39,7 @@ uses
   TelegramBotApi.Types.Payments,
   TelegramBotApi.Types.Request,
   TelegramBotApi.Types.UpdatingMessages,
-  System.Classes;
+  TelegramBotApi.Types.WebApps;
 
 type
   TTelegramBotApi = class(TPersistent)

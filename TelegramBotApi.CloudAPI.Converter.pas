@@ -52,7 +52,8 @@ uses
   TelegramBotApi.Types.Enums,
   TelegramBotApi.Types.Helpers,
   TelegramBotApi.Types.Keyboards,
-  TelegramBotApi.Types.Payments;
+  TelegramBotApi.Types.Payments,
+  TelegramBotApi.Types.WebApps;
 { TtgConverters }
 
 class procedure TtgConverters.TtgAllowedUpdatesConverter;
