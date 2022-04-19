@@ -96,6 +96,7 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgForceReply>;
   TcaRequestArgument.Current.RegisterToJson<TArray<TtgLabeledPrice>>;
   TcaRequestArgument.Current.RegisterToJson<TtgChatAdministratorRights>;
+  TcaRequestArgument.Current.RegisterToJson<TtgMenuButtonAbstract>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;

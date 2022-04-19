@@ -846,6 +846,42 @@ type
     property ForChannels;
   end;
 
+  /// <summary>
+  /// Use this method to change the bot's menu button in a private chat, or the
+  /// default menu button. Returns True on success.
+  /// </summary>
+  TtgSetChatMenuButtonArgument = record
+  private
+    [caName('chat_id')]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+    [caName('menu_button')]
+    FMenuButton: TtgMenuButtonAbstract;
+  public
+    /// <summary>Unique identifier for the target private chat. If not specified,
+    /// default bot's menu button will be changed</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+    /// <summary>
+    /// A JSON-serialized object for the new bot's menu button. Defaults to
+    /// MenuButtonDefault
+    /// </summary>
+    property MenuButton: TtgMenuButtonAbstract read FMenuButton write FMenuButton;
+  end;
+
+  /// <summary>Use this method to get the current value of the bot's menu button in a
+  /// private chat, or the default menu button. Returns MenuButton on success.
+  /// </summary>
+  TtgGetChatMenuButtonArgument = record
+  private
+    [caName('chat_id')]
+    [caDefaultValueInt64(0)]
+    FChatId: TtgUserLink;
+  public
+    /// <summary>Unique identifier for the target private chat. If not specified,
+    /// default bot's menu button will be returned</summary>
+    property ChatId: TtgUserLink read FChatId write FChatId;
+  end;
+
 implementation
 
 uses System.SysUtils;

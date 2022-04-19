@@ -388,6 +388,16 @@ type
     /// </summary>
     function GetMyDefaultAdministratorRights(AGetMyDefaultAdministratorRightsArgument
       : TtgGetMyDefaultAdministratorRightsArgument): ItgResponse<TtgChatAdministratorRights>;
+    /// <summary>
+    /// Use this method to change the bot's menu button in a private chat, or the
+    /// default menu button. Returns True on success.
+    /// </summary>
+    function SetChatMenuButton(ASetChatMenuButtonArgument: TtgSetChatMenuButtonArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to get the current value of the bot's menu button in a private
+    /// chat, or the default menu button. Returns MenuButton on success.
+    /// </summary>
+    function GetChatMenuButton(AGetChatMenuButtonArgument: TtgGetChatMenuButtonArgument): ItgResponse<TtgMenuButton>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -534,6 +544,12 @@ begin
   finally
     lGetChatMemberCount.Free;
   end;
+end;
+
+function TTelegramBotApi.GetChatMenuButton(AGetChatMenuButtonArgument: TtgGetChatMenuButtonArgument)
+  : ItgResponse<TtgMenuButton>;
+begin
+  TryInternalExecute<TtgGetChatMenuButtonArgument, TtgMenuButton>(AGetChatMenuButtonArgument, Result);
 end;
 
 function TTelegramBotApi.GetFile(AGetFile: TtgGetFileArgument): ItgResponse<TtgFile>;
@@ -781,6 +797,12 @@ begin
     FBotToken := Value;
     TTelegramAuthenticator(FCloudApi.Authenticator).BotToken := Value;
   end;
+end;
+
+function TTelegramBotApi.SetChatMenuButton(ASetChatMenuButtonArgument: TtgSetChatMenuButtonArgument)
+  : ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgSetChatMenuButtonArgument, Boolean>(ASetChatMenuButtonArgument, Result);
 end;
 
 function TTelegramBotApi.SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
