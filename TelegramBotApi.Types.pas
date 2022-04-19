@@ -2145,6 +2145,27 @@ type
   end;
 
   /// <summary>
+  /// Contains data sent from a Web App to the bot.
+  /// </summary>
+  TtgWebAppData = class
+  private
+    [JsonName('data')]
+    FData: string;
+    [JsonName('button_text')]
+    FButtonText: string;
+  public
+    /// <summary>
+    /// The data. Be aware that a bad client can send arbitrary data in this field.
+    /// </summary>
+    property Data: string read FData write FData;
+    /// <summary>
+    /// Text of the web_app keyboard button, from which the Web App was opened. Be
+    /// aware that a bad client can send arbitrary data in this field.
+    /// </summary>
+    property ButtonText: string read FButtonText write FButtonText;
+  end;
+
+/// <summary>
   /// This object represents a message.
   /// </summary>
   TtgMessage = class
@@ -2272,6 +2293,8 @@ type
     FVideoChatParticipantsInvited: TtgVideoChatParticipantsInvited;
     [JsonName('video_chat_scheduled ')]
     FVideoChatScheduled: TtgVideoChatScheduled;
+    [JsonName('web_app_data')]
+    FWebAppData: TtgWebAppData;
     [JsonName('reply_markup')]
     FReplyMarkup: TtgInlineKeyboardMarkup;
   public
@@ -2551,6 +2574,10 @@ type
     /// </summary>
     property VideoChatParticipantsInvited: TtgVideoChatParticipantsInvited read FVideoChatParticipantsInvited
       write FVideoChatParticipantsInvited;
+    /// <summary>
+    /// Optional. Service message: data sent by a Web App
+    /// </summary>
+    property WebAppData: TtgWebAppData read FWebAppData write FWebAppData;
     /// <summary>
     /// Optional. Inline keyboard attached to the message. login_url buttons are
     /// represented as ordinary url buttons.
