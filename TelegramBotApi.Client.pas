@@ -44,7 +44,7 @@ uses
 type
   TTelegramBotApi = class(TPersistent)
   public const
-    LIB_VERSION = '5.7.0';
+    LIB_VERSION = '6.0.0';
   private
     FCloudApi: TCloudApiClient;
     FBotToken: string;
