@@ -95,6 +95,7 @@ begin
   TcaRequestArgument.Current.RegisterToJson<TtgReplyKeyboardRemove>;
   TcaRequestArgument.Current.RegisterToJson<TtgForceReply>;
   TcaRequestArgument.Current.RegisterToJson<TArray<TtgLabeledPrice>>;
+  TcaRequestArgument.Current.RegisterToJson<TtgChatAdministratorRights>;
 end;
 
 class procedure TtgConverters.TtgParseModeConverter;
@@ -115,9 +116,7 @@ begin
         TtgParseMode.HTML:
           Result := 'HTML';
       else
-        begin
-          raise Exception.Create(TRttiEnumerationType.GetName(lVal));
-        end;
+        raise Exception.Create(TRttiEnumerationType.GetName(lVal));
       end;
     end);
 end;

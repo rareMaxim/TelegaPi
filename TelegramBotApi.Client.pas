@@ -373,6 +373,21 @@ type
     /// Animated sticker sets can have up to 50 stickers. Static sticker sets can have
     /// up to 120 stickers. Returns True on success.</summary>
     function AddStickerToSet(ASticker: TtgAddStickerToSet): ItgResponse<Boolean>;
+
+    /// <summary>
+    /// Use this method to change the default administrator rights requested by the bot
+    /// when it's added as an administrator to groups or channels. These rights will be
+    /// suggested to users, but they are are free to modify the list before adding the
+    /// bot. Returns True on success.
+    /// </summary>
+    function SetMyDefaultAdministratorRights(ASetMyDefaultAdministratorRightsArgument
+      : TtgSetMyDefaultAdministratorRightsArgument): ItgResponse<Boolean>;
+    /// <summary>
+    /// Use this method to get the current default administrator rights of the bot.
+    /// Returns ChatAdministratorRights on success.
+    /// </summary>
+    function GetMyDefaultAdministratorRights(AGetMyDefaultAdministratorRightsArgument
+      : TtgGetMyDefaultAdministratorRightsArgument): ItgResponse<TtgChatAdministratorRights>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -627,6 +642,13 @@ begin
   TryInternalExecute<TtgEditMessageTextArgument, TtgMessage>(AEditMessageArgument, Result);
 end;
 
+function TTelegramBotApi.GetMyDefaultAdministratorRights(AGetMyDefaultAdministratorRightsArgument
+  : TtgGetMyDefaultAdministratorRightsArgument): ItgResponse<TtgChatAdministratorRights>;
+begin
+  TryInternalExecute<TtgGetMyDefaultAdministratorRightsArgument, TtgChatAdministratorRights>
+    (AGetMyDefaultAdministratorRightsArgument, Result);
+end;
+
 function TTelegramBotApi.LogOut: ItgResponse<Boolean>;
 var
   lLogOut: TtgLogOutArgunent;
@@ -764,6 +786,13 @@ end;
 function TTelegramBotApi.SetMyCommands(ASetMyCommands: TtgSetMyCommandsArgument): ItgResponse<Boolean>;
 begin
   TryInternalExecute<TtgSetMyCommandsArgument, Boolean>(ASetMyCommands, Result);
+end;
+
+function TTelegramBotApi.SetMyDefaultAdministratorRights(ASetMyDefaultAdministratorRightsArgument
+  : TtgSetMyDefaultAdministratorRightsArgument): ItgResponse<Boolean>;
+begin
+  TryInternalExecute<TtgSetMyDefaultAdministratorRightsArgument, Boolean>
+    (ASetMyDefaultAdministratorRightsArgument, Result);
 end;
 
 function TTelegramBotApi.SetWebhook(SetWebhookArgument: TtgSetWebhookArgument): Boolean;

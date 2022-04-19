@@ -3219,6 +3219,87 @@ type
     property UserId: Int64 read FUserId write FUserId;
   end;
 
+  /// <summary>
+  /// Represents the rights of an administrator in a chat.
+  /// </summary>
+  TtgChatAdministratorRights = class
+  private
+    [JsonName('is_anonymous')]
+    FIsAnonymous: Boolean;
+    [JsonName('can_manage_chat')]
+    FCanManageChat: Boolean;
+    [JsonName('can_delete_messages')]
+    FCanDeleteMessages: Boolean;
+    [JsonName('can_manage_video_chats')]
+    FCanManageVideoChats: Boolean;
+    [JsonName('can_restrict_members')]
+    FCanRestrictMembers: Boolean;
+    [JsonName('can_promote_members')]
+    FCanPromoteMembers: Boolean;
+    [JsonName('can_change_info')]
+    FCanChangeInfo: Boolean;
+    [JsonName('can_invite_users')]
+    FCanInviteUsers: Boolean;
+    [JsonName('can_post_messages')]
+    FCanPostMessages: Boolean;
+    [JsonName('can_edit_messages')]
+    FCanEditMessages: Boolean;
+    [JsonName('can_pin_messages')]
+    FCanPinMessages: Boolean;
+  public
+    /// <summary>
+    /// True, if the user's presence in the chat is hidden
+    /// </summary>
+    property IsAnonymous: Boolean read FIsAnonymous write FIsAnonymous;
+    /// <summary>
+    /// True, if the administrator can access the chat event log, chat statistics,
+    /// message statistics in channels, see channel members, see anonymous
+    /// administrators in supergroups and ignore slow mode. Implied by any other
+    /// administrator privilege
+    /// </summary>
+    property CanManageChat: Boolean read FCanManageChat write FCanManageChat;
+    /// <summary>
+    /// True, if the administrator can delete messages of other users
+    /// </summary>
+    property CanDeleteMessages: Boolean read FCanDeleteMessages write FCanDeleteMessages;
+    /// <summary>
+    /// True, if the administrator can manage video chats
+    /// </summary>
+    property CanManageVideoChats: Boolean read FCanManageVideoChats write FCanManageVideoChats;
+    /// <summary>
+    /// True, if the administrator can restrict, ban or unban chat members
+    /// </summary>
+    property CanRestrictMembers: Boolean read FCanRestrictMembers write FCanRestrictMembers;
+    /// <summary>
+    /// True, if the administrator can add new administrators with a subset of their
+    /// own privileges or demote administrators that he has promoted, directly or
+    /// indirectly (promoted by administrators that were appointed by the user)
+    /// </summary>
+    property CanPromoteMembers: Boolean read FCanPromoteMembers write FCanPromoteMembers;
+    /// <summary>
+    /// True, if the user is allowed to change the chat title, photo and other settings
+    /// </summary>
+    property CanChangeInfo: Boolean read FCanChangeInfo write FCanChangeInfo;
+    /// <summary>
+    /// True, if the user is allowed to invite new users to the chat
+    /// </summary>
+    property CanInviteUsers: Boolean read FCanInviteUsers write FCanInviteUsers;
+    /// <summary>
+    /// Optional. True, if the administrator can post in the channel; channels only
+    /// </summary>
+    property CanPostMessages: Boolean read FCanPostMessages write FCanPostMessages;
+    /// <summary>
+    /// Optional. True, if the administrator can edit messages of other users and can
+    /// pin messages; channels only
+    /// </summary>
+    property CanEditMessages: Boolean read FCanEditMessages write FCanEditMessages;
+    /// <summary>
+    /// Optional. True, if the user is allowed to pin messages; groups and supergroups
+    /// only
+    /// </summary>
+    property CanPinMessages: Boolean read FCanPinMessages write FCanPinMessages;
+  end;
+
 implementation
 
 uses

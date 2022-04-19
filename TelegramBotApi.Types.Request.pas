@@ -805,6 +805,47 @@ type
     property CacheTime: Integer read FCacheTime write FCacheTime;
   end;
 
+  /// <summary> Use this method to get the current default administrator rights of
+  /// the bot. Returns ChatAdministratorRights on success.
+  /// </summary>
+  TtgGetMyDefaultAdministratorRightsArgument = class
+  private
+    [caName('for_channels')]
+    [caDefaultValueBoolean(False)]
+    FForChannels: Boolean;
+  public
+    /// <summary> Pass True to get default administrator rights of the bot in channels.
+    /// Otherwise, default administrator rights of the bot for groups and supergroups
+    /// will be returned.
+    /// </summary>
+    property ForChannels: Boolean read FForChannels write FForChannels;
+  end;
+
+/// <summary>
+  /// Use this method to change the default administrator rights requested by the bot
+  /// when it's added as an administrator to groups or channels. These rights will be
+  /// suggested to users, but they are are free to modify the list before adding the
+  /// bot. Returns True on success.
+  /// </summary>
+  TtgSetMyDefaultAdministratorRightsArgument = class(TtgGetMyDefaultAdministratorRightsArgument)
+  private
+    [caName('rights')]
+    [caDefaultValueString('{}')]
+    FRights: TtgChatAdministratorRights;
+  public
+    /// <summary>
+    /// A JSON-serialized object describing new default administrator rights. If not
+    /// specified, the default administrator rights will be cleared.
+    /// </summary>
+    property Rights: TtgChatAdministratorRights read FRights write FRights;
+    /// <summary>
+    /// Pass True to change the default administrator rights of the bot in channels.
+    /// Otherwise, the default administrator rights of the bot for groups and
+    /// supergroups will be changed.
+    /// </summary>
+    property ForChannels;
+  end;
+
 implementation
 
 uses System.SysUtils;
