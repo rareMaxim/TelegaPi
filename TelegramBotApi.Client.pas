@@ -398,6 +398,13 @@ type
     /// chat, or the default menu button. Returns MenuButton on success.
     /// </summary>
     function GetChatMenuButton(AGetChatMenuButtonArgument: TtgGetChatMenuButtonArgument): ItgResponse<TtgMenuButton>;
+    /// <summary>
+    /// Use this method to set the result of an interaction with a Web App and send a
+    /// corresponding message on behalf of the user to the chat from which the query
+    /// originated. On success, a SentWebAppMessage object is returned.
+    /// </summary>
+    function AnswerWebAppQuery(AAnswerWebAppQueryArgument: TTgAnswerWebAppQueryArgument)
+      : ItgResponse<TtgSentWebAppMessage>;
     constructor Create; overload;
     constructor Create(const AToken: string); overload;
     destructor Destroy; override;
@@ -476,6 +483,12 @@ end;
 function TTelegramBotApi.AnswerShippingQuery(AAnswerShippingQuery: TtgAnswerShippingQuery): ItgResponse<Boolean>;
 begin
   TryInternalExecute<TtgAnswerShippingQuery, Boolean>(AAnswerShippingQuery, Result);
+end;
+
+function TTelegramBotApi.AnswerWebAppQuery(AAnswerWebAppQueryArgument: TTgAnswerWebAppQueryArgument)
+  : ItgResponse<TtgSentWebAppMessage>;
+begin
+  TryInternalExecute<TTgAnswerWebAppQueryArgument, TtgSentWebAppMessage>(AAnswerWebAppQueryArgument, Result);
 end;
 
 function TTelegramBotApi.Close: ItgResponse<Boolean>;

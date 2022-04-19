@@ -882,6 +882,28 @@ type
     property ChatId: TtgUserLink read FChatId write FChatId;
   end;
 
+  /// <summary>
+  /// Use this method to set the result of an interaction with a Web App and send a
+  /// corresponding message on behalf of the user to the chat from which the query
+  /// originated. On success, a SentWebAppMessage object is returned.
+  /// </summary>
+  TTgAnswerWebAppQueryArgument = record
+  private
+    [caName('result')]
+    [caName('web_app_query_id')]
+    FWebAppQueryId: string;
+    FResult: TtgInlineQueryResult;
+  public
+    /// <summary>
+    /// Unique identifier for the query to be answered
+    /// </summary>
+    property WebAppQueryId: string read FWebAppQueryId write FWebAppQueryId;
+    /// <summary>
+    /// A JSON-serialized object describing the message to be sent
+    /// </summary>
+    property Result: TtgInlineQueryResult read FResult write FResult;
+  end;
+
 implementation
 
 uses System.SysUtils;

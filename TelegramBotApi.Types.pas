@@ -3404,6 +3404,22 @@ type
 
   TtgMenuButton = class(TtgMenuButtonWebApp);
 
+  /// <summary>
+  /// Contains information about an inline message sent by a Web App on behalf of a
+  /// user.
+  /// </summary>
+  TtgSentWebAppMessage = record
+  private
+    [JsonName('inline_message_id')]
+    FInlineMessageId: string;
+  public
+      /// <summary>Optional. Identifier of the sent inline message. Available only if
+    /// there is an inline keyboard attached to the message.</summary>
+    property InlineMessageId: string read FInlineMessageId write FInlineMessageId;
+  end;
+
+  TtgInlineQueryResult = class abstract;
+
 implementation
 
 uses
