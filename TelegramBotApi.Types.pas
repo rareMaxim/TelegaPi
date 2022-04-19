@@ -1735,7 +1735,6 @@ type
   /// <summary> Contains information about the current status of a webhook.</summary>
   TtgWebhookInfo = class
   private
-    [JsonName('allowed_updates')]
     [JsonName('url')]
     FUrl: string;
     [JsonName('has_custom_certificate')]
@@ -1747,6 +1746,9 @@ type
     FLastErrorDate: TDateTime;
     [JsonName('last_error_message')]
     FLastErrorMessage: string;
+    [JsonName('last_synchronization_error_date')]
+    [JsonConverter(TJsonUnixTimeConverter)]
+    FLastSynchronizationErrorDate: TDateTime;
     [JsonName('max_connections')]
     FMaxConnections: Integer;
     [JsonName('allowed_updates')]
@@ -1780,6 +1782,12 @@ type
     /// happened when trying to deliver an update via webhook
     /// </summary>
     property LastErrorMessage: string read FLastErrorMessage write FLastErrorMessage;
+    /// <summary>
+    /// Optional. Unix time of the most recent error that happened when trying to
+    /// synchronize available updates with Telegram datacenters
+    /// </summary>
+    property LastSynchronizationErrorDate: TDateTime read FLastSynchronizationErrorDate
+      write FLastSynchronizationErrorDate;
     /// <summary>
     /// Optional. Maximum allowed number of simultaneous HTTPS connections to the
     /// webhook for update delivery
