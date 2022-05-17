@@ -72,12 +72,12 @@ type
   TtgKeyboardButton = class(TObject)
   private
     [JsonName('text')]
-    [JsonName('web_app')]
     FText: string;
     [JsonName('request_contact')]
     FRequestContact: Boolean;
     [JsonName('request_location')]
     FRequestLocation: Boolean;
+    [JsonName('web_app')]
     FWebApp: TtgWebAppInfo;
     function GetText: string;
     procedure SetText(const Value: string);
