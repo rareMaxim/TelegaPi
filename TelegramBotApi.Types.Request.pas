@@ -46,7 +46,10 @@ type
   /// Requires no parameters.
   /// Returns basic information about the bot in form of a User object.
   /// </summary>
-  TtgGetMeArgunent = class(TtgEmptyArgument);
+  TtgGetMeArgunent = record
+    class function Default: TtgGetMeArgunent; static;
+  end;
+
   /// <summary>
   /// Use this method to log out from the cloud Bot API server before launching the
   /// bot locally. You must log out the bot before running it locally, otherwise
@@ -822,7 +825,7 @@ type
     property ForChannels: Boolean read FForChannels write FForChannels;
   end;
 
-/// <summary>
+  /// <summary>
   /// Use this method to change the default administrator rights requested by the bot
   /// when it's added as an administrator to groups or channels. These rights will be
   /// suggested to users, but they are are free to modify the list before adding the
@@ -1040,6 +1043,11 @@ begin
   if Assigned(FScope) then
     FreeAndNil(FScope);
   inherited;
+end;
+
+class function TtgGetMeArgunent.Default: TtgGetMeArgunent;
+begin
+  Result := Result;
 end;
 
 end.

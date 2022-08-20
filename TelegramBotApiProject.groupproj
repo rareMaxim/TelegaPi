@@ -19,7 +19,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="Demos\Pooling\Pooling.dproj">
-            <Dependencies/>
+            <Dependencies>CloudAPI\CloudAPI.dproj;TelegramBotApi.dproj</Dependencies>
         </Projects>
         <Projects Include="Demos\Calendar\CalendarDemo.dproj">
             <Dependencies>TelegramBotApi.dproj</Dependencies>
@@ -80,13 +80,13 @@
     <Target Name="EchoDemo:Make">
         <MSBuild Projects="Demos\Echo\EchoDemo.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Pooling">
+    <Target Name="Pooling" DependsOnTargets="CloudAPI;TelegramBotApi">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj"/>
     </Target>
-    <Target Name="Pooling:Clean">
+    <Target Name="Pooling:Clean" DependsOnTargets="CloudAPI:Clean;TelegramBotApi:Clean">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="Pooling:Make">
+    <Target Name="Pooling:Make" DependsOnTargets="CloudAPI:Make;TelegramBotApi:Make">
         <MSBuild Projects="Demos\Pooling\Pooling.dproj" Targets="Make"/>
     </Target>
     <Target Name="CalendarDemo" DependsOnTargets="TelegramBotApi">

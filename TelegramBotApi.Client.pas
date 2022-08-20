@@ -28,7 +28,7 @@ unit TelegramBotApi.Client;
 interface
 
 uses
-  CloudApi.Client.Sync,
+  CloudApi.Client,
   CloudApi.IAuthenticator,
   CloudApi.Request,
   System.Classes,
@@ -39,7 +39,8 @@ uses
   TelegramBotApi.Types.Payments,
   TelegramBotApi.Types.Request,
   TelegramBotApi.Types.UpdatingMessages,
-  TelegramBotApi.Types.WebApps;
+  TelegramBotApi.Types.WebApps,
+  System.SysUtils;
 
 type
   TTelegramBotApi = class(TPersistent)
@@ -54,7 +55,11 @@ type
   protected
     function TryInternalExecute<TArgument, TResult>(AArgument: TArgument; var AResp: ItgResponse<TResult>)
       : Boolean; overload;
+    procedure TryInternalExecuteAsync<TArgument, TResult>(AArgument: TArgument;
+      AResponse: TProc < ItgResponse < TResult >> ); overload;
     function TryInternalExecute<TResult>(ARequest: IcaRequest; var AResp: ItgResponse<TResult>): Boolean; overload;
+    procedure TryInternalExecuteAsync<TResult>(ARequest: IcaRequest; AResp: TProc < ItgResponse < TResult >> );
+      overload;
     function TryInternalExecuteCustom<TResult>(ARequest: IcaRequest; var AResult: TResult): Boolean; overload;
     function InternalExecuteCustom<TArgument: record; TResult>(AArgument: TArgument): TResult; overload;
   public
@@ -77,6 +82,7 @@ type
     /// Returns basic information about the bot in form of a User object.
     /// </summary>
     function GetMe: ItgResponse<TtgUser>;
+    procedure GetMeAsync(AOnResult: TProc < ItgResponse < TtgUser >> );
     /// <summary>
     /// Use this method to log out from the cloud Bot API server before launching the
     /// bot locally. You must log out the bot before running it locally, otherwise
@@ -98,6 +104,8 @@ type
     /// Use this method to send text messages. On success, the sent Message is returned.
     /// </summary>
     function SendMessage(ASendMessageArgument: TtgSendMessageArgument): ItgResponse<TtgMessage>;
+    procedure SendMessageAsync(ASendMessageArgument: TtgSendMessageArgument;
+      AOnResult: TProc < ItgResponse < TtgMessage >> );
     /// <summary>
     /// Use this method to forward messages of any kind. On success, the sent Message
     /// is returned.
@@ -572,15 +580,13 @@ begin
 end;
 
 function TTelegramBotApi.GetMe: ItgResponse<TtgUser>;
-var
-  lGetMe: TtgGetMeArgunent;
 begin
-  lGetMe := TtgGetMeArgunent.Create;
-  try
-    TryInternalExecute<TtgGetMeArgunent, TtgUser>(lGetMe, Result);
-  finally
-    lGetMe.Free;
-  end;
+  TryInternalExecute<TtgGetMeArgunent, TtgUser>(TtgGetMeArgunent.Default, Result);
+end;
+
+procedure TTelegramBotApi.GetMeAsync(AOnResult: TProc < ItgResponse < TtgUser >> );
+begin
+  TryInternalExecuteAsync<TtgGetMeArgunent, TtgUser>(TtgGetMeArgunent.Default, AOnResult);
 end;
 
 function TTelegramBotApi.GetMyCommands(AGetMyCommands: TtgGetMyCommandsArgument): ItgResponse<TArray<TtgBotCommand>>;
@@ -629,6 +635,15 @@ begin
     if Assigned(AResp) then
       AResp.CloudResponse := LCloudResponse;
   end;
+end;
+
+procedure TTelegramBotApi.TryInternalExecuteAsync<TArgument, TResult>(AArgument: TArgument;
+  AResponse: TProc < ItgResponse < TResult >> );
+var
+  LReq: IcaRequest;
+begin
+  LReq := TcaRequestArgument.Current.ObjToRequest<TArgument>(AArgument);
+  TryInternalExecuteAsync<TResult>(LReq, AResponse);
 end;
 
 function TTelegramBotApi.InternalExecuteCustom<TArgument, TResult>(AArgument: TArgument): TResult;
@@ -769,6 +784,12 @@ begin
   TryInternalExecute<TtgSendMessageArgument, TtgMessage>(ASendMessageArgument, Result);
 end;
 
+procedure TTelegramBotApi.SendMessageAsync(ASendMessageArgument: TtgSendMessageArgument;
+  AOnResult: TProc < ItgResponse < TtgMessage >> );
+begin
+  TryInternalExecuteAsync<TtgSendMessageArgument, TtgMessage>(ASendMessageArgument, AOnResult);
+end;
+
 function TTelegramBotApi.SendPhoto(ASendPhotoArgument: TtgSendPhotoArgument): ItgResponse<TtgMessage>;
 begin
   TryInternalExecute<TtgSendPhotoArgument, TtgMessage>(ASendPhotoArgument, Result);
@@ -847,6 +868,21 @@ function TTelegramBotApi.StopMessageLiveLocation(AEditMessageLiveLocationArgumen
   : ItgResponse<TtgMessage>;
 begin
   TryInternalExecute<TtgStopMessageLiveLocationArgument, TtgMessage>(AEditMessageLiveLocationArgument, Result);
+end;
+
+procedure TTelegramBotApi.TryInternalExecuteAsync<TResult>(ARequest: IcaRequest;
+  AResp: TProc < ItgResponse < TResult >> );
+begin
+  FCloudApi.TryExecuteAsync < TtgResponse < TResult >> (ARequest,
+    procedure(ACloudResp: IcaResponse < TtgResponse < TResult >> )
+    begin
+      var
+      LResp := ACloudResp.Data;
+      if Assigned(LResp) then
+        LResp.CloudResponse := ACloudResp;
+      if Assigned(AResp) then
+        AResp(LResp);
+    end);
 end;
 
 function TTelegramBotApi.UnbanChatMember(AUnbanChatMember: TtgUnbanChatMemberArgument): ItgResponse<Boolean>;

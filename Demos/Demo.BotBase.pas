@@ -44,6 +44,7 @@ procedure TDemoBotBase.WhaitEnter;
 begin
   Writeln('Press Enter to stop bot service... ');
   Readln;
+  Writeln('Please wait, closing service... ');
 end;
 
 end.

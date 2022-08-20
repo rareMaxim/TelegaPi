@@ -8,7 +8,7 @@ uses
   System.SysUtils,
   System.Rtti,
   Winapi.Windows,
-  Demo.BotBase in '..\Demo.BotBase.pas';
+  Demo.BotBase in '..\Demo.BotBase.pas', TelegramBotApi.Types;
 
 type
   TDemoPooling = class(TDemoBotBase)
@@ -111,22 +111,20 @@ begin
   try
     lMsg.ChatId := UserLink;
     lMsg.Text := MsgText;
-    Bot.SendMessage(lMsg);
+    Bot.SendMessageAsync(lMsg, nil);
   finally
     lMsg.Free;
   end;
 end;
 
 procedure TDemoPooling.UpdateConsoleTitle(ABot: TTelegramBotApi);
-var
-  lUser: TtgUser;
 begin
-  lUser := ABot.GetMe.Result;
-  try
-    SetConsoleTitle(pwideChar(lUser.Username));
-  finally
-    // lUser.Free; <-- Autofree in TelegaPi core
-  end;
+  ABot.GetMeAsync(
+    procedure(AResp: ItgResponse<TtgUser>)
+    begin
+      if AResp.Ok then
+        SetConsoleTitle(pwideChar(AResp.Result.Username));
+    end);
 end;
 
 procedure Main;
